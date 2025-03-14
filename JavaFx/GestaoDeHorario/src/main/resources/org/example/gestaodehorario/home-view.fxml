@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="468.0" prefWidth="579.0" style="-fx-background-color: #DCDCDC; -fx-border-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestaodehorario.Controller.TelaHomeController">
+
+    <!-- Menu Lateral -->
+    <left>
+        <VBox alignment="CENTER" prefHeight="415.0" prefWidth="113.0" spacing="10" style="-fx-background-color: #2C3E50;">
+            <padding>
+                <Insets bottom="20" left="10" right="10" top="20" />
+            </padding>
+            <Button onAction="#btnCursosClick" style="-fx-background-color: #34495E; -fx-text-fill: white;" text="Cursos" />
+            <Button onAction="#btnMateriaClick" style="-fx-background-color: #34495E; -fx-text-fill: white;" text="Materia" />
+            <Button onAction="#btnProfessoresClick" style="-fx-background-color: #34495E; -fx-text-fill: white;" text="Professores" />
+            <Button onAction="#btnHorariosClick" style="-fx-background-color: #34495E; -fx-text-fill: white;" text="Horários" />
+        </VBox>
+    </left>
+
+    <!-- Área Principal -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Tela Principal" />
+            <HBox alignment="CENTER" spacing="20">
+                <Label fx:id="lblTotalCursos" />
+                <Label fx:id="lblTotalMateria" />
+                <Label fx:id="lblTotalProfessores" />
+            </HBox>
+         <Button fx:id="btnHorarios1" style="-fx-background-color: #4a4a4a; -fx-text-fill: white;" text="Arrumar Horário" />
+        </VBox>
+    </center>
+
+</BorderPane>

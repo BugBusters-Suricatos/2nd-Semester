@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoProfessoresController">
+
+    <!-- Seção de Formulário -->
+    <GridPane hgap="10" vgap="10">
+        <Button text="Voltar" onAction="#btnVoltarClick"/>
+
+        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="nomeField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Telefone:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="telefoneField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Disciplinas Lecionadas:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="disciplinasComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <items>
+                <!-- Os itens serão carregados dinamicamente pelo controlador -->
+            </items>
+        </ComboBox>
+    </GridPane>
+
+    <!-- Seção de Botões -->
+    <HBox spacing="10">
+        <Button text="Adicionar" />
+        <Button text="Editar" />
+        <Button text="Remover" />
+    </HBox>
+
+    <!-- Tabela de Professores Cadastrados -->
+    <TableView fx:id="professoresTable" prefHeight="200">
+        <columns>
+            <TableColumn text="Nome" fx:id="nomeColumn"/>
+            <TableColumn text="Email" fx:id="emailColumn"/>
+            <TableColumn text="Telefone" fx:id="telefoneColumn"/>
+            <TableColumn text="Disciplinas Lecionadas" fx:id="disciplinasColumn"/>
+        </columns>
+    </TableView>
+</VBox>

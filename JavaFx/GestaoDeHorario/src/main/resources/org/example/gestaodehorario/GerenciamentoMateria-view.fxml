@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoMateriaController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: #f0f0f0;">
+
+    <!-- Top: Formulário para cadastrar/editar materia -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="Voltar" onAction="#btnVoltarClick"/>
+
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Nome da Materia:" />
+            <TextField fx:id="txtNomeMateria" promptText="Ex: Programação" />
+
+            <Label text="Curso Associado:" />
+            <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" />
+
+            <Label text="Carga Horária:" />
+            <TextField fx:id="txtCargaHoraria" promptText="Ex: 60" />
+        </HBox>
+    </top>
+
+    <!-- Center: Tabela para listar materia cadastradas -->
+    <center>
+        <TableView fx:id="tableMateria">
+            <columns>
+                <TableColumn fx:id="colNome" text="Nome da Materia" prefWidth="200"/>
+                <TableColumn fx:id="colCurso" text="Curso Associado" prefWidth="150"/>
+                <TableColumn fx:id="colCargaHoraria" text="Carga Horária" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- Bottom: Botões de ação -->
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button fx:id="btnAdicionar" text="Adicionar" />
+            <Button fx:id="btnEditar" text="Editar" />
+            <Button fx:id="btnRemover" text="Remover" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
