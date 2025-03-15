@@ -31,13 +31,13 @@
 
 ---
 
- ## :dart:Contextualização
+ ## :dart: Contextualização
 
 A organização de horários de aula é frequentemente complexa, especialmente ao lidar com professores compartilhados entre cursos e semestres. Este projeto visa criar uma aplicação que gerencie horários de forma otimizada, evitando conflitos e promovendo uma organização prática e eficiente.
 
 ---
 
-## :page_facing_up:: Requisitos Funcionais
+## :page_facing_up: Requisitos Funcionais
 
 1. **Definição de Horário de Aula para um Semestre**  
    O sistema deve permitir que os coordenadores definam os horários de aula para um semestre letivo completo. Cada disciplina possui uma quantidade obrigatória de aulas por semana. Por exemplo, a disciplina "Arquitetura e Modelagem de Banco de Dados" possui 4 aulas semanais, sendo necessário definir individualmente o horário de cada uma dessas aulas. O sistema deve garantir a flexibilidade para ajustes e alterações conforme necessário.
