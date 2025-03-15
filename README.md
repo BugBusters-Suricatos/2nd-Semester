@@ -14,7 +14,7 @@
 
 ---
 
-## ◻️ Equipe
+# Nossa Equipe :busts_in_silhouette:
 
 | **FUNÇÃO**        | **NOME**           | **REDES SOCIAIS**                                                                 |
 |--------------------|--------------------|-----------------------------------------------------------------------------------|
@@ -31,13 +31,13 @@
 
 ---
 
-## ◻️ Contextualização
+ ## :dart:Contextualização
 
 A organização de horários de aula é frequentemente complexa, especialmente ao lidar com professores compartilhados entre cursos e semestres. Este projeto visa criar uma aplicação que gerencie horários de forma otimizada, evitando conflitos e promovendo uma organização prática e eficiente.
 
 ---
 
-## ◻️ Requisitos Funcionais
+## :page_facing_up:: Requisitos Funcionais
 
 1. **Definição de Horário de Aula para um Semestre**  
    O sistema deve permitir que os coordenadores definam os horários de aula para um semestre letivo completo. Cada disciplina possui uma quantidade obrigatória de aulas por semana. Por exemplo, a disciplina "Arquitetura e Modelagem de Banco de Dados" possui 4 aulas semanais, sendo necessário definir individualmente o horário de cada uma dessas aulas. O sistema deve garantir a flexibilidade para ajustes e alterações conforme necessário.
@@ -65,7 +65,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 
 ---
 
-## ◻️ Requisitos Não Funcionais
+## :page_with_curl: Requisitos Não Funcionais
 
 1. **Manual do Usuário**  
    O sistema deve incluir um manual do usuário detalhado com instruções acessíveis no sistema e em PDF.
@@ -90,7 +90,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 
 ---
 
-## ◻️ User Stories
+## :date: User Stories
 
 1. Como coordenador, eu quero definir os horários de aula para um semestre, para organizar o calendário de aulas.
 2. Como coordenador, eu quero evitar sobreposição de horários, para garantir que os professores não tenham conflitos de horários.
@@ -102,7 +102,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 
 ---
 
-## ◻️ Product Backlog
+## :star: Product Backlog
 
 | **Rank** | **Prioridade** | **User Story**                                                                                   | **Estimativa** | **Sprint** |
 |----------|----------------|---------------------------------------------------------------------------------------------------|----------------|------------|
@@ -115,7 +115,9 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 | 7        | Baixa          | Como usuário, quero um guia de instalação para instalar o aplicativo corretamente.               | 5              | 3          |
 | 8        | Baixa          | Como desenvolvedor, quero um modelo de entidade relacionamento para garantir a correta implementação do banco de dados. | 8              | 3          |
 
-## ◻️ Sprints
+
+## :calendar:  Sprints
+
 
 | **SPRINTS** | **PERÍODOS**         | **DESCRIÇÃO**                                                      |
 |-------------|----------------------|--------------------------------------------------------------------|
