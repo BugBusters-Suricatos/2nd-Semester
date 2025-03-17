@@ -103,6 +103,8 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 6. Como coordenador, eu quero cadastrar e gerenciar informações dos professores, para ter controle sobre os recursos humanos do curso.
 7. Como coordenador, eu quero gerenciar os horários de aula, considerando a padronização de 50 minutos e variações de intervalos, para adequar o calendário ao curso.
 
+teste
+
 ---
 
 ## :star: Product Backlog
