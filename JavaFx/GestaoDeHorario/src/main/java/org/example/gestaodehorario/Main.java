@@ -2,10 +2,9 @@ package org.example.gestaodehorario;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.example.gestaodehorario.connect.DatabaseConnection;
+import org.example.gestaodehorario.connect.DatabaseManager;
 
 import java.net.URL;
-import java.sql.Connection;
 
 public class Main extends Application {
 
@@ -28,12 +27,8 @@ public class Main extends Application {
             System.out.println("Carregando: " + fxmlLocation.toExternalForm());
         }
 
-        Connection conn = DatabaseConnection.getConnection();
-        if (conn != null) {
-            System.out.println("Conexão bem-sucedida!");
-        } else {
-            System.out.println("Falha na conexão!");
-        }
+//      Inicializa o banco
+        DatabaseManager.criarTabela();
     }
 
     public static void main(String[] args) {

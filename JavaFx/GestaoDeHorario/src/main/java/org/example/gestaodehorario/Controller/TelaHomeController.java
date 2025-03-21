@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.scene.control.Label;
-import org.example.gestaodehorario.connect.DatabaseConnection;
 
 public class TelaHomeController {
 
@@ -49,37 +48,37 @@ public class TelaHomeController {
 
     // Lógica de banco de dados
     private void carregarDadosDoBanco() {
-        try (Connection connection = DatabaseConnection.getConnection()) {
-
-            // Total de cursos
-            String sqlCursos = "SELECT COUNT(*) AS totalCursos FROM Curso";
-            try (PreparedStatement stmt = connection.prepareStatement(sqlCursos);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    lblTotalCursos.setText("Total de Cursos: " + rs.getInt("totalCursos"));
-                }
-            }
-
-            // Total de matérias (refatorado)
-            String sqlMateria = "SELECT COUNT(*) AS totalMateria FROM Materia";
-            try (PreparedStatement stmt = connection.prepareStatement(sqlMateria);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    lblTotalMateria.setText("Total de Matérias: " + rs.getInt("totalMateria"));
-                }
-            }
-
-            // Total de professores
-            String sqlProfessores = "SELECT COUNT(*) AS totalProfessores FROM Professor";
-            try (PreparedStatement stmt = connection.prepareStatement(sqlProfessores);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    lblTotalProfessores.setText("Total de Professores: " + rs.getInt("totalProfessores"));
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try (Connection connection = H2DatabaseUtil.getConnection()) {
+//
+//            // Total de cursos
+//            String sqlCursos = "SELECT COUNT(*) AS totalCursos FROM Curso";
+//            try (PreparedStatement stmt = connection.prepareStatement(sqlCursos);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    lblTotalCursos.setText("Total de Cursos: " + rs.getInt("totalCursos"));
+//                }
+//            }
+//
+//            // Total de matérias (refatorado)
+//            String sqlMateria = "SELECT COUNT(*) AS totalMateria FROM Materia";
+//            try (PreparedStatement stmt = connection.prepareStatement(sqlMateria);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    lblTotalMateria.setText("Total de Matérias: " + rs.getInt("totalMateria"));
+//                }
+//            }
+//
+//            // Total de professores
+//            String sqlProfessores = "SELECT COUNT(*) AS totalProfessores FROM Professor";
+//            try (PreparedStatement stmt = connection.prepareStatement(sqlProfessores);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    lblTotalProfessores.setText("Total de Professores: " + rs.getInt("totalProfessores"));
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 }
