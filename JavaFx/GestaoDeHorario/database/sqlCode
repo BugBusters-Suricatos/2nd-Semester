@@ -1,0 +1,108 @@
+-- Tabela de Coordenadores (AUTOINCREMENT e INTEGER)
+CREATE TABLE Coordenador (
+    id_coordenador INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    senha TEXT NOT NULL
+);
+
+-- Tabela de Cursos
+CREATE TABLE Curso (
+    id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    periodo TEXT NOT NULL,
+    id_coordenador INTEGER,
+    FOREIGN KEY (id_coordenador) REFERENCES Coordenador(id_coordenador) ON DELETE SET NULL
+);
+
+-- Tabela de Semestres
+CREATE TABLE Semestre (
+    id_semestre INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    ano INTEGER NOT NULL
+);
+
+-- Tabela de Matérias
+CREATE TABLE Materia (
+    id_materia INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    carga_horaria INTEGER NOT NULL,
+    id_curso INTEGER,
+    FOREIGN KEY (id_curso) REFERENCES Curso(id_curso) ON DELETE CASCADE
+);
+
+-- Tabela de Professores
+CREATE TABLE Professor (
+    id_professor INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL
+);
+
+-- Tabela de Disponibilidade (Substituição do ENUM)
+CREATE TABLE Disponibilidade (
+    id_disponibilidade INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_professor INTEGER NOT NULL,
+    dia_semana TEXT CHECK(dia_semana IN ('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado')) NOT NULL,
+    hora_inicio TEXT NOT NULL,  -- SQLite não tem tipo TIME, usamos TEXT
+    hora_fim TEXT NOT NULL,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id_professor) ON DELETE CASCADE
+);
+
+-- Tabela Materia_Professor
+CREATE TABLE Materia_Professor (
+    id_materia_professor INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_materia INTEGER NOT NULL,
+    id_professor INTEGER NOT NULL,
+    FOREIGN KEY (id_materia) REFERENCES Materia(id_materia) ON DELETE CASCADE,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id_professor) ON DELETE CASCADE
+);
+
+-- Tabela de Slots (Status com CHECK)
+CREATE TABLE Slot (
+    id_slot INTEGER PRIMARY KEY AUTOINCREMENT,
+    dia_semana TEXT CHECK(dia_semana IN ('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado')) NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    hora_fim TEXT NOT NULL,
+    status TEXT CHECK(status IN ('Disponível', 'Ocupado')) NOT NULL DEFAULT 'Disponível'
+);
+
+-- Tabela de Alocação
+CREATE TABLE Alocacao (
+    id_alocacao INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_materia_professor INTEGER NOT NULL,
+    id_slot INTEGER NOT NULL,
+    id_semestre INTEGER NOT NULL,
+    FOREIGN KEY (id_materia_professor) REFERENCES Materia_Professor(id_materia_professor) ON DELETE CASCADE,
+    FOREIGN KEY (id_slot) REFERENCES Slot(id_slot) ON DELETE CASCADE,
+    FOREIGN KEY (id_semestre) REFERENCES Semestre(id_semestre) ON DELETE CASCADE
+);
+
+-- Inserção de Dados de Exemplo
+INSERT INTO Coordenador (nome, email, senha) VALUES
+('Ana Silva', 'ana.silva@email.com', 'senha123'),
+('Carlos Oliveira', 'carlos.oliveira@email.com', 'abc456');
+
+INSERT INTO Curso (nome, periodo, id_coordenador) VALUES
+('Ciência da Computação', 'Noturno', 1),
+('Engenharia de Software', 'Matutino', 2);
+
+INSERT INTO Semestre (nome, ano) VALUES
+('2024.1', 2024),
+('2024.2', 2024);
+
+INSERT INTO Materia (nome, carga_horaria, id_curso) VALUES
+('Programação Orientada a Objetos', 60, 1),
+('Banco de Dados', 60, 1),
+('Inteligência Artificial', 80, 2);
+
+INSERT INTO Professor (nome, email) VALUES
+('Dr. João Santos', 'joao.santos@email.com'),
+('Dra. Maria Fernandes', 'maria.fernandes@email.com');
+
+INSERT INTO Disponibilidade (id_professor, dia_semana, hora_inicio, hora_fim) VALUES
+(1, 'Segunda', '19:00', '22:00'),
+(2, 'Quarta', '08:00', '11:00');
+
+INSERT INTO Slot (dia_semana, hora_inicio, hora_fim, status) VALUES
+('Segunda', '19:00', '22:00', 'Disponível'),
+('Quarta', '08:00', '11:00', 'Ocupado');
