@@ -3,10 +3,6 @@ package org.example.gestaodehorario.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import org.example.gestaodehorario.ScreenManager;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javafx.scene.control.Label;
 
 public class TelaHomeController {
@@ -14,22 +10,22 @@ public class TelaHomeController {
     // Botões de navegação
     @FXML
     private void btnCursosClick(ActionEvent event) {
-        ScreenManager.changeScreen("GerenciamentoCursos-view.fxml");
+        ScreenManager.changeScreen("view/GerenciamentoCursos-view.fxml", "styles/customGerenciamentoCursos.css");
     }
 
     @FXML
     private void btnMateriaClick(ActionEvent event) { // Nome do método alterado
-        ScreenManager.changeScreen("GerenciamentoMateria-view.fxml");
+        ScreenManager.changeScreen("view/GerenciamentoMateria-view.fxml", "styles/customGerenciamentoMateria.css");
     }
 
     @FXML
     private void btnProfessoresClick(ActionEvent event) {
-        ScreenManager.changeScreen("GerenciamentoProfessores-view.fxml");
+        ScreenManager.changeScreen("view/GerenciamentoProfessores-view.fxml", "styles/customGerenciamentoProfessores.css");
     }
 
     @FXML
     private void btnHorariosClick(ActionEvent event) {
-        ScreenManager.changeScreen("GerenciamentoHorario-view.fxml");
+        ScreenManager.changeScreen("view/GerenciamentoHorario-view.fxml", "styles/customGerenciamentoHorario.css");
     }
 
     // Labels

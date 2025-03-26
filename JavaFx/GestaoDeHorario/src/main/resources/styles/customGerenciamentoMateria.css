@@ -1,0 +1,64 @@
+.root {
+    -fx-background-color: #ecf0f1; /* Fundo claro */
+    -fx-padding: 20px;
+}
+
+/* Estilização do formulário */
+.form-container {
+    -fx-padding: 15px;
+    -fx-background-color: #DCDCDC;
+    -fx-border-radius: 5px;
+}
+
+/* Campos de entrada */
+.input-field {
+    -fx-pref-width: 200px;
+    -fx-padding: 5px;
+}
+
+/* Estilização dos botões */
+.button-container {
+    -fx-padding: 10px;
+}
+
+.primary-button {
+    -fx-background-color: #2C3E50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #1F2A35;
+}
+
+.secondary-button {
+    -fx-background-color: #34495E;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #2C3E50;
+}
+
+.danger-button {
+    -fx-background-color: #E74C3C;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+.danger-button:hover {
+    -fx-background-color: #C0392B;
+}
+
+/* Estilização da Tabela */
+.table-view {
+    -fx-border-color: #2C3E50;
+    -fx-border-radius: 5px;
+}

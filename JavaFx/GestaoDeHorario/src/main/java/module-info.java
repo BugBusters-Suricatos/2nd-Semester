@@ -16,4 +16,6 @@ module org.example.gestaodehorario {
     exports org.example.gestaodehorario;
     exports org.example.gestaodehorario.Controller;
     opens org.example.gestaodehorario.Controller to javafx.fxml;
+    exports org.example.gestaodehorario.util;
+    opens org.example.gestaodehorario.util to javafx.fxml;
 }

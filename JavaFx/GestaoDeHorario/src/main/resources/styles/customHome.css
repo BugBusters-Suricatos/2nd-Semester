@@ -1,0 +1,51 @@
+.root {
+    -fx-background-color: #ecf0f1; /* Cor de fundo neutra */
+}
+
+/* Estilização do menu lateral */
+.sidebar {
+    -fx-background-color: #2C3E50;
+    -fx-padding: 20px;
+}
+
+.sidebar-button {
+    -fx-background-color: #34495E;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-min-width: 100px;
+    -fx-background-radius: 5px;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #1F2A35;
+}
+
+/* Estilização da área principal */
+.main-container {
+    -fx-padding: 20px;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+.info-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #34495E;
+}
+
+/* Botão principal */
+.primary-button {
+    -fx-background-color: #4a4a4a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #333333;
+}

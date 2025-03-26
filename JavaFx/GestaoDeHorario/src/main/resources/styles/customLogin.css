@@ -1,0 +1,100 @@
+/* Estilos gerais */
+.root {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Container do login */
+.login-container {
+    -fx-padding: 30px;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+}
+
+/* Título */
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Grupo de entrada */
+.input-group {
+    -fx-spacing: 8px;
+    -fx-alignment: center-left;
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 8px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-color: #ddd;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group .input-field {
+    padding-left: 40px; /* Para dar espaço ao ícone */
+}
+
+.input-group .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+}
+
+#iconUser {
+    background-image: url("../images/icon-user.png");
+}
+
+#iconLock {
+    background-image: url("../images/icon-lock.png");
+}
+
+/* Ícones nos campos de entrada */
+.input-icon {
+    -fx-opacity: 0.6;
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+}
+
+/* Campos de entrada */
+.input-field {
+    -fx-pref-width: 100%;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+.input-field:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Botão de login */
+.login-button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 12px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+.login-button:hover {
+    -fx-background-color: #555;
+}
+
+/* Link "Esqueci minha senha" */
+.forgot-password {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+}
+.forgot-password:hover {
+    -fx-underline: true;
+}

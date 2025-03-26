@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoCursosController"
+          vgap="12" hgap="12" styleClass="root"
+          alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Título -->
+    <Label text="Gerenciamento de Cursos"
+           GridPane.columnSpan="2"
+           styleClass="title-label"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"/>
+
+    <!-- Botão de Voltar -->
+    <Button text="Voltar"
+            onAction="#btnVoltarClick"
+            GridPane.rowIndex="0"
+            GridPane.columnIndex="2"
+            styleClass="secondary-button"/>
+
+    <!-- Nome do Curso -->
+    <Label text="Nome do Curso:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="txtNomeCurso" promptText="Digite o nome do curso"
+               GridPane.rowIndex="1" GridPane.columnIndex="1"
+               styleClass="input-field"/>
+
+    <!-- Carga Horária -->
+    <Label text="Carga Horária (em horas):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="txtCargaHoraria" promptText="Ex: 40"
+               GridPane.rowIndex="2" GridPane.columnIndex="1"
+               styleClass="input-field"/>
+
+    <!-- Botões -->
+    <HBox spacing="12" GridPane.rowIndex="3" GridPane.columnSpan="2" alignment="CENTER">
+        <Button text="Adicionar" fx:id="btnAdicionar" styleClass="primary-button"/>
+        <Button text="Editar" fx:id="btnEditar" styleClass="secondary-button"/>
+        <Button text="Remover" fx:id="btnRemover" styleClass="danger-button"/>
+    </HBox>
+
+    <!-- Lista de Cursos -->
+    <VBox spacing="10" GridPane.rowIndex="4" GridPane.columnSpan="3">
+        <Label text="Cursos Cadastrados:" styleClass="list-title"/>
+        <ListView fx:id="listViewCursos" prefHeight="200" styleClass="list-view"/>
+    </VBox>
+
+</GridPane>

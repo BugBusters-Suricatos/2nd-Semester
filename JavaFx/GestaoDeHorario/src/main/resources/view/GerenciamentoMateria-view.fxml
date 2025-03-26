@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoMateriaController"
+            prefWidth="800" prefHeight="600"
+            styleClass="root">
+
+    <!-- Top: Formulário para cadastrar/editar matéria -->
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="form-container">
+            <Button text="Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+
+            <Label text="Nome da Matéria:" />
+            <TextField fx:id="txtNomeMateria" promptText="Ex: Programação" styleClass="input-field"/>
+
+            <Label text="Curso Associado:" />
+            <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" styleClass="input-field"/>
+
+            <Label text="Carga Horária:" />
+            <TextField fx:id="txtCargaHoraria" promptText="Ex: 60" styleClass="input-field"/>
+        </HBox>
+    </top>
+
+    <!-- Center: Tabela para listar matérias cadastradas -->
+    <center>
+        <TableView fx:id="tableMateria" styleClass="table-view">
+            <columns>
+                <TableColumn fx:id="colNome" text="Nome da Matéria" prefWidth="250"/>
+                <TableColumn fx:id="colCurso" text="Curso Associado" prefWidth="200"/>
+                <TableColumn fx:id="colCargaHoraria" text="Carga Horária" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- Bottom: Botões de ação -->
+    <bottom>
+        <HBox spacing="12" alignment="CENTER" styleClass="button-container">
+            <Button fx:id="btnAdicionar" text="Adicionar" styleClass="primary-button"/>
+            <Button fx:id="btnEditar" text="Editar" styleClass="secondary-button"/>
+            <Button fx:id="btnRemover" text="Remover" styleClass="danger-button"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:controller="org.example.gestaodehorario.Controller.TelaLoginController"
+           xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/23"
+           styleClass="root">
+
+    <VBox alignment="CENTER" spacing="16" maxWidth="400" styleClass="login-container">
+        <!-- Título -->
+        <Label text="Bem-vindo" styleClass="title" />
+
+        <!-- Campo Usuário -->
+        <VBox styleClass="input-group">
+            <TextField fx:id="txtUsuario" promptText="Email" styleClass="input-field" />
+        </VBox>
+
+        <!-- Campo Senha -->
+        <VBox styleClass="input-group">
+            <PasswordField fx:id="txtSenha" promptText="Senha" styleClass="input-field" />
+        </VBox>
+
+        <!-- Botão Login -->
+        <Button onAction="#LoginClick" text="Acessar Sistema" styleClass="login-button" />
+
+        <!-- Link Esqueci Senha -->
+        <Hyperlink text="Esqueci minha senha" styleClass="forgot-password" />
+    </VBox>
+</StackPane>
