@@ -64,3 +64,9 @@
     -fx-border-color: #2C3E50;
     -fx-border-radius: 5px;
 }
+
+/* Estilização da Tabela */
+.table-view {
+    -fx-border-color: #2C3E50;
+    -fx-border-radius: 5px;
+}

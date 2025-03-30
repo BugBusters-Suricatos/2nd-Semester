@@ -9,13 +9,13 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         // Alerta de Erro Geral
-        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro Crítico");
-            alert.setHeaderText("Ocorreu um erro inesperado");
-            alert.setContentText(throwable.getMessage());
-            alert.showAndWait();
-        });
+//        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Erro Crítico");
+//            alert.setHeaderText("Ocorreu um erro inesperado");
+//            alert.setContentText(throwable.getMessage());
+//            alert.showAndWait();
+//        });
 
         ScreenManager.setPrimaryStage(stage);
         ScreenManager.changeScreen("view/login-view.fxml", "styles/customlogin.css");

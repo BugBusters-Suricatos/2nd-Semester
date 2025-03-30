@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox spacing="16" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoProfessoresController"
+      fx:controller="org.example.gestaodehorario.Controller.ProfessoresController"
       styleClass="root"
       alignment="CENTER">
 
@@ -26,15 +26,15 @@
         <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="input-field"/>
 
-        <Label text="Disciplinas Lecionadas:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="disciplinasComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="input-field"/>
+        <Label text="Matéria Lecionada:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="materiasComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="input-field"/>
     </GridPane>
 
     <!-- Seção de Botões -->
     <HBox spacing="12" alignment="CENTER" styleClass="button-container">
-        <Button text="Adicionar" styleClass="primary-button"/>
-        <Button text="Editar" styleClass="secondary-button"/>
-        <Button text="Remover" styleClass="danger-button"/>
+        <Button fx:id="btnAdicionar" text="Adicionar" styleClass="primary-button" onAction="#btnAdicionarClick"/>
+        <Button fx:id="btnEditar" text="Editar" styleClass="secondary-button" onAction="#btnEditarClick"/>
+        <Button fx:id="btnRemover" text="Remover" styleClass="danger-button" onAction="#btnRemoverClick"/>
     </HBox>
 
     <!-- Tabela de Professores Cadastrados -->
@@ -42,7 +42,7 @@
         <columns>
             <TableColumn text="Nome" fx:id="nomeColumn"/>
             <TableColumn text="Email" fx:id="emailColumn"/>
-            <TableColumn text="Disciplinas Lecionadas" fx:id="disciplinasColumn"/>
+            <TableColumn text="Matéria Lecionada" fx:id="materiaColumn"/>
         </columns>
     </TableView>
 </VBox>

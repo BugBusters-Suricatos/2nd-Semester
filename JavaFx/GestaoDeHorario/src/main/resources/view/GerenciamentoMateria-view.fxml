@@ -11,7 +11,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoMateriaController"
+            fx:controller="org.example.gestaodehorario.Controller.MateriaController"
             prefWidth="800" prefHeight="600"
             styleClass="root">
 
@@ -45,9 +45,9 @@
     <!-- Bottom: Botões de ação -->
     <bottom>
         <HBox spacing="12" alignment="CENTER" styleClass="button-container">
-            <Button fx:id="btnAdicionar" text="Adicionar" styleClass="primary-button"/>
-            <Button fx:id="btnEditar" text="Editar" styleClass="secondary-button"/>
-            <Button fx:id="btnRemover" text="Remover" styleClass="danger-button"/>
+            <Button fx:id="btnAdicionar" text="Adicionar" onAction="#btnAdicionarClick" styleClass="primary-button"/>
+            <Button fx:id="btnEditar" text="Editar" onAction="#btnEditarClick" styleClass="secondary-button"/>
+            <Button fx:id="btnRemover" text="Remover" onAction="#btnRemoverClick" styleClass="danger-button"/>
         </HBox>
     </bottom>
 

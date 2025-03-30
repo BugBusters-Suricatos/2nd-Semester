@@ -2,8 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -11,7 +13,7 @@
 
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="org.example.gestaodehorario.Controller.TelaGerenciamentoCursosController"
+          fx:controller="org.example.gestaodehorario.Controller.CursosController"
           vgap="12" hgap="12" styleClass="root"
           alignment="CENTER">
 
@@ -19,43 +21,52 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <!-- Título -->
+    <!-- Cabeçalho -->
     <Label text="Gerenciamento de Cursos"
-           GridPane.columnSpan="2"
+           GridPane.columnSpan="3"
            styleClass="title-label"
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
 
-    <!-- Botão de Voltar -->
     <Button text="Voltar"
             onAction="#btnVoltarClick"
             GridPane.rowIndex="0"
             GridPane.columnIndex="2"
             styleClass="secondary-button"/>
 
-    <!-- Nome do Curso -->
+    <!-- Campos de entrada -->
     <Label text="Nome do Curso:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField fx:id="txtNomeCurso" promptText="Digite o nome do curso"
                GridPane.rowIndex="1" GridPane.columnIndex="1"
                styleClass="input-field"/>
 
-    <!-- Carga Horária -->
-    <Label text="Carga Horária (em horas):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <TextField fx:id="txtCargaHoraria" promptText="Ex: 40"
-               GridPane.rowIndex="2" GridPane.columnIndex="1"
-               styleClass="input-field"/>
+    <Label text="Período:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="comboPeriodos"
+              GridPane.rowIndex="2"
+              GridPane.columnIndex="1"
+              prefWidth="200"/>
 
-    <!-- Botões -->
-    <HBox spacing="12" GridPane.rowIndex="3" GridPane.columnSpan="2" alignment="CENTER">
-        <Button text="Adicionar" fx:id="btnAdicionar" styleClass="primary-button"/>
-        <Button text="Editar" fx:id="btnEditar" styleClass="secondary-button"/>
-        <Button text="Remover" fx:id="btnRemover" styleClass="danger-button"/>
+    <Label text="Coordenador:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="comboCoordenadores"
+              GridPane.rowIndex="3"
+              GridPane.columnIndex="1"
+              prefWidth="200"/>
+
+    <!-- Botões de ação -->
+    <HBox spacing="12" GridPane.rowIndex="4" GridPane.columnSpan="3" alignment="CENTER">
+        <Button text="Adicionar" fx:id="btnAdicionar" onAction="#adicionarCurso" styleClass="primary-button"/>
+        <Button text="Editar" fx:id="btnEditar" onAction="#editarCurso" styleClass="secondary-button"/>
+        <Button text="Remover" fx:id="btnRemover" onAction="#removerCurso" styleClass="danger-button"/>
     </HBox>
 
-    <!-- Lista de Cursos -->
-    <VBox spacing="10" GridPane.rowIndex="4" GridPane.columnSpan="3">
-        <Label text="Cursos Cadastrados:" styleClass="list-title"/>
-        <ListView fx:id="listViewCursos" prefHeight="200" styleClass="list-view"/>
-    </VBox>
+    <!-- Tabela de cursos -->
+    <TableView fx:id="cursosTable" GridPane.rowIndex="5" GridPane.columnSpan="3" prefHeight="300">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn" prefWidth="50"/>
+            <TableColumn text="Nome" fx:id="nomeColumn" prefWidth="200"/>
+            <TableColumn text="Período" fx:id="periodoColumn" prefWidth="100"/>
+            <TableColumn text="Coordenador" fx:id="coordenadorColumn" prefWidth="150"/>
+        </columns>
+    </TableView>
 
 </GridPane>

@@ -25,7 +25,12 @@ public class TelaHomeController {
 
     @FXML
     private void btnHorariosClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoHorario-view.fxml", "styles/customGerenciamentoHorario.css");
+        ScreenManager.changeScreen("view/GerenciamentoIndisponibilidade-view.fxml", "styles/customGerenciamentoIndisponibilidade.css");
+    }
+
+    @FXML
+    private void btnMontagemClick(ActionEvent event) {
+        ScreenManager.changeScreen("view/GerenciamentoMontagem-view.fxml", "styles/customGerenciamentoMontagem.css");
     }
 
     // Labels

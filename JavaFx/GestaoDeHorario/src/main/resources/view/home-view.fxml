@@ -20,6 +20,7 @@
             <Button onAction="#btnMateriaClick" text="Matéria" styleClass="sidebar-button" />
             <Button onAction="#btnProfessoresClick" text="Professores" styleClass="sidebar-button" />
             <Button onAction="#btnHorariosClick" text="Horários" styleClass="sidebar-button" />
+            <Button onAction="#btnMontagemClick" text="Montar Horário" styleClass="sidebar-button" />
         </VBox>
     </left>
 
@@ -32,7 +33,6 @@
                 <Label fx:id="lblTotalMateria" styleClass="info-label" />
                 <Label fx:id="lblTotalProfessores" styleClass="info-label" />
             </HBox>
-            <Button fx:id="btnHorarios1" text="Arrumar Horário" styleClass="primary-button" />
         </VBox>
     </center>
 
