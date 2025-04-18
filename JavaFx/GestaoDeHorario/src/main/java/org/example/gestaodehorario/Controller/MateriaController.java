@@ -15,29 +15,60 @@ import org.example.gestaodehorario.model.Materia;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * Controlador JavaFX responsável pelo gerenciamento de matérias.
+ * <p>
+ * Provê funcionalidades para criar, editar, remover e listar matérias associadas a cursos,
+ * além de interagir com a interface gráfica por meio de componentes FXML.
+ * </p>
+ */
 public class MateriaController {
 
-    // Componentes FXML
+    /** Campo de texto para entrada do nome da matéria. */
     @FXML private TextField txtNomeMateria;
+
+    /** ComboBox para seleção do curso ao qual a matéria pertence. */
     @FXML private ComboBox<Curso> cbCurso;
+
+    /** Campo de texto para entrada da carga horária da matéria. */
     @FXML private TextField txtCargaHoraria;
+
+    /** TableView que exibe a lista de matérias. */
     @FXML private TableView<Materia> tableMateria;
+
+    /** Coluna que exibe o nome da matéria na tabela. */
     @FXML private TableColumn<Materia, String> colNome;
+
+    /** Coluna que exibe o nome do curso associado à matéria. */
     @FXML private TableColumn<Materia, String> colCurso;
+
+    /** Coluna que exibe a carga horária da matéria. */
     @FXML private TableColumn<Materia, Integer> colCargaHoraria;
 
+    /** Botão para adicionar ou salvar edição de matéria. */
     @FXML private Button btnAdicionar;
+
+    /** Botão para iniciar edição da matéria selecionada. */
     @FXML private Button btnEditar;
 
-    // DAOs
+    /** DAO para operações de banco de dados relacionadas a matérias. */
     private final MateriaDAO materiaDAO = new MateriaDAO();
+
+    /** DAO para operações de banco de dados relacionadas a cursos. */
     private final CursoDAO cursoDAO = new CursoDAO();
 
-    // Lista observável para a TableView
+    /** Lista observável que alimenta a TableView de matérias. */
     private final ObservableList<Materia> materiasList = FXCollections.observableArrayList();
 
+    /** Referência à matéria atualmente em modo de edição (null se for novo registro). */
     private Materia materiaEmEdicao = null;
 
+    /**
+     * Método inicial chamado após injeção dos componentes FXML.
+     * <p>
+     * Configura colunas da tabela, inicializa ComboBox, carrega dados e ajusta a interface.
+     * </p>
+     */
     @FXML
     public void initialize() {
         configurarTabela();
@@ -46,26 +77,28 @@ public class MateriaController {
         atualizarInterfaceParaEdicao();
     }
 
+    /**
+     * Configura as colunas da TableView e listeners de seleção.
+     */
     private void configurarTabela() {
-        // Configuração das colunas
         colNome.setCellValueFactory(cellData -> cellData.getValue().nomeProperty());
         colCurso.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCurso().getNome())
         );
         colCargaHoraria.setCellValueFactory(cellData -> cellData.getValue().cargaHorariaProperty().asObject());
 
-        // Vincula a lista à tabela
         tableMateria.setItems(materiasList);
-
-        // Listener para seleção na tabela
         tableMateria.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> selecionarMateria(newValue)
+                (obs, oldVal, newVal) -> selecionarMateria(newVal)
         );
         tableMateria.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldValue, newValue) -> preencherCampos(newValue)
+                (obs, oldVal, newVal) -> preencherCampos(newVal)
         );
     }
 
+    /**
+     * Atualiza textos e habilitação de botões conforme modo de edição ou adição.
+     */
     private void atualizarInterfaceParaEdicao() {
         if (materiaEmEdicao != null) {
             btnAdicionar.setText("Salvar Edição");
@@ -76,8 +109,10 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Configura o ComboBox de cursos e carrega os cursos do banco.
+     */
     private void configurarComboBox() {
-        // Configura como os cursos serão exibidos
         cbCurso.setConverter(new StringConverter<Curso>() {
             @Override
             public String toString(Curso curso) {
@@ -90,7 +125,6 @@ public class MateriaController {
             }
         });
 
-        // Carrega os cursos do banco
         try {
             cbCurso.getItems().setAll(cursoDAO.getAll());
         } catch (SQLException e) {
@@ -98,6 +132,9 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Carrega todas as matérias do banco e atualiza a lista da TableView.
+     */
     private void carregarDados() {
         try {
             materiasList.setAll(materiaDAO.getAll());
@@ -106,6 +143,11 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Inicia o modo de edição para a matéria com o ID especificado.
+     *
+     * @param idMateria identificador da matéria a ser editada
+     */
     public void editarMateria(int idMateria) {
         try {
             Optional<Materia> materia = materiaDAO.getById(idMateria);
@@ -118,25 +160,28 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Preenche os campos do formulário com os dados da matéria informada.
+     *
+     * @param materia instância de {@link Materia} cujo conteúdo será exibido
+     */
     private void preencherCampos(Materia materia) {
         if (materia != null) {
-            // Preenche os campos básicos
             txtNomeMateria.setText(materia.getNome());
             txtCargaHoraria.setText(String.valueOf(materia.getCargaHoraria()));
-            txtCargaHoraria.setText(materia.getCargaHoraria() > 0
-                    ? String.valueOf(materia.getCargaHoraria())
-                    : "");
-
-            // Configura o ComboBox de cursos
             selecionarCursoNoComboBox(materia.getCurso());
         } else {
             limparCampos();
         }
     }
 
+    /**
+     * Seleciona o curso correspondente no ComboBox.
+     *
+     * @param curso instância de {@link Curso} a ser selecionada
+     */
     private void selecionarCursoNoComboBox(Curso curso) {
         if (curso != null) {
-            // Procura o curso na lista do ComboBox
             cbCurso.getItems().stream()
                     .filter(c -> c.getIdCurso() == curso.getIdCurso())
                     .findFirst()
@@ -146,6 +191,12 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Handler para o clique do botão Adicionar/Salvar Edição.
+     * <p>
+     * Verifica campos, insere ou atualiza matéria no banco.
+     * </p>
+     */
     @FXML
     private void btnAdicionarClick() {
         if (validarCampos()) {
@@ -153,14 +204,12 @@ public class MateriaController {
 
             try {
                 if (materiaEmEdicao == null) {
-                    // Modo de adição - verificar duplicata
                     if (materiaDAO.existeMateria(materia.getNome(), materia.getCurso().getIdCurso())) {
                         mostrarAlerta("Já existe uma matéria com este nome para o curso selecionado!");
                         return;
                     }
                     materiaDAO.insert(materia);
                 } else {
-                    // Modo de edição - atualizar existente
                     materia.setIdMateria(materiaEmEdicao.getIdMateria());
                     materiaDAO.update(materia);
                 }
@@ -174,6 +223,12 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Handler para o clique do botão Editar.
+     * <p>
+     * Prepara a interface para edição da matéria selecionada.
+     * </p>
+     */
     @FXML
     private void btnEditarClick() {
         Materia selecionada = tableMateria.getSelectionModel().getSelectedItem();
@@ -186,6 +241,12 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Handler para o clique do botão Remover.
+     * <p>
+     * Exclui a matéria selecionada do banco de dados.
+     * </p>
+     */
     @FXML
     private void btnRemoverClick() {
         Materia materiaSelecionada = tableMateria.getSelectionModel().getSelectedItem();
@@ -203,9 +264,13 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Cria uma instância de {@link Materia} a partir dos valores do formulário.
+     *
+     * @return nova instância de Materia com dados preenchidos
+     */
     private Materia criarMateriaFromForm() {
         Materia materia = new Materia();
-        // Se estiver editando, manter o ID original
         if (materiaEmEdicao != null) {
             materia.setIdMateria(materiaEmEdicao.getIdMateria());
         }
@@ -215,31 +280,29 @@ public class MateriaController {
         return materia;
     }
 
+    /**
+     * Valida os campos do formulário antes de operações de inserção ou edição.
+     *
+     * @return true se estiver tudo válido, false caso contrário
+     */
     private boolean validarCampos() {
-        // Validação básica dos campos
         if (txtNomeMateria.getText().isBlank() ||
                 txtCargaHoraria.getText().isBlank() ||
                 cbCurso.getValue() == null) {
-
             mostrarAlerta("Preencha todos os campos!");
             return false;
         }
-
-        // Validação numérica
         try {
             Integer.parseInt(txtCargaHoraria.getText());
         } catch (NumberFormatException e) {
             mostrarAlerta("Carga horária deve ser um número inteiro!");
             return false;
         }
-
-        // Validação de duplicata apenas para novos registros
         if (materiaEmEdicao == null) {
             try {
                 if (materiaDAO.existeMateria(
                         txtNomeMateria.getText().trim(),
                         cbCurso.getValue().getIdCurso())) {
-
                     mostrarAlerta("Matéria já existe para este curso!");
                     return false;
                 }
@@ -248,10 +311,14 @@ public class MateriaController {
                 return false;
             }
         }
-
         return true;
     }
 
+    /**
+     * Atualiza campos do formulário para a matéria selecionada.
+     *
+     * @param materia matéria selecionada na tabela
+     */
     private void selecionarMateria(Materia materia) {
         if (materia != null) {
             txtNomeMateria.setText(materia.getNome());
@@ -260,6 +327,11 @@ public class MateriaController {
         }
     }
 
+    /**
+     * Exibe alerta de erro com a mensagem informada.
+     *
+     * @param mensagem texto a ser exibido
+     */
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erro");
@@ -268,8 +340,11 @@ public class MateriaController {
         alert.showAndWait();
     }
 
+    /**
+     * Limpa todos os campos do formulário e reseta estado de edição.
+     */
     private void limparCampos() {
-        materiaEmEdicao = null; // Resetar estado de edição
+        materiaEmEdicao = null;
         txtNomeMateria.clear();
         txtCargaHoraria.clear();
         cbCurso.getSelectionModel().clearSelection();
@@ -277,6 +352,9 @@ public class MateriaController {
         atualizarInterfaceParaEdicao();
     }
 
+    /**
+     * Ação para o botão Voltar, retorna à tela principal.
+     */
     @FXML
     private void btnVoltarClick() {
         ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");

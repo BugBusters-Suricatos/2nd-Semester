@@ -7,9 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object (DAO) para operações com entidades Slot no banco de dados.
+ * Gerencia horários específicos vinculados a períodos acadêmicos, incluindo
+ * disponibilidade e status de ocupação.
+ */
 public class SlotDAO {
 
-    // Insere um novo slot (com id_periodo)
+    /**
+     * Insere um novo slot no banco de dados
+     * @param slot Objeto Slot a ser persistido (o ID será gerado automaticamente)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void insert(Slot slot) throws SQLException {
         String sql = "INSERT INTO Slot (dia_semana, hora_inicio, hora_fim, id_periodo, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -31,7 +40,11 @@ public class SlotDAO {
         }
     }
 
-    // Atualiza um slot existente
+    /**
+     * Atualiza os dados de um slot existente
+     * @param slot Objeto Slot com os novos dados (deve conter ID válido)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void update(Slot slot) throws SQLException {
         String sql = "UPDATE Slot SET dia_semana = ?, hora_inicio = ?, hora_fim = ?, id_periodo = ?, status = ? WHERE id_slot = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -48,7 +61,11 @@ public class SlotDAO {
         }
     }
 
-    // Remove um slot pelo ID
+    /**
+     * Remove permanentemente um slot do sistema
+     * @param idSlot ID do slot a ser excluído
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void delete(int idSlot) throws SQLException {
         String sql = "DELETE FROM Slot WHERE id_slot = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -59,7 +76,12 @@ public class SlotDAO {
         }
     }
 
-    // Busca um slot pelo ID
+    /**
+     * Busca um slot pelo seu ID único
+     * @param id ID do slot a ser recuperado
+     * @return Optional contendo o slot encontrado ou vazio se não existir
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public Optional<Slot> getById(int id) throws SQLException {
         String sql = "SELECT * FROM Slot WHERE id_slot = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -70,21 +92,23 @@ public class SlotDAO {
 
             if (rs.next()) {
                 return Optional.of(new Slot(
-
                         rs.getInt("id_slot"),
                         rs.getString("dia_semana"),
                         rs.getString("hora_inicio"),
                         rs.getString("hora_fim"),
                         rs.getString("status"),
                         rs.getInt("id_periodo")
-
                 ));
             }
             return Optional.empty();
         }
     }
 
-    // Lista todos os slots
+    /**
+     * Lista todos os slots cadastrados no sistema
+     * @return Lista completa de slots (pode ser vazia se não houver registros)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public List<Slot> getAll() throws SQLException {
         List<Slot> slots = new ArrayList<>();
         String sql = "SELECT * FROM Slot";
@@ -107,6 +131,14 @@ public class SlotDAO {
         return slots;
     }
 
+    /**
+     * Busca um slot específico por horário, dia e período
+     * @param horaInicio Hora de início no formato HH:MM
+     * @param dia Dia da semana (ex: 'Segunda', 'Terça')
+     * @param idPeriodo ID do período acadêmico
+     * @return Optional contendo o slot encontrado ou vazio se não existir
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public Optional<Slot> getByHorarioDia(String horaInicio, String dia, int idPeriodo) throws SQLException {
         String sql = "SELECT * FROM Slot WHERE hora_inicio = ? AND dia_semana = ? AND id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -127,11 +159,17 @@ public class SlotDAO {
                         rs.getInt("id_periodo")
                 ));
             }
-            return Optional.empty(); // Retorna Optional vazio se não encontrar
+            return Optional.empty();
         }
     }
 
-    // Busca slots vinculados a um curso e semestre (com filtro de período)
+    /**
+     * Recupera slots vinculados a um curso e semestre específicos
+     * @param idCurso ID do curso
+     * @param idSemestre ID do semestre
+     * @return Lista de slots ordenados por dia da semana e hora de início
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public List<Slot> getByCursoSemestre(int idCurso, int idSemestre) throws SQLException {
         String sql = """
             SELECT s.* 
@@ -161,7 +199,13 @@ public class SlotDAO {
         }
     }
 
-    // Busca a hora_fim com base na hora_inicio (considera id_periodo para evitar ambiguidade)
+    /**
+     * Busca a hora de término correspondente a uma hora de início e período
+     * @param horaInicio Hora de início no formato HH:MM
+     * @param idPeriodo ID do período acadêmico
+     * @return Hora de término ou null se não encontrado
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public String findHoraFimByHoraInicio(String horaInicio, int idPeriodo) throws SQLException {
         String sql = "SELECT hora_fim FROM Slot WHERE hora_inicio = ? AND id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -175,7 +219,14 @@ public class SlotDAO {
         }
     }
 
-    // Atualiza o status de um slot específico (considera período para evitar ambiguidade)
+    /**
+     * Atualiza o status de disponibilidade de um slot
+     * @param dia Dia da semana (ex: 'Segunda', 'Terça')
+     * @param horaInicio Hora de início no formato HH:MM
+     * @param idPeriodo ID do período acadêmico
+     * @param status Novo status (ex: 'disponível', 'ocupado')
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void atualizarStatus(String dia, String horaInicio, int idPeriodo, String status) throws SQLException {
         String sql = "UPDATE Slot SET status = ? WHERE dia_semana = ? AND hora_inicio = ? AND id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -189,7 +240,12 @@ public class SlotDAO {
         }
     }
 
-    // Processa resultados das queries (com id_periodo)
+    /**
+     * Processa um ResultSet convertendo os resultados em objetos Slot
+     * @param rs ResultSet contendo dados do banco
+     * @return Lista de slots convertidos
+     * @throws SQLException Se ocorrer um erro ao acessar os dados
+     */
     private List<Slot> processarResultado(ResultSet rs) throws SQLException {
         List<Slot> slots = new ArrayList<>();
         while (rs.next()) {
@@ -205,6 +261,12 @@ public class SlotDAO {
         return slots;
     }
 
+    /**
+     * Lista todos os slots de um período específico
+     * @param idPeriodo ID do período acadêmico
+     * @return Lista de slots associados ao período
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public List<Slot> getByPeriodo(int idPeriodo) throws SQLException {
         String sql = "SELECT * FROM Slot WHERE id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();

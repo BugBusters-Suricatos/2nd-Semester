@@ -2,24 +2,37 @@ package org.example.gestaodehorario.dao;
 
 import org.example.gestaodehorario.connect.DatabaseManager;
 import org.example.gestaodehorario.model.Alocacao;
-import org.example.gestaodehorario.model.MateriaProfessor;
-import org.example.gestaodehorario.model.Semestre;
-import org.example.gestaodehorario.model.Slot;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * DAO responsável pelas operações de persistência e consulta de objetos {@link Alocacao}.
+ * <p>
+ * Oferece métodos para salvar, inserir, remover e buscar alocações, além de verificar
+ * a ocupação de slots em um dado semestre.
+ * </p>
+ */
 public class AlocacaoDAO {
 
+    /**
+     * Persiste em lote uma lista de alocações e atualiza o status dos slots correspondentes.
+     * <p>
+     * Executa todos os inserts em uma única transação, e em caso de falha realiza rollback.
+     * </p>
+     *
+     * @param alocacoes lista de {@link Alocacao} a serem salvas
+     * @throws SQLException se ocorrer erro de acesso ao banco de dados ou na transação
+     */
     public void salvar(List<Alocacao> alocacoes) throws SQLException {
         String sql = "INSERT INTO Alocacao (id_materia_professor, id_slot, id_semestre) VALUES (?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            conn.setAutoCommit(false); // Inicia transação
+            conn.setAutoCommit(false); // inicia transação
 
             try {
                 for (Alocacao alocacao : alocacoes) {
@@ -28,7 +41,7 @@ public class AlocacaoDAO {
                     stmt.setInt(3, alocacao.getSemestre().getIdSemestre());
                     stmt.addBatch();
 
-                    // Atualiza status do slot para "Ocupado"
+                    // Atualiza status do slot para 'Ocupado'
                     new SlotDAO().atualizarStatus(
                             alocacao.getSlot().getDia_semana(),
                             alocacao.getSlot().getHora_inicio(),
@@ -47,6 +60,12 @@ public class AlocacaoDAO {
         }
     }
 
+    /**
+     * Insere uma única alocação no banco de dados e define seu ID gerado.
+     *
+     * @param alocacao instância de {@link Alocacao} a ser inserida
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public void insert(Alocacao alocacao) throws SQLException {
         String sql = "INSERT INTO Alocacao (id_materia_professor, id_slot, id_semestre) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -66,6 +85,12 @@ public class AlocacaoDAO {
         }
     }
 
+    /**
+     * Remove a alocação com o ID especificado.
+     *
+     * @param idAlocacao identificador da alocação a ser removida
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public void delete(int idAlocacao) throws SQLException {
         String sql = "DELETE FROM Alocacao WHERE id_alocacao = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -76,6 +101,13 @@ public class AlocacaoDAO {
         }
     }
 
+    /**
+     * Busca uma alocação pelo seu identificador.
+     *
+     * @param id identificador da alocação
+     * @return {@link Optional} contendo a alocação se encontrada, ou vazio caso contrário
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public Optional<Alocacao> getById(int id) throws SQLException {
         String sql = "SELECT * FROM Alocacao WHERE id_alocacao = ?";
 
@@ -83,15 +115,22 @@ public class AlocacaoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return Optional.ofNullable(mapearAlocacao(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.ofNullable(mapearAlocacao(rs));
+                }
+                return Optional.empty();
             }
-            return Optional.empty();
         }
     }
 
+    /**
+     * Mapeia um {@link ResultSet} para uma instância de {@link Alocacao}.
+     *
+     * @param rs {@link ResultSet} posicionado na linha a ser mapeada
+     * @return nova instância de {@link Alocacao} com dados do ResultSet
+     * @throws SQLException se ocorrer erro ao ler dados do ResultSet
+     */
     private Alocacao mapearAlocacao(ResultSet rs) throws SQLException {
         MateriaProfessorDAO mpDAO = new MateriaProfessorDAO();
         SlotDAO slotDAO = new SlotDAO();
@@ -105,6 +144,12 @@ public class AlocacaoDAO {
         );
     }
 
+    /**
+     * Retorna todas as alocações existentes no banco de dados.
+     *
+     * @return lista de {@link Alocacao}
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public List<Alocacao> getAll() throws SQLException {
         String sql = "SELECT * FROM Alocacao";
         List<Alocacao> alocacoes = new ArrayList<>();
@@ -123,7 +168,13 @@ public class AlocacaoDAO {
         return alocacoes;
     }
 
-
+    /**
+     * Busca alocações vinculadas a um semestre específico.
+     *
+     * @param idSemestre identificador do semestre
+     * @return lista de {@link Alocacao} associadas ao semestre
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public List<Alocacao> getBySemestre(int idSemestre) throws SQLException {
         String sql = """
             SELECT a.* 
@@ -138,18 +189,26 @@ public class AlocacaoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idSemestre);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Alocacao alocacao = mapearAlocacao(rs);
-                if (alocacao != null) {
-                    alocacoes.add(alocacao);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Alocacao alocacao = mapearAlocacao(rs);
+                    if (alocacao != null) {
+                        alocacoes.add(alocacao);
+                    }
                 }
             }
         }
         return alocacoes;
     }
 
+    /**
+     * Verifica se um dado slot já está ocupado em um semestre.
+     *
+     * @param idSlot      identificador do slot
+     * @param idSemestre  identificador do semestre
+     * @return true se o slot estiver ocupado, false caso contrário
+     * @throws SQLException se ocorrer erro ao acessar o banco de dados
+     */
     public boolean slotEstaOcupado(int idSlot, int idSemestre) throws SQLException {
         String sql = "SELECT 1 FROM Alocacao WHERE id_slot = ? AND id_semestre = ?";
 
@@ -159,7 +218,9 @@ public class AlocacaoDAO {
             stmt.setInt(1, idSlot);
             stmt.setInt(2, idSemestre);
 
-            return stmt.executeQuery().next();
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 }

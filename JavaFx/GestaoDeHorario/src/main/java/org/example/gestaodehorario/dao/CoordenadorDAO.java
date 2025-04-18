@@ -8,7 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe responsável pelo acesso aos dados da entidade {@link Coordenador} no banco de dados.
+ */
 public class CoordenadorDAO {
+
+    /**
+     * Insere um novo coordenador no banco de dados.
+     *
+     * @param coordenador O coordenador a ser inserido.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void insert(Coordenador coordenador) throws SQLException {
         String sql = "INSERT INTO Coordenador (nome, email, senha) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -25,6 +35,12 @@ public class CoordenadorDAO {
         }
     }
 
+    /**
+     * Atualiza as informações de um coordenador existente no banco de dados.
+     *
+     * @param coordenador O coordenador com os dados atualizados.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void update(Coordenador coordenador) throws SQLException {
         String sql = "UPDATE Coordenador SET nome = ?, email = ?, senha = ? WHERE id_coordenador = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -37,6 +53,12 @@ public class CoordenadorDAO {
         }
     }
 
+    /**
+     * Remove um coordenador do banco de dados pelo seu ID.
+     *
+     * @param idCoordenador O ID do coordenador a ser removido.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void delete(int idCoordenador) throws SQLException {
         String sql = "DELETE FROM Coordenador WHERE id_coordenador = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -46,6 +68,13 @@ public class CoordenadorDAO {
         }
     }
 
+    /**
+     * Busca um coordenador no banco de dados pelo seu ID.
+     *
+     * @param id O ID do coordenador a ser buscado.
+     * @return Um {@link Optional} contendo o coordenador, caso encontrado.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public Optional<Coordenador> getById(int id) throws SQLException {
         String sql = "SELECT * FROM Coordenador WHERE id_coordenador = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -65,6 +94,13 @@ public class CoordenadorDAO {
         }
     }
 
+    /**
+     * Verifica se existe um coordenador cadastrado com o e-mail informado.
+     *
+     * @param email O e-mail a ser verificado.
+     * @return {@code true} se o e-mail já estiver cadastrado, {@code false} caso contrário.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public boolean existeEmail(String email) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Coordenador WHERE email = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -76,6 +112,12 @@ public class CoordenadorDAO {
         }
     }
 
+    /**
+     * Retorna uma lista com todos os coordenadores cadastrados no banco de dados.
+     *
+     * @return Uma lista de coordenadores.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public List<Coordenador> getAll() throws SQLException {
         List<Coordenador> coordenadores = new ArrayList<>();
         String sql = "SELECT * FROM Coordenador";

@@ -8,10 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object (DAO) para operações com entidades Professor no banco de dados.
+ * Gerencia o CRUD de professores e suas relações com matérias.
+ * Utiliza {@link MateriaDAO} para operações relacionadas a matérias.
+ */
 public class ProfessorDAO {
     private final MateriaDAO materiaDAO = new MateriaDAO();
 
-    // Método para inserir um novo professor
+    /**
+     * Insere um novo professor no banco de dados
+     * @param professor Objeto Professor a ser persistido (deve conter uma matéria válida)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void insert(Professor professor) throws SQLException {
         String sql = "INSERT INTO professor (nome, email, materia_id) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -23,7 +32,11 @@ public class ProfessorDAO {
         }
     }
 
-    // Método para buscar todos os professores com suas matérias
+    /**
+     * Recupera todos os professores com informações completas de suas matérias
+     * @return Lista de professores com dados da matéria associada (usando INNER JOIN)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public List<Professor> getAllComMaterias() throws SQLException {
         String sql = """
             SELECT 
@@ -58,7 +71,11 @@ public class ProfessorDAO {
         return professores;
     }
 
-    // Método para atualizar um professor
+    /**
+     * Atualiza os dados de um professor existente
+     * @param professor Objeto Professor com os novos dados (deve conter ID válido)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void update(Professor professor) throws SQLException {
         String sql = """
             UPDATE professor 
@@ -75,7 +92,11 @@ public class ProfessorDAO {
         }
     }
 
-    // Método para excluir um professor
+    /**
+     * Remove permanentemente um professor do sistema
+     * @param idProfessor ID do professor a ser excluído
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void delete(int idProfessor) throws SQLException {
         String sql = "DELETE FROM professor WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -85,7 +106,12 @@ public class ProfessorDAO {
         }
     }
 
-    // Métodos auxiliares
+    /**
+     * Cria um objeto Materia a partir de um ResultSet
+     * @param rs ResultSet contendo os dados da matéria
+     * @return Objeto Materia construído
+     * @throws SQLException Se ocorrer um erro ao acessar os dados
+     */
     private Materia criarMateria(ResultSet rs) throws SQLException {
         return new Materia(
                 rs.getInt("idMateria"),
@@ -93,6 +119,13 @@ public class ProfessorDAO {
         );
     }
 
+    /**
+     * Cria um objeto Professor a partir de um ResultSet e Matéria
+     * @param rs ResultSet contendo os dados do professor
+     * @param materia Matéria associada ao professor
+     * @return Objeto Professor construído
+     * @throws SQLException Se ocorrer um erro ao acessar os dados
+     */
     private Professor criarProfessor(ResultSet rs, Materia materia) throws SQLException {
         Professor professor = new Professor(
                 rs.getString("nome_professor"),
@@ -103,6 +136,12 @@ public class ProfessorDAO {
         return professor;
     }
 
+    /**
+     * Busca um professor pelo ID com sua matéria associada
+     * @param id ID do professor a ser recuperado
+     * @return Optional contendo o professor encontrado (a matéria pode ser null se não existir)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public Optional<Professor> getById(int id) throws SQLException {
         String sql = "SELECT * FROM professor WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();

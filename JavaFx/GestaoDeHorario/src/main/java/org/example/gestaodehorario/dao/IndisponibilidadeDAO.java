@@ -7,8 +7,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe responsável pelo acesso aos dados da entidade {@link Indisponibilidade} no banco de dados.
+ */
 public class IndisponibilidadeDAO {
 
+    /**
+     * Obtém a lista de indisponibilidades de um professor específico.
+     *
+     * @param idProfessor O ID do professor.
+     * @return Lista de {@link Indisponibilidade} do professor.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public List<Indisponibilidade> getByProfessor(int idProfessor) throws SQLException {
         List<Indisponibilidade> indisponibilidades = new ArrayList<>();
         String sql = """
@@ -46,15 +56,28 @@ public class IndisponibilidadeDAO {
         return indisponibilidades;
     }
 
+    /**
+     * Remove todas as disponibilidades associadas a um professor específico.
+     *
+     * @param professorId O ID do professor.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void removerPorProfessor(int professorId) throws SQLException {
         String sql = "DELETE FROM disponibilidades WHERE professor_id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, professorId);
             pstmt.executeUpdate();
         }
     }
 
+    /**
+     * Salva a lista de indisponibilidades de um professor, substituindo as antigas.
+     *
+     * @param idProfessor O ID do professor.
+     * @param indisponibilidades A lista de indisponibilidades a serem salvas.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void salvarIndisponibilidades(int idProfessor, List<Indisponibilidade> indisponibilidades) throws SQLException {
         Connection conn = null;
         try {
@@ -98,6 +121,12 @@ public class IndisponibilidadeDAO {
         }
     }
 
+    /**
+     * Salva uma lista de indisponibilidades diretamente no banco de dados.
+     *
+     * @param indisponibilidades A lista de indisponibilidades a serem salvas.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void salvar(List<Indisponibilidade> indisponibilidades) throws SQLException {
         String sql = "INSERT INTO Disponibilidade (id_professor, dia_semana, hora_inicio, hora_fim, id_curso, id_semestre) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";

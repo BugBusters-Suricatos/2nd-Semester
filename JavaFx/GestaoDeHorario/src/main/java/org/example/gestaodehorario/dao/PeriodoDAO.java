@@ -7,9 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object (DAO) para operações com entidades Periodo no banco de dados.
+ * Gerencia operações CRUD (Create, Read, Update, Delete) para períodos acadêmicos.
+ * Os IDs dos períodos são gerados automaticamente pelo banco de dados.
+ */
 public class PeriodoDAO {
 
-    // Busca todos os períodos cadastrados
+    /**
+     * Recupera todos os períodos cadastrados no sistema
+     * @return Lista de períodos (pode ser vazia se não houver registros)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public List<Periodo> getAll() throws SQLException {
         String sql = "SELECT * FROM Periodo";
         List<Periodo> periodos = new ArrayList<>();
@@ -28,7 +37,12 @@ public class PeriodoDAO {
         return periodos;
     }
 
-    // Busca um período pelo ID
+    /**
+     * Busca um período pelo seu ID único
+     * @param id ID do período a ser recuperado
+     * @return Optional contendo o período encontrado ou vazio se não existir
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public Optional<Periodo> getById(int id) throws SQLException {
         String sql = "SELECT * FROM Periodo WHERE id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -47,7 +61,11 @@ public class PeriodoDAO {
         }
     }
 
-    // Insere um novo período (ID é autoincrement)
+    /**
+     * Insere um novo período no banco de dados (ID é gerado automaticamente)
+     * @param periodo Objeto Periodo a ser persistido (o ID será atualizado com o valor gerado)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void insert(Periodo periodo) throws SQLException {
         String sql = "INSERT INTO Periodo (nome) VALUES (?)";
         try (Connection conn = DatabaseManager.getConnection();
@@ -64,7 +82,11 @@ public class PeriodoDAO {
         }
     }
 
-    // Atualiza o nome de um período existente
+    /**
+     * Atualiza os dados de um período existente
+     * @param periodo Objeto Periodo com os novos dados (deve conter o ID válido)
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void update(Periodo periodo) throws SQLException {
         String sql = "UPDATE Periodo SET nome = ? WHERE id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -76,7 +98,11 @@ public class PeriodoDAO {
         }
     }
 
-    // Remove um período pelo ID
+    /**
+     * Remove permanentemente um período do sistema
+     * @param idPeriodo ID do período a ser excluído
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
     public void delete(int idPeriodo) throws SQLException {
         String sql = "DELETE FROM Periodo WHERE id_periodo = ?";
         try (Connection conn = DatabaseManager.getConnection();

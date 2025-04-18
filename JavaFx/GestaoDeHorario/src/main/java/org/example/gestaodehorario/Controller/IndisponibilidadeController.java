@@ -9,19 +9,49 @@ import org.example.gestaodehorario.model.*;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Controlador JavaFX responsável por gerenciar a disponibilidade de horários (indisponibilidade) de um professor.
+ * <p>
+ * Permite selecionar curso e semestre, marcar slots de tempo indisponíveis e salvar essas informações na base de dados.
+ * </p>
+ */
 public class IndisponibilidadeController {
 
+    /** Painel que exibe a grade horária com checkboxes para marcação de indisponibilidade. */
     @FXML private GridPane gradeHoraria;
+
+    /** ComboBox para seleção do curso cujos slots serão exibidos. */
     @FXML private ComboBox<Curso> cbCursos;
+
+    /** ComboBox para seleção do semestre cujos slots serão exibidos. */
     @FXML private ComboBox<Semestre> cbSemestres;
 
+    /**
+     * Estrutura que mapeia dia da semana e horário de início para o checkbox correspondente na grade.
+     */
     private final Map<String, Map<String, CheckBox>> grade = new HashMap<>();
-    private final SlotDAO slotDAO = new SlotDAO();
-    private final CursoDAO cursoDAO = new CursoDAO();
-    private final SemestreDAO semestreDAO = new SemestreDAO();
-    private final IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
-    private Professor professorLogado; // Supondo que o professor está autenticado
 
+    /** DAO para acesso aos slots de horários disponíveis no sistema. */
+    private final SlotDAO slotDAO = new SlotDAO();
+
+    /** DAO para acesso a dados de cursos. */
+    private final CursoDAO cursoDAO = new CursoDAO();
+
+    /** DAO para acesso a dados de semestres. */
+    private final SemestreDAO semestreDAO = new SemestreDAO();
+
+    /** DAO para persistência das indisponibilidades marcadas. */
+    private final IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
+
+    /** Professor atualmente autenticado, cujas indisponibilidades serão salvas. */
+    private Professor professorLogado;
+
+    /**
+     * Inicializa o controlador após a injeção dos componentes FXML.
+     * <p>
+     * Carrega cursos e semestres disponíveis e configura listeners para atualizar a grade.
+     * </p>
+     */
     @FXML
     public void initialize() {
         try {
@@ -32,21 +62,36 @@ public class IndisponibilidadeController {
         }
     }
 
-    // Método para definir o professor logado (chamado após o login)
+    /**
+     * Define o professor logado no sistema.
+     *
+     * @param professor instância de {@link Professor} autenticado
+     */
     public void setProfessorLogado(Professor professor) {
         this.professorLogado = professor;
     }
 
+    /**
+     * Carrega dados iniciais de cursos e semestres para os ComboBoxes.
+     *
+     * @throws SQLException se ocorrer erro de acesso ao banco de dados
+     */
     private void carregarDadosIniciais() throws SQLException {
         cbCursos.getItems().setAll(cursoDAO.getAll());
         cbSemestres.getItems().setAll(semestreDAO.getAll());
     }
 
+    /**
+     * Configura listeners para ComboBoxes de curso e semestre, invocando atualização da grade.
+     */
     private void configurarListeners() {
         cbCursos.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
         cbSemestres.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
     }
 
+    /**
+     * Atualiza a grade horária exibida com base no curso e semestre selecionados.
+     */
     private void atualizarGrade() {
         try {
             Curso curso = cbCursos.getValue();
@@ -60,32 +105,31 @@ public class IndisponibilidadeController {
         }
     }
 
+    /**
+     * Constrói a grade de horários, adicionando labels de dias e horários e checkboxes para cada slot.
+     *
+     * @param slots lista de {@link Slot} contendo informações de dia, hora e status
+     */
     private void construirGrade(List<Slot> slots) {
         gradeHoraria.getChildren().clear();
         grade.clear();
 
-        // Cabeçalhos dos dias
         String[] dias = {"Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
         for (int i = 0; i < dias.length; i++) {
             gradeHoraria.add(new Label(dias[i]), i + 1, 0);
             grade.put(dias[i], new HashMap<>());
         }
 
-        // Mapeamento de horários para linhas
         Map<String, Integer> linhaHorario = new HashMap<>();
         int linhaAtual = 1;
 
         for (Slot slot : slots) {
             String horario = slot.getHora_inicio() + " - " + slot.getHora_fim();
-
-            // Adiciona horário na coluna 0 se não existir
             if (!linhaHorario.containsKey(horario)) {
                 gradeHoraria.add(new Label(horario), 0, linhaAtual);
                 linhaHorario.put(horario, linhaAtual);
                 linhaAtual++;
             }
-
-            // Adiciona checkbox na coluna do dia
             CheckBox checkBox = new CheckBox();
             checkBox.setDisable("Ocupado".equals(slot.getStatus()));
             int colunaDia = Arrays.asList(dias).indexOf(slot.getDia_semana()) + 1;
@@ -94,6 +138,9 @@ public class IndisponibilidadeController {
         }
     }
 
+    /**
+     * Persiste as indisponibilidades selecionadas pelo professor no banco de dados.
+     */
     @FXML
     private void salvarIndisponibilidade() {
         try {
@@ -112,15 +159,9 @@ public class IndisponibilidadeController {
                         try {
                             String horaFim = slotDAO.findHoraFimByHoraInicio(horaInicio, curso.getIdPeriodo());
                             indisponibilidades.add(new Indisponibilidade(
-                                    professorLogado.getId(),
-                                    dia,
-                                    horaInicio,
-                                    horaFim,
-                                    curso.getIdCurso(),
-                                    semestre.getIdSemestre()
-                            ));
+                                    professorLogado.getId(), dia, horaInicio, horaFim,
+                                    curso.getIdCurso(), semestre.getIdSemestre()));
                         } catch (SQLException e) {
-                            // Trate o erro, por exemplo, logando ou mostrando uma mensagem
                             mostrarErro("Erro ao obter hora fim: " + e.getMessage());
                         }
                     }
@@ -134,6 +175,11 @@ public class IndisponibilidadeController {
         }
     }
 
+    /**
+     * Exibe um alerta de erro com a mensagem informada.
+     *
+     * @param mensagem texto a ser exibido no alerta de erro
+     */
     private void mostrarErro(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erro");
@@ -142,6 +188,11 @@ public class IndisponibilidadeController {
         alert.showAndWait();
     }
 
+    /**
+     * Exibe um alerta de informação com a mensagem informada.
+     *
+     * @param mensagem texto a ser exibido no alerta de sucesso
+     */
     private void mostrarSucesso(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
@@ -150,6 +201,9 @@ public class IndisponibilidadeController {
         alert.showAndWait();
     }
 
+    /**
+     * Ação executada ao clicar no botão de voltar, retorna para a tela principal.
+     */
     @FXML
     private void btnVoltarClick() {
         ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");

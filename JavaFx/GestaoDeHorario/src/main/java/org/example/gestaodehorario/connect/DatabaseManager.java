@@ -5,9 +5,23 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Classe responsável por gerenciar a conexão com o banco de dados SQLite utilizado pelo sistema de horários.
+ */
 public class DatabaseManager {
+
+    /** URL de conexão JDBC para o banco de dados SQLite. */
     private static final String URL = "jdbc:sqlite:database/SistemaHorario.db";
 
+    /**
+     * Obtém uma conexão com o banco de dados.
+     * <p>
+     * Ao ser chamado, exibe uma mensagem de sucesso no console e retorna o objeto Connection.
+     * </p>
+     *
+     * @return uma instância de {@link Connection} apontando para o banco de dados SQLite
+     * @throws SQLException se ocorrer um erro ao tentar estabelecer a conexão
+     */
     public static Connection getConnection() throws SQLException {
         System.out.println("Banco de dados conectado com sucesso!");
         return DriverManager.getConnection(URL);

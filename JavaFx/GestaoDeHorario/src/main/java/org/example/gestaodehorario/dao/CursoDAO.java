@@ -8,7 +8,17 @@ import java.sql.*;
 import java.util.*;
 import static org.example.gestaodehorario.connect.DatabaseManager.getConnection;
 
+/**
+ * Classe responsável pelo acesso aos dados da entidade {@link Curso} no banco de dados.
+ */
 public class CursoDAO {
+
+    /**
+     * Insere um novo curso no banco de dados.
+     *
+     * @param curso O curso a ser inserido.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void insert(Curso curso) throws SQLException {
         String sql = "INSERT INTO Curso (nome, id_periodo, id_coordenador) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
@@ -25,6 +35,12 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Atualiza as informações de um curso existente no banco de dados.
+     *
+     * @param curso O curso com os dados atualizados.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void update(Curso curso) throws SQLException {
         String sql = "UPDATE Curso SET nome = ?, id_periodo = ?, id_coordenador = ? WHERE id_curso = ?";
         try (Connection conn = getConnection();
@@ -37,6 +53,12 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Remove um curso do banco de dados pelo seu ID.
+     *
+     * @param idCurso O ID do curso a ser removido.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public void delete(int idCurso) throws SQLException {
         String sql = "DELETE FROM Curso WHERE id_curso = ?";
         try (Connection conn = getConnection();
@@ -46,6 +68,13 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Busca um curso no banco de dados pelo seu ID.
+     *
+     * @param idCurso O ID do curso a ser buscado.
+     * @return Um {@link Optional} contendo o curso, caso encontrado.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public Optional<Curso> getById(int idCurso) throws SQLException {
         String sql = "SELECT * FROM curso WHERE id_curso = ?";
         try (Connection conn = DatabaseManager.getConnection();
@@ -68,6 +97,14 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Verifica se já existe um curso cadastrado com o mesmo nome e período.
+     *
+     * @param nome O nome do curso.
+     * @param idPeriodo O ID do período associado ao curso.
+     * @return {@code true} se o curso já existir, {@code false} caso contrário.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public boolean existeCurso(String nome, int idPeriodo) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Curso WHERE nome = ? AND id_periodo = ?";
         try (Connection conn = getConnection();
@@ -80,6 +117,12 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Retorna uma lista com todos os cursos cadastrados no banco de dados.
+     *
+     * @return Uma lista de cursos.
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados.
+     */
     public List<Curso> getAll() throws SQLException {
         String sql = "SELECT id_curso, nome, id_periodo, id_coordenador FROM Curso";
         List<Curso> cursos = new ArrayList<>();
