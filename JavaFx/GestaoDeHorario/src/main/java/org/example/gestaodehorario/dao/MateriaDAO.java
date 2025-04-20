@@ -215,4 +215,22 @@ public class MateriaDAO {
         }
         return materias;
     }
+
+    /**
+     * Retorna o número total de matérias cadastradas no sistema
+     * @return Quantidade total de matérias
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados
+     */
+    public int getTotalMaterias() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM Materia";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        }
+    }
 }

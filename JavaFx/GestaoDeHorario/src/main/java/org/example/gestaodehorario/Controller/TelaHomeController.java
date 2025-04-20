@@ -1,96 +1,101 @@
 package org.example.gestaodehorario.Controller;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import org.example.gestaodehorario.ScreenManager;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
+import org.example.gestaodehorario.ScreenManager;
+import org.example.gestaodehorario.dao.CursoDAO;
+import org.example.gestaodehorario.dao.MateriaDAO;
+import org.example.gestaodehorario.dao.MateriaProfessorDAO;
+import org.example.gestaodehorario.dao.ProfessorDAO;
+import org.example.gestaodehorario.util.AlertHelper;
 
 /**
- * Controlador JavaFX da tela inicial (home) do sistema de gestão de horários.
- * <p>
- * Fornece navegação para as diferentes funcionalidades (cursos, matérias,
- * professores, horários de indisponibilidade e montagem de grade) e exibe
- * estatísticas resumidas do sistema.
- * </p>
+ * Controlador da tela inicial com dashboard de estatísticas
  */
 public class TelaHomeController {
 
-    /** Label que exibe o total de cursos cadastrados. */
-    @FXML
-    private Label lblTotalCursos;
+    // Componentes FXML
+    @FXML private BorderPane rootPane;
+    @FXML private Label lblTotalCursos;
+    @FXML private Label lblTotalMateria;
+    @FXML private Label lblTotalProfessores;
+    @FXML private Label lblTotalAssociacoes;
 
-    /** Label que exibe o total de matérias cadastradas. */
-    @FXML
-    private Label lblTotalMateria;
-
-    /** Label que exibe o total de professores cadastrados. */
-    @FXML
-    private Label lblTotalProfessores;
+    // DAOs
+    private final CursoDAO cursoDAO = new CursoDAO();
+    private final MateriaDAO materiaDAO = new MateriaDAO();
+    private final ProfessorDAO professorDAO = new ProfessorDAO();
+    private final MateriaProfessorDAO materiaProfessorDAO = new MateriaProfessorDAO();
 
     /**
-     * Método de inicialização do controlador, chamado após a injeção dos componentes FXML.
-     * <p>
-     * Chama o método para carregar dados do banco e atualizar as labels.
-     * </p>
+     * Inicialização do controller com animações e carregamento de dados
      */
     @FXML
     public void initialize() {
+        configurarAnimacoes();
         carregarDadosDoBanco();
     }
 
     /**
-     * Carrega as contagens de cursos, matérias e professores do banco de dados
-     * e atualiza as respectivas labels na interface.
+     * Configura animações de entrada
      */
-    private void carregarDadosDoBanco() {
-        // Implementar lógica de acesso ao banco e atualização dos labels
+    private void configurarAnimacoes() {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(800), rootPane);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
     }
 
     /**
-     * Navega para a tela de gerenciamento de cursos.
-     *
-     * @param event evento de ação disparado pelo clique no botão de cursos
+     * Carrega e atualiza as estatísticas em tempo real
      */
+    private void carregarDadosDoBanco() {
+        try {
+            lblTotalCursos.setText(String.valueOf(cursoDAO.getTotalCursos()));
+            lblTotalMateria.setText(String.valueOf(materiaDAO.getTotalMaterias()));
+            lblTotalProfessores.setText(String.valueOf(professorDAO.getTotalProfessores()));
+            lblTotalAssociacoes.setText(String.valueOf(materiaProfessorDAO.getTotalAssociacoes()));
+        } catch (Exception e) {
+            AlertHelper.showError("Erro ao atualizar dashboard: " + e.getMessage());
+            definirValoresPadrao();
+        }
+    }
+
+    /**
+     * Define valores padrão para as estatísticas
+     */
+    private void definirValoresPadrao() {
+        lblTotalCursos.setText("--");
+        lblTotalMateria.setText("--");
+        lblTotalProfessores.setText("--");
+        lblTotalAssociacoes.setText("--");
+    }
+
+    // Métodos de navegação (mantidos)
     @FXML
     private void btnCursosClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoCursos-view.fxml", "styles/customGerenciamentoCursos.css");
     }
 
-    /**
-     * Navega para a tela de gerenciamento de matérias.
-     *
-     * @param event evento de ação disparado pelo clique no botão de matérias
-     */
     @FXML
     private void btnMateriaClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoMateria-view.fxml", "styles/customGerenciamentoMateria.css");
     }
 
-    /**
-     * Navega para a tela de gerenciamento de professores.
-     *
-     * @param event evento de ação disparado pelo clique no botão de professores
-     */
     @FXML
     private void btnProfessoresClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoProfessores-view.fxml", "styles/customGerenciamentoProfessores.css");
     }
 
-    /**
-     * Navega para a tela de gerenciamento de indisponibilidades de horário.
-     *
-     * @param event evento de ação disparado pelo clique no botão de horários
-     */
     @FXML
     private void btnHorariosClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoIndisponibilidade-view.fxml", "styles/customGerenciamentoIndisponibilidade.css");
     }
 
-    /**
-     * Navega para a tela de montagem de grade de alocação.
-     *
-     * @param event evento de ação disparado pelo clique no botão de montagem de grade
-     */
     @FXML
     private void btnMontagemClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoMontagem-view.fxml", "styles/customGerenciamentoMontagem.css");

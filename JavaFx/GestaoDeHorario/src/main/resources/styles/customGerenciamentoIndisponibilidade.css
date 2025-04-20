@@ -1,128 +1,168 @@
+/* Estilo Global */
 .root {
-    -fx-background-color: #f0f4f8;
-    -fx-padding: 25px;
-    -fx-spacing: 20px;
+    -fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+    -fx-font-family: 'Segoe UI';
+    -fx-padding: 30px;
 }
 
-.header {
-    -fx-text-fill: #2c3e50;
-    -fx-font-weight: bold;
-    -fx-font-size: 1.5em;
-    -fx-padding: 0 0 15px 0;
+/* Cabeçalho */
+.header-container {
+    -fx-padding: 0 0 25px 0;
 }
 
-.form-container {
-    -fx-padding: 15px;
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 8px;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 8px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #E74C3C, #C0392B);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
-.form-label {
-    -fx-text-fill: #495057;
-    -fx-font-weight: bold;
-    -fx-min-width: 80px;
-}
-
-.input-field {
-    -fx-pref-width: 300px;
-    -fx-padding: 8px;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 4px;
-    -fx-font-size: 14px;
-}
-
-.grade-scroll {
-    -fx-fit-to-width: true;
-    -fx-padding: 0;
+.back-button {
     -fx-background-color: transparent;
-    -fx-min-width: 1000px;
+    -fx-text-fill: #6c757d;
+    -fx-font-weight: 600;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
 }
 
-.grade-pane {
-    -fx-hgap: 1px;
-    -fx-vgap: 1px;
-    -fx-padding: 2px;
-    -fx-background-color: #ffffff;
+.back-button:hover {
+    -fx-text-fill: #2A2D43;
 }
 
-.grade-pane .label {
-    -fx-alignment: CENTER;
-    -fx-padding: 12px;
-    -fx-font-weight: bold;
-    -fx-background-color: #4a6572;
+/* Filtros */
+.filter-container {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 15px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
+    -fx-animation: slide-in 0.6s ease-out;
+}
+
+.filter-label {
+    -fx-text-fill: #2A2D43;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+}
+
+.modern-combo {
+    -fx-pref-width: 300px;
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+/* Grade Horária */
+.interactive-grid {
+    -fx-background-color: transparent;
+    -fx-border-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
+}
+
+.interactive-grid .label {
+    -fx-background-color: linear-gradient(to bottom, #2A2D43, #3A3F5D);
     -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-padding: 15px;
+    -fx-border-color: #4A4F6D;
+}
+
+.time-slot {
+    -fx-background-color: #ffffff;
     -fx-border-color: #dee2e6;
-}
-
-.check-box {
-    -fx-padding: 10px;
+    -fx-border-width: 1px;
     -fx-alignment: CENTER;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
 }
 
-.check-box .box {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #adb5bd;
-    -fx-border-radius: 4px;
-    -fx-pref-width: 20px;
-    -fx-pref-height: 20px;
+.time-slot:selected {
+    -fx-background-color: linear-gradient(to bottom right, #FF6B6B, #E74C3C);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(231,76,60,0.3), 10, 0, 0, 3);
 }
 
-.check-box:selected .mark {
-    -fx-background-color: #e74c3c; /* Vermelho para indisponibilidade */
+.time-slot:hover:selected {
+    -fx-background-color: #f8f9fa;
+    -fx-translate-y: -2px;
 }
 
-.check-box:selected .box {
-    -fx-background-color: #fadbd8;
-    -fx-border-color: #e74c3c;
+.time-slot:disabled {
+    -fx-background-color: repeating-linear-gradient(
+            45deg,
+            #f8d7da,
+            #f8d7da 5px,
+            #f5c6cb 5px,
+            #f5c6cb 10px
+    );
+    -fx-opacity: 1;
 }
 
-.check-box:disabled {
-    -fx-opacity: 1; /* Mantém visível mesmo se desabilitado */
-}
-
-.check-box:disabled .box {
-    -fx-background-color: #f8d7da; /* Vermelho claro para slots ocupados */
-    -fx-border-color: #dc3545;
-}
-
-.primary-button {
-    -fx-background-color: #e74c3c; /* Vermelho temático */
+/* Botões */
+.save-button {
+    -fx-background-color: linear-gradient(to right, #E74C3C, #C0392B);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10px 25px;
-    -fx-background-radius: 6px;
-    -fx-font-size: 14px;
-}
-
-.primary-button:hover {
-    -fx-background-color: #c0392b;
+    -fx-padding: 12px 35px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(231,76,60,0.3), 10, 0, 0, 3);
     -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
 }
 
-.secondary-button {
-    -fx-background-color: #7f8c8d; /* Cinza mais suave */
+.save-button:hover {
+    -fx-background-color: linear-gradient(to right, #C0392B, #A93226);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.clear-button {
+    -fx-background-color: linear-gradient(to right, #7f8c8d, #6c7a7b);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10px 25px;
-    -fx-background-radius: 6px;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 8px;
+}
+
+.clear-button:hover {
+    -fx-background-color: linear-gradient(to right, #636d6e, #464f50);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Mensagens */
+.status-message {
     -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
 }
 
-.secondary-button:hover {
-    -fx-background-color: #6c7a7b;
-    -fx-cursor: hand;
+.status-message.error {
+    -fx-text-fill: #dc3545;
+    -fx-background-color: #f8d7da;
 }
 
-.mensagem-label {
-    -fx-text-fill: #e74c3c; /* Vermelho para mensagens de erro */
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
+.status-message.success {
+    -fx-text-fill: #28a745;
+    -fx-background-color: #d4edda;
 }
 
-.mensagem-label.success {
-    -fx-text-fill: #27ae60; /* Verde para sucesso */
+/* Animações */
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.03; -fx-scale-y: 1.03; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+@keyframes slide-in {
+    from { -fx-translate-y: 20px; -fx-opacity: 0; }
+    to { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+.has-unsaved-changes {
+    -fx-effect: dropshadow(gaussian, rgba(231,76,60,0.3), 15, 0.5, 0, 0);
+    -fx-animation: pulse 1.5s infinite;
 }

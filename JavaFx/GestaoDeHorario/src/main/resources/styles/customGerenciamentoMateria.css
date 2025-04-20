@@ -1,64 +1,178 @@
+/* Estilo Global */
 .root {
-    -fx-background-color: #ecf0f1; /* Fundo claro */
-    -fx-padding: 20px;
+    -fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+    -fx-font-family: 'Segoe UI';
 }
 
-/* Estilização do formulário */
+/* Cabeçalho */
+.header-container {
+    -fx-padding: 0 0 25px 0;
+}
+
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #2A2D43, #4A4F6D);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c757d;
+    -fx-font-weight: 600;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    -fx-text-fill: #FF6B6B;
+}
+
+/* Formulário */
 .form-container {
-    -fx-padding: 15px;
-    -fx-background-color: #DCDCDC;
-    -fx-border-radius: 5px;
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 20px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
 }
 
-/* Campos de entrada */
-.input-field {
-    -fx-pref-width: 200px;
-    -fx-padding: 5px;
-}
-
-/* Estilização dos botões */
-.button-container {
-    -fx-padding: 10px;
-}
-
-.primary-button {
-    -fx-background-color: #2C3E50;
-    -fx-text-fill: white;
+.form-label {
+    -fx-text-fill: #2A2D43;
+    -fx-font-weight: 600;
     -fx-font-size: 14px;
-    -fx-padding: 8px;
-    -fx-background-radius: 5px;
 }
 
-.primary-button:hover {
-    -fx-background-color: #1F2A35;
+.modern-input {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 10px;
+    -fx-padding: 0 15px;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+    -fx-transition: all 0.3s ease;
 }
 
-.secondary-button {
-    -fx-background-color: #34495E;
+.modern-input:focused {
+    -fx-border-color: #FF6B6B;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.2), 0, 0, 0, 2);
+}
+
+.modern-combo {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 10px;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+}
+
+/* Botões Gradientes */
+.gradient-button-primary {
+    -fx-background-color: linear-gradient(to right, #4CAF50, #45a049);
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 8px;
-    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(76,175,80,0.3), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
 }
 
-.secondary-button:hover {
-    -fx-background-color: #2C3E50;
-}
-
-.danger-button {
-    -fx-background-color: #E74C3C;
+.gradient-button-secondary {
+    -fx-background-color: linear-gradient(to right, #2196F3, #1976D2);
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 8px;
-    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(85, 145, 239, 0.3), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
 }
 
-.danger-button:hover {
-    -fx-background-color: #C0392B;
+.gradient-button-danger {
+    -fx-background-color: linear-gradient(to right, #FF5252, #FF3D3D);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgb(131, 48, 48), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
 }
 
-/* Estilização da Tabela */
-.table-view {
-    -fx-border-color: #2C3E50;
-    -fx-border-radius: 5px;
+.gradient-button-neutral {
+    -fx-background-color: linear-gradient(to right, #7f8c8d, #6c7a7b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgb(96, 96, 96), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.gradient-button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #45a049, #3d8b40);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.gradient-button-secondary:hover {
+    -fx-background-color: linear-gradient(to right, #1b78bf, #145fa6);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.gradient-button-danger:hover {
+    -fx-background-color: linear-gradient(to right, #cd4343, #a62929);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.gradient-button-neutral:hover {
+    -fx-background-color: linear-gradient(to right, #687273, #505b5c);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Tabela Estilizada */
+.styled-table {
+    -fx-background-color: transparent;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
+}
+
+.table-column {
+    -fx-background-color: linear-gradient(to bottom, #2A2D43, #3A3F5D);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-border-color: #4A4F6D;
+}
+
+.styled-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-transition: all 0.2s ease;
+}
+
+.styled-table .table-row-cell:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-translate-y: -2px;
+}
+
+.empty-table-label {
+    -fx-text-fill: #6c757d;
+    -fx-font-style: italic;
+}
+
+/* Animações */
+@keyframes slide-in {
+    from { -fx-translate-y: 20px; -fx-opacity: 0; }
+    to { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+.form-container {
+    -fx-animation: slide-in 0.6s ease-out;
 }

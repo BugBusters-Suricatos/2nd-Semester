@@ -26,6 +26,9 @@ public class IndisponibilidadeController {
     /** ComboBox para seleção do semestre cujos slots serão exibidos. */
     @FXML private ComboBox<Semestre> cbSemestres;
 
+    /** Label para fazer a limpeza da seleçao. */
+    @FXML private Label lblMensagem;
+
     /**
      * Estrutura que mapeia dia da semana e horário de início para o checkbox correspondente na grade.
      */
@@ -87,6 +90,20 @@ public class IndisponibilidadeController {
     private void configurarListeners() {
         cbCursos.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
         cbSemestres.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
+    }
+
+    /**
+     * Configura a limpeza das seleçoes.
+     */
+    @FXML
+    private void limparSelecao() {
+        grade.values().forEach(horarios ->
+                horarios.values().forEach(checkBox ->
+                        checkBox.setSelected(false)
+                )
+        );
+        lblMensagem.setText("");
+        lblMensagem.getStyleClass().removeAll("success", "error");
     }
 
     /**

@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox spacing="16" xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.gestaodehorario.Controller.ProfessoresController"
-      styleClass="root"
-      alignment="CENTER">
+      spacing="25" styleClass="root"
+      alignment="TOP_CENTER">
 
-    <!-- Botão de Voltar -->
-    <Button text="Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
 
-    <!-- Seção de Formulário -->
-    <GridPane hgap="12" vgap="12" styleClass="form-container">
-        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="nomeField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="input-field"/>
-
-        <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="input-field"/>
-
-        <Label text="Matéria Lecionada:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="materiasComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="input-field"/>
-    </GridPane>
-
-    <!-- Seção de Botões -->
-    <HBox spacing="12" alignment="CENTER" styleClass="button-container">
-        <Button fx:id="btnAdicionar" text="Adicionar" styleClass="primary-button" onAction="#btnAdicionarClick"/>
-        <Button fx:id="btnEditar" text="Editar" styleClass="secondary-button" onAction="#btnEditarClick"/>
-        <Button fx:id="btnRemover" text="Remover" styleClass="danger-button" onAction="#btnRemoverClick"/>
+    <!-- Cabeçalho -->
+    <HBox alignment="CENTER" spacing="20" styleClass="header-container">
+        <Label text="👨🏫 Gerenciamento de Professores" styleClass="title-label"/>
+        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
     </HBox>
 
-    <!-- Tabela de Professores Cadastrados -->
-    <TableView fx:id="professoresTable" prefHeight="250" styleClass="table-view">
+    <!-- Formulário Flutuante -->
+    <VBox styleClass="form-container" spacing="20">
+        <GridPane hgap="15" vgap="15">
+            <Label text="Nome Completo:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="nomeField" promptText="Ex: João Silva" styleClass="modern-input" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="E-mail Institucional:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="emailField" promptText="Ex: joao.silva@instituicao.edu" styleClass="modern-input" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Matéria Lecionada:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="materiasComboBox" promptText="Selecione a Matéria" styleClass="modern-combo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Botões de Ação -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="➕ Adicionar" fx:id="btnAdicionar" onAction="#btnAdicionarClick" styleClass="gradient-button-primary"/>
+            <Button text="✏️ Editar" fx:id="btnEditar" onAction="#btnEditarClick" styleClass="gradient-button-secondary"/>
+            <Button text="🗑️ Remover" fx:id="btnRemover" onAction="#btnRemoverClick" styleClass="gradient-button-danger"/>
+            <Button text="🧹 Limpar" onAction="#limparCampos" styleClass="gradient-button-neutral"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tabela Estilizada -->
+    <TableView fx:id="professoresTable" styleClass="styled-table" prefHeight="350">
         <columns>
-            <TableColumn text="Nome" fx:id="nomeColumn"/>
-            <TableColumn text="Email" fx:id="emailColumn"/>
-            <TableColumn text="Matéria Lecionada" fx:id="materiaColumn"/>
+            <TableColumn fx:id="nomeColumn" text="Nome" styleClass="table-column" prefWidth="250"/>
+            <TableColumn fx:id="emailColumn" text="E-mail" styleClass="table-column" prefWidth="300"/>
+            <TableColumn fx:id="materiaColumn" text="Matéria" styleClass="table-column" prefWidth="200"/>
         </columns>
+        <placeholder>
+            <Label text="Nenhum professor cadastrado" styleClass="empty-table-label"/>
+        </placeholder>
     </TableView>
+
 </VBox>

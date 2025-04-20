@@ -160,4 +160,22 @@ public class ProfessorDAO {
             return Optional.empty();
         }
     }
+
+    /**
+     * Retorna o número total de professores cadastrados no sistema
+     * @return Quantidade total de professores
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
+    public int getTotalProfessores() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM Professor";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        }
+    }
 }

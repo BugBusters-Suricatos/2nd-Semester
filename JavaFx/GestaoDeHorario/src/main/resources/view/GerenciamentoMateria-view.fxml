@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.gestaodehorario.Controller.MateriaController"
+      spacing="25" styleClass="root"
+      alignment="TOP_CENTER">
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.gestaodehorario.Controller.MateriaController"
-            prefWidth="800" prefHeight="600"
-            styleClass="root">
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
 
-    <!-- Top: Formulário para cadastrar/editar matéria -->
-    <top>
-        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="form-container">
-            <Button text="Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    <!-- Cabeçalho -->
+    <HBox alignment="CENTER" spacing="20" styleClass="header-container">
+        <Label text="📚 Gerenciamento de Matérias" styleClass="title-label"/>
+        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    </HBox>
 
-            <Label text="Nome da Matéria:" />
-            <TextField fx:id="txtNomeMateria" promptText="Ex: Programação" styleClass="input-field"/>
+    <!-- Formulário Flutuante -->
+    <VBox styleClass="form-container" spacing="20">
+        <GridPane hgap="15" vgap="15">
+            <Label text="Nome da Matéria:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNomeMateria" promptText="Ex: Programação" styleClass="modern-input" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-            <Label text="Curso Associado:" />
-            <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" styleClass="input-field"/>
+            <Label text="Curso Associado:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-            <Label text="Carga Horária:" />
-            <TextField fx:id="txtCargaHoraria" promptText="Ex: 60" styleClass="input-field"/>
+            <Label text="Carga Horária:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtCargaHoraria" promptText="Ex: 60" styleClass="modern-input" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Botões de Ação -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="➕ Adicionar" fx:id="btnAdicionar" onAction="#btnAdicionarClick" styleClass="gradient-button-primary"/>
+            <Button text="✏️ Editar" fx:id="btnEditar" onAction="#btnEditarClick" styleClass="gradient-button-secondary"/>
+            <Button text="🗑️ Remover" fx:id="btnRemover" onAction="#btnRemoverClick" styleClass="gradient-button-danger"/>
+            <Button text="🧹 Limpar" onAction="#limparCampos" styleClass="gradient-button-neutral"/>
         </HBox>
-    </top>
+    </VBox>
 
-    <!-- Center: Tabela para listar matérias cadastradas -->
-    <center>
-        <TableView fx:id="tableMateria" styleClass="table-view">
-            <columns>
-                <TableColumn fx:id="colNome" text="Nome da Matéria" prefWidth="250"/>
-                <TableColumn fx:id="colCurso" text="Curso Associado" prefWidth="200"/>
-                <TableColumn fx:id="colCargaHoraria" text="Carga Horária" prefWidth="120"/>
-            </columns>
-        </TableView>
-    </center>
+    <!-- Tabela Estilizada -->
+    <TableView fx:id="tableMateria" styleClass="styled-table" prefHeight="350">
+        <columns>
+            <TableColumn fx:id="colNome" text="Nome" styleClass="table-column" prefWidth="250"/>
+            <TableColumn fx:id="colCurso" text="Curso" styleClass="table-column" prefWidth="200"/>
+            <TableColumn fx:id="colCargaHoraria" text="Carga Horária" styleClass="table-column" prefWidth="120"/>
+        </columns>
+        <placeholder>
+            <Label text="Nenhuma matéria cadastrada" styleClass="empty-table-label"/>
+        </placeholder>
+    </TableView>
 
-    <!-- Bottom: Botões de ação -->
-    <bottom>
-        <HBox spacing="12" alignment="CENTER" styleClass="button-container">
-            <Button fx:id="btnAdicionar" text="Adicionar" onAction="#btnAdicionarClick" styleClass="primary-button"/>
-            <Button fx:id="btnEditar" text="Editar" onAction="#btnEditarClick" styleClass="secondary-button"/>
-            <Button fx:id="btnRemover" text="Remover" onAction="#btnRemoverClick" styleClass="danger-button"/>
-        </HBox>
-    </bottom>
-
-</BorderPane>
+</VBox>

@@ -1,72 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/17"
+<VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController"
       styleClass="root"
-      alignment="TOP_CENTER">
+      alignment="TOP_CENTER"
+      spacing="25">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
 
     <!-- Cabeçalho -->
-    <Label text="Registro de Indisponibilidade - Professor" styleClass="header">
-        <font>
-            <Font size="20"/>
-        </font>
-    </Label>
+    <HBox alignment="CENTER" spacing="15" styleClass="header-container">
+        <Label text="🚫 Registo de Indisponibilidade" styleClass="title-label"/>
+        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    </HBox>
 
-    <!-- Seção de Seleção -->
-    <VBox spacing="10" styleClass="form-container">
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Professor:" styleClass="form-label"/>
-            <ComboBox fx:id="cbProfessores" styleClass="input-field" prefWidth="300"/>
-        </HBox>
+    <!-- Seção de Filtros -->
+    <GridPane styleClass="filter-container" hgap="20" vgap="15">
+        <Label text="Professor:" styleClass="filter-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbProfessores" styleClass="modern-combo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Curso:" styleClass="form-label"/>
-            <ComboBox fx:id="cbCursos" styleClass="input-field" prefWidth="300"/>
-        </HBox>
+        <Label text="Curso:" styleClass="filter-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbCursos" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Semestre:" styleClass="form-label"/>
-            <ComboBox fx:id="cbSemestres" styleClass="input-field" prefWidth="300"/>
-        </HBox>
-    </VBox>
+        <Label text="Semestre:" styleClass="filter-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbSemestres" styleClass="modern-combo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
 
-    <!-- Grade de Horários -->
-    <ScrollPane fitToWidth="true" styleClass="grade-scroll">
-        <GridPane fx:id="gradeHoraria" styleClass="grade-pane">
+    <!-- Grade Interativa -->
+    <ScrollPane fitToWidth="true" styleClass="grade-scroll" vmax="500">
+        <GridPane fx:id="gradeHoraria" styleClass="interactive-grid">
             <columnConstraints>
-                <ColumnConstraints prefWidth="100" halignment="CENTER"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="120" halignment="CENTER"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
+                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
             </columnConstraints>
         </GridPane>
     </ScrollPane>
 
-    <!-- Mensagens e Botões -->
-    <VBox spacing="10" alignment="CENTER">
-        <Label fx:id="lblMensagem" styleClass="mensagem-label"/>
-        <HBox spacing="15" alignment="CENTER" styleClass="button-container">
-            <Button text="Salvar Indisponibilidade"
-                    styleClass="primary-button"
+    <!-- Ações -->
+    <VBox spacing="15" alignment="CENTER">
+        <Label fx:id="lblMensagem" styleClass="status-message"/>
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="💾 Salvar Indisponibilidade"
+                    styleClass="save-button"
                     onAction="#salvarIndisponibilidade"/>
-            <Button text="Voltar"
-                    styleClass="secondary-button"
-                    onAction="#btnVoltarClick"/>
+            <Button text="🔄 Limpar Seleção"
+                    styleClass="clear-button"
+                    onAction="#limparSelecao"/>
         </HBox>
     </VBox>
 

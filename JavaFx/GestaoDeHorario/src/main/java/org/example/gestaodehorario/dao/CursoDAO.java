@@ -145,4 +145,22 @@ public class CursoDAO {
         }
         return cursos;
     }
+
+    /**
+     * Retorna o número total de cursos cadastrados no sistema
+     * @return Quantidade total de cursos
+     * @throws SQLException Caso ocorra um erro de acesso ao banco de dados
+     */
+    public int getTotalCursos() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM Curso";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        }
+    }
 }

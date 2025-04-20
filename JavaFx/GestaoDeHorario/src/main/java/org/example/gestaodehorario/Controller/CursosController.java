@@ -1,8 +1,11 @@
 package org.example.gestaodehorario.Controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -267,19 +270,32 @@ public class CursosController {
         }
     }
 
+    public class ValidatorUtil {
+        public static boolean validarNome(String nome, int min, int max) {
+            return nome != null
+                    && nome.trim().length() >= min
+                    && nome.trim().length() <= max;
+        }
+    }
+
     /**
      * Valida os campos de entrada antes de operações de adicionar ou editar.
      *
      * @return true se todos os campos estiverem preenchidos corretamente, false caso contrário
      */
     private boolean validarCampos() {
+        if (!ValidatorUtil.validarNome(txtNomeCurso.getText(), 4, 100)) {
+            mostrarAlerta("Nome inválido!");
+            return false;
+        }
+
         if (txtNomeCurso.getText().isBlank() || comboPeriodos.getValue() == null || comboCoordenadores.getValue() == null) {
             mostrarAlerta("Preencha todos os campos e selecione um período/coordenador!");
             return false;
         }
 
         if (txtNomeCurso.getText().length() < 5 || txtNomeCurso.getText().length() > 100) {
-            mostrarAlerta("Nome deve ter entre 5 e 100 caracteres!");
+            mostrarAlerta("Nome deve ter entre 4 e 100 caracteres!");
             return false;
         }
 
@@ -300,11 +316,20 @@ public class CursosController {
      * Carrega a lista de cursos do banco de dados e atualiza a tabela.
      */
     private void carregarDados() {
-        try {
-            cursosList.setAll(cursoDAO.getAll());
-        } catch (SQLException e) {
-            mostrarAlerta("Erro ao carregar cursos: " + e.getMessage());
-        }
+        Service<Void> service = new Service<>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<>() {
+                    @Override
+                    protected Void call() throws SQLException {
+                        List<Curso> cursos = cursoDAO.getAll();
+                        Platform.runLater(() -> cursosList.setAll(cursos));
+                        return null;
+                    }
+                };
+            }
+        };
+        service.start();
     }
 
     /**

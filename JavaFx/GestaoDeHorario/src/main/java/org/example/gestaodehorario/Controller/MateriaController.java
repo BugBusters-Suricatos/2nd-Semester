@@ -343,12 +343,13 @@ public class MateriaController {
     /**
      * Limpa todos os campos do formulário e reseta estado de edição.
      */
+    @FXML
     private void limparCampos() {
-        materiaEmEdicao = null;
         txtNomeMateria.clear();
         txtCargaHoraria.clear();
         cbCurso.getSelectionModel().clearSelection();
         tableMateria.getSelectionModel().clearSelection();
+        materiaEmEdicao = null;
         atualizarInterfaceParaEdicao();
     }
 

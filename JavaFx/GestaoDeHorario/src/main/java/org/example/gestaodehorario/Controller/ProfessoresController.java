@@ -256,12 +256,13 @@ public class ProfessoresController {
     /**
      * Limpa o formulário e reseta o estado de edição.
      */
+    @FXML
     private void limparCampos() {
-        professorEmEdicao = null;
         nomeField.clear();
         emailField.clear();
         materiasComboBox.getSelectionModel().clearSelection();
         professoresTable.getSelectionModel().clearSelection();
+        professorEmEdicao = null;
         atualizarInterface();
     }
 

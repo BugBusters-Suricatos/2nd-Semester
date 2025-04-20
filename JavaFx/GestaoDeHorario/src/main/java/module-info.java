@@ -9,7 +9,6 @@ module org.example.gestaodehorario {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
-    requires com.almasb.fxgl.all;
     requires java.sql;
 
     opens org.example.gestaodehorario to javafx.fxml;

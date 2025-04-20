@@ -192,4 +192,22 @@ public class MateriaProfessorDAO {
         }
         return list;
     }
+
+    /**
+     * Retorna o número total de associações matéria-professor cadastradas
+     * @return Quantidade total de relações cadastradas
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
+    public int getTotalAssociacoes() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM Materia_Professor";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        }
+    }
 }

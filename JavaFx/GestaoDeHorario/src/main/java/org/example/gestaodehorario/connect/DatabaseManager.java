@@ -22,9 +22,15 @@ public class DatabaseManager {
      * @return uma instância de {@link Connection} apontando para o banco de dados SQLite
      * @throws SQLException se ocorrer um erro ao tentar estabelecer a conexão
      */
-    public static Connection getConnection() throws SQLException {
-        System.out.println("Banco de dados conectado com sucesso!");
-        return DriverManager.getConnection(URL);
+    public static Connection getConnection() {
+        try {
+            Connection conn = DriverManager.getConnection(URL);
+            System.out.println("Conexão estabelecida com sucesso!");
+            return conn;
+        } catch (SQLException e) {
+            System.err.println("Falha na conexão: " + e.getMessage());
+            throw new RuntimeException("Erro crítico no banco de dados", e);
+        }
     }
 
 }

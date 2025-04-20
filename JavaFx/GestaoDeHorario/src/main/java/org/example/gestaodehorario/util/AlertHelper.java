@@ -29,7 +29,7 @@ public class AlertHelper {
      * @param message Mensagem de erro a ser exibida
      */
     public static void showError(String message) {
-        showAlert(Alert.AlertType.ERROR, "Erro", null, message, null);
+        showError("Erro", message);
     }
 
     /**
