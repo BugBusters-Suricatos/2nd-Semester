@@ -8,13 +8,27 @@ import javafx.beans.property.StringProperty;
  * Mantém informações de contato e a matéria associada para lecionar.
  */
 public class Professor {
+    private int id;
     private final StringProperty nome;
     private final StringProperty email;
     private Materia materia;
-    private int id;
 
     /**
      * Construtor principal para criação de professores
+     * @param id Id professor
+     * @param nome Nome completo do professor
+     * @param email Email institucional
+     * @param materia {@link Materia} que o professor está qualificado a lecionar
+     */
+    public Professor(int id, String nome, String email, Materia materia) {
+        this.id = id;
+        this.nome = new SimpleStringProperty(nome);
+        this.email = new SimpleStringProperty(email);
+        this.materia = materia;
+    }
+
+    /**
+     * Construtor para criação de professores
      * @param nome Nome completo do professor
      * @param email Email institucional
      * @param materia {@link Materia} que o professor está qualificado a lecionar

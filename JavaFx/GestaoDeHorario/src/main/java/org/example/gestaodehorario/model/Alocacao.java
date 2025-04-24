@@ -6,7 +6,8 @@ package org.example.gestaodehorario.model;
  */
 public class Alocacao {
     private Integer idAlocacao;
-    private MateriaProfessor materiaProfessor;
+    private Professor professor;
+    private Materia materia;
     private Slot slot;
     private Semestre semestre;
 
@@ -18,12 +19,14 @@ public class Alocacao {
 
     /**
      * Construtor para nova alocação (sem ID)
-     * @param materiaProfessor Relação professor-matéria a ser alocada
+     * @param professor Relação professor-matéria a ser alocada
+     * @param materia Relação professor-matéria a ser alocada
      * @param slot Slot horário para a alocação
      * @param semestre Semestre acadêmico da alocação
      */
-    public Alocacao(MateriaProfessor materiaProfessor, Slot slot, Semestre semestre) {
-        this.materiaProfessor = materiaProfessor;
+    public Alocacao(Professor professor, Materia materia, Slot slot, Semestre semestre) {
+        this.professor = professor;
+        this.materia = materia;
         this.slot = slot;
         this.semestre = semestre;
     }
@@ -31,13 +34,15 @@ public class Alocacao {
     /**
      * Construtor completo para alocação existente
      * @param idAlocacao Identificador único da alocação
-     * @param materiaProfessor Relação professor-matéria alocada
+     * @param professor Relação professor-matéria alocada
+     * @param materia Relação professor-matéria alocada
      * @param slot Slot horário reservado
      * @param semestre Semestre acadêmico vinculado
      */
-    public Alocacao(Integer idAlocacao, MateriaProfessor materiaProfessor, Slot slot, Semestre semestre) {
+    public Alocacao(Integer idAlocacao, Professor professor, Materia materia, Slot slot, Semestre semestre) {
         this.idAlocacao = idAlocacao;
-        this.materiaProfessor = materiaProfessor;
+        this.professor = professor;
+        this.materia = materia;
         this.slot = slot;
         this.semestre = semestre;
     }
@@ -58,18 +63,33 @@ public class Alocacao {
     }
 
     /**
-     * @return {@link MateriaProfessor} contendo a relação professor-matéria alocada
+     * @return {@link Professor} contendo a relação professor-matéria alocada
      */
-    public MateriaProfessor getMateriaProfessor() {
-        return materiaProfessor;
+    public Professor getProfessor() {
+        return professor;
     }
 
     /**
      * Define a relação professor-matéria para esta alocação
-     * @param materiaProfessor Nova relação professor-matéria
+     * @param professor Nova relação professor-matéria
      */
-    public void setMateriaProfessor(MateriaProfessor materiaProfessor) {
-        this.materiaProfessor = materiaProfessor;
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+
+    /**
+     * @return {@link Materia} contendo a relação professor-matéria alocada
+     */
+    public Materia getMateria() {
+        return materia;
+    }
+
+    /**
+     * Define a relação professor-matéria para esta alocação
+     * @param materia Nova relação professor-matéria
+     */
+    public void setMateria(Materia materia) {
+        this.materia = materia;
     }
 
     /**

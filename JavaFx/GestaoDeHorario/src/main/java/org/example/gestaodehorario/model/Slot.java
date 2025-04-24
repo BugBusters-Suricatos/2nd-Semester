@@ -122,15 +122,15 @@ public class Slot {
     /**
      * @return ID do {@link Periodo} associado
      */
-    public int getId_periodo() {
+    public int getIdPeriodo() {
         return id_periodo;
     }
 
     /**
      * Define o período acadêmico associado
-     * @param id_periodo Novo ID de período
+     * @param idPeriodo Novo ID de período
      */
-    public void setId_periodo(int id_periodo) {
-        this.id_periodo = id_periodo;
+    public void setIdPeriodo(int idPeriodo) {
+        this.id_periodo = idPeriodo;
     }
 }

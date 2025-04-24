@@ -1,141 +1,103 @@
+/* styles.css */
 .root {
     -fx-background-color: #f8f9fa;
-    -fx-padding: 25px;
-    -fx-spacing: 20px;
+    -fx-padding: 20px;
 }
 
-.header {
-    -fx-text-fill: #2c3e50;
-    -fx-font-weight: bold;
-    -fx-font-size: 1.5em;
-    -fx-padding: 0 0 15px 0;
-}
-
-.form-container {
-    -fx-padding: 15px;
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 8px;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 8px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+.header-container {
+    -fx-padding: 0 0 20px 0;
 }
 
 .form-label {
-    -fx-text-fill: #495057;
+    -fx-text-fill: #3b3f45;
     -fx-font-weight: bold;
-    -fx-min-width: 60px;
-}
-
-.input-field {
-    -fx-pref-width: 200px;
-    -fx-padding: 8px;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 4px;
     -fx-font-size: 14px;
-}
-
-.grade-scroll {
-    -fx-fit-to-width: true;
-    -fx-padding: 0;
-    -fx-background-color: transparent;
-    -fx-min-width: 1100px;
-}
-
-.grade-pane-alocacao {
-    -fx-hgap: 2px;
-    -fx-vgap: 2px;
-    -fx-padding: 5px;
-    -fx-background-color: #ffffff;
-}
-
-.grade-pane-alocacao .label {
-    -fx-alignment: CENTER;
-    -fx-padding: 12px;
-    -fx-font-weight: bold;
-    -fx-background-color: #4a6572;
-    -fx-text-fill: white;
-    -fx-border-color: #dee2e6;
-}
-
-.slot-disponivel {
-    -fx-background-color: #d4edda;
-    -fx-border-color: #28a745;
-    -fx-border-radius: 4px;
-}
-
-.slot-indisponivel {
-    -fx-background-color: #f8d7da;
-    -fx-opacity: 0.7;
-    -fx-border-color: #dc3545;
-}
-
-.slot-ocupado {
-    -fx-background-color: #fff3cd;
-    -fx-border-color: #ffc107;
 }
 
 .combo-box {
-    -fx-pref-width: 140px;
-    -fx-font-size: 13px;
+    -fx-pref-width: 150px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ced4da;
+    -fx-padding: 6px;
 }
 
-.combo-box .list-cell {
-    -fx-padding: 5px;
-}
-
-.primary-button {
-    -fx-background-color: #007bff;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 25px;
-    -fx-background-radius: 6px;
-    -fx-font-size: 14px;
-}
-
-.primary-button:hover {
-    -fx-background-color: #0069d9;
-    -fx-cursor: hand;
-}
-
-.secondary-button {
-    -fx-background-color: #6c757d;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 25px;
-    -fx-background-radius: 6px;
-    -fx-font-size: 14px;
-}
-
-.button-container {
-    -fx-padding: 20px 0 0 0;
-    -fx-spacing: 20px;
+.palette-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 12px;
 }
 
 .header-cell {
+    -fx-alignment: CENTER;
+    -fx-padding: 8px;
     -fx-background-color: #4a6572;
     -fx-text-fill: white;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 10px;
-    -fx-alignment: CENTER;
+    -fx-background-radius: 4px;
 }
 
-.time-cell {
+.matter-list .list-cell {
+    -fx-padding: 6px;
+}
+
+.grade-scroll {
+    -fx-background: transparent;
+}
+
+.grade-pane-alocacao {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 10px;
+}
+
+/* Cabeçalhos de dias */
+.grade-pane-alocacao Label {
     -fx-background-color: #344955;
     -fx-text-fill: white;
-    -fx-padding: 10px;
+    -fx-padding: 6px;
+    -fx-alignment: CENTER;
     -fx-font-weight: bold;
+    -fx-border-color: #ecf0f1;
+    -fx-border-width: 0 0 1 0;
 }
 
-.slot-disponivel {
-    -fx-background-color: #d4edda;
-    -fx-border-color: #28a745;
-    -fx-border-radius: 4px;
-    -fx-padding: 15px;
+/* Células da grade vazias */
+.grade-pane-alocacao > *:nth-child(n + 1) {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-padding: 10px;
 }
 
-.slot-ocupado {
-    -fx-background-color: #fff3cd;
-    -fx-border-color: #ffc107;
-    -fx-opacity: 0.7;
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+.btn-secondary:hover {
+    -fx-background-color: #5a6268;
+}
+
+.button-container {
+    -fx-padding: 10px 0 0 0;
 }

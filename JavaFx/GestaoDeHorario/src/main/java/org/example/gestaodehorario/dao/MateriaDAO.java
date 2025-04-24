@@ -137,7 +137,7 @@ public class MateriaDAO {
                 c.id_curso, 
                 c.nome AS nome_curso 
             FROM materia m
-            INNER JOIN curso c ON m.curso_id = c.id_curso
+            INNER JOIN curso c ON m.id_curso = c.id_curso
             WHERE m.id_materia = ?
             """;
 

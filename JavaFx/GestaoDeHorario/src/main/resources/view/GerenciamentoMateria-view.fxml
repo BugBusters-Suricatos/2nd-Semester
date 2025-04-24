@@ -31,8 +31,8 @@
             <Label text="Curso Associado:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
             <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-            <Label text="Carga Horária:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="txtCargaHoraria" promptText="Ex: 60" styleClass="modern-input" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Aulas Semanais:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCargaHoraria" promptText="Ex: 2 ou 4 Aulas Semanais" styleClass="modern-input" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         </GridPane>
 
         <!-- Botões de Ação -->

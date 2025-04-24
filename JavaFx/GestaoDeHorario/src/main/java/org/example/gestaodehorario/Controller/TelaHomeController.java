@@ -7,9 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import org.example.gestaodehorario.ScreenManager;
+import org.example.gestaodehorario.dao.AlocacaoDAO;
 import org.example.gestaodehorario.dao.CursoDAO;
 import org.example.gestaodehorario.dao.MateriaDAO;
-import org.example.gestaodehorario.dao.MateriaProfessorDAO;
 import org.example.gestaodehorario.dao.ProfessorDAO;
 import org.example.gestaodehorario.util.AlertHelper;
 
@@ -29,7 +29,7 @@ public class TelaHomeController {
     private final CursoDAO cursoDAO = new CursoDAO();
     private final MateriaDAO materiaDAO = new MateriaDAO();
     private final ProfessorDAO professorDAO = new ProfessorDAO();
-    private final MateriaProfessorDAO materiaProfessorDAO = new MateriaProfessorDAO();
+    private final AlocacaoDAO alocacaoDAO = new AlocacaoDAO();
 
     /**
      * Inicialização do controller com animações e carregamento de dados
@@ -58,7 +58,7 @@ public class TelaHomeController {
             lblTotalCursos.setText(String.valueOf(cursoDAO.getTotalCursos()));
             lblTotalMateria.setText(String.valueOf(materiaDAO.getTotalMaterias()));
             lblTotalProfessores.setText(String.valueOf(professorDAO.getTotalProfessores()));
-            lblTotalAssociacoes.setText(String.valueOf(materiaProfessorDAO.getTotalAssociacoes()));
+            lblTotalAssociacoes.setText(String.valueOf(alocacaoDAO.getTotalAlocacao()));
         } catch (Exception e) {
             AlertHelper.showError("Erro ao atualizar dashboard: " + e.getMessage());
             definirValoresPadrao();
@@ -99,5 +99,10 @@ public class TelaHomeController {
     @FXML
     private void btnMontagemClick(ActionEvent event) {
         ScreenManager.changeScreen("view/GerenciamentoMontagem-view.fxml", "styles/customGerenciamentoMontagem.css");
+    }
+
+    @FXML
+    private void btnRelatorioClick(ActionEvent event) {
+        ScreenManager.changeScreen("view/RelatorioGrade-view.fxml", "styles/customRelatorioGrade.css");
     }
 }

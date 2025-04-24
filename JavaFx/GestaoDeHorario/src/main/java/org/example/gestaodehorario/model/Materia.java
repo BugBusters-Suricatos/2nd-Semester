@@ -48,6 +48,9 @@ public class Materia {
         // Implementação pendente - necessário vincular curso através do ID
     }
 
+    public Materia(int materiaId) {
+    }
+
     // Property Accessors ======================================================
 
     /**

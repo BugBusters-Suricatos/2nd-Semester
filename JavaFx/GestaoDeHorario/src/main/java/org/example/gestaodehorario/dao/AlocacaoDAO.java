@@ -2,6 +2,7 @@ package org.example.gestaodehorario.dao;
 
 import org.example.gestaodehorario.connect.DatabaseManager;
 import org.example.gestaodehorario.model.Alocacao;
+import org.example.gestaodehorario.model.RelatorioAlocacao;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,36 +28,17 @@ public class AlocacaoDAO {
      * @throws SQLException se ocorrer erro de acesso ao banco de dados ou na transação
      */
     public void salvar(List<Alocacao> alocacoes) throws SQLException {
-        String sql = "INSERT INTO Alocacao (id_materia_professor, id_slot, id_semestre) VALUES (?, ?, ?)";
-
+        String sql = "INSERT INTO Alocacao (id_professor, id_materia, id_slot, id_semestre) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            conn.setAutoCommit(false); // inicia transação
-
-            try {
-                for (Alocacao alocacao : alocacoes) {
-                    stmt.setInt(1, alocacao.getMateriaProfessor().getIdMateriaProfessor());
-                    stmt.setInt(2, alocacao.getSlot().getId_slot());
-                    stmt.setInt(3, alocacao.getSemestre().getIdSemestre());
-                    stmt.addBatch();
-
-                    // Atualiza status do slot para 'Ocupado'
-                    new SlotDAO().atualizarStatus(
-                            alocacao.getSlot().getDia_semana(),
-                            alocacao.getSlot().getHora_inicio(),
-                            alocacao.getSlot().getId_periodo(),
-                            "Ocupado"
-                    );
-                }
-
-                stmt.executeBatch();
-                conn.commit();
-
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
+            for (Alocacao alocacao : alocacoes) {
+                stmt.setInt(1, alocacao.getProfessor().getId());
+                stmt.setInt(2, alocacao.getMateria().getIdMateria());
+                stmt.setInt(3, alocacao.getSlot().getId_slot());
+                stmt.setInt(4, alocacao.getSemestre().getIdSemestre());
+                stmt.addBatch();
             }
+            stmt.executeBatch();
         }
     }
 
@@ -67,16 +49,19 @@ public class AlocacaoDAO {
      * @throws SQLException se ocorrer erro ao acessar o banco de dados
      */
     public void insert(Alocacao alocacao) throws SQLException {
-        String sql = "INSERT INTO Alocacao (id_materia_professor, id_slot, id_semestre) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Alocacao (id_professor, id_materia, id_slot, id_semestre) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, alocacao.getMateriaProfessor().getIdMateriaProfessor());
-            stmt.setInt(2, alocacao.getSlot().getId_slot());
-            stmt.setInt(3, alocacao.getSemestre().getIdSemestre());
+            // Obtém os IDs do Professor e Matéria diretamente
+            stmt.setInt(1, alocacao.getProfessor().getId());
+            stmt.setInt(2, alocacao.getMateria().getIdMateria());
+            stmt.setInt(3, alocacao.getSlot().getId_slot());
+            stmt.setInt(4, alocacao.getSemestre().getIdSemestre());
 
             stmt.executeUpdate();
 
+            // Atualiza o ID gerado
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     alocacao.setIdAlocacao(rs.getInt(1));
@@ -132,13 +117,15 @@ public class AlocacaoDAO {
      * @throws SQLException se ocorrer erro ao ler dados do ResultSet
      */
     private Alocacao mapearAlocacao(ResultSet rs) throws SQLException {
-        MateriaProfessorDAO mpDAO = new MateriaProfessorDAO();
+        ProfessorDAO professorDAO = new ProfessorDAO();
+        MateriaDAO materiaDAO = new MateriaDAO();
         SlotDAO slotDAO = new SlotDAO();
         SemestreDAO semestreDAO = new SemestreDAO();
 
         return new Alocacao(
                 rs.getInt("id_alocacao"),
-                mpDAO.getById(rs.getInt("id_materia_professor")).orElse(null),
+                professorDAO.getById(rs.getInt("id_professor")).orElse(null),
+                materiaDAO.getById(rs.getInt("id_materia")).orElse(null),
                 slotDAO.getById(rs.getInt("id_slot")).orElse(null),
                 semestreDAO.getById(rs.getInt("id_semestre")).orElse(null)
         );
@@ -166,6 +153,24 @@ public class AlocacaoDAO {
             }
         }
         return alocacoes;
+    }
+
+    /**
+     * Retorna o número total de alocacoes cadastrados no sistema
+     * @return Quantidade total de alocacoes
+     * @throws SQLException Se ocorrer um erro de acesso ao banco de dados
+     */
+    public int getTotalAlocacao() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM Alocacao";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            return 0;
+        }
     }
 
     /**
@@ -223,4 +228,45 @@ public class AlocacaoDAO {
             }
         }
     }
+
+    public List<RelatorioAlocacao> getRelatorioAll() throws SQLException {
+        String sql = """
+        SELECT 
+            c.nome AS curso, 
+            s.nome AS semestre, 
+            p.nome AS periodo, 
+            slot.dia_semana AS dia, 
+            slot.hora_inicio || ' - ' || slot.hora_fim AS horario,
+            m.nome AS materia
+            j.nome AS professor
+        FROM Alocacao a
+        JOIN Materia m ON a.id_materia = m.id_materia
+        JOIN Professor j ON p.id = j.id
+        JOIN Curso c ON m.id_curso = c.id_curso
+        JOIN Semestre s ON a.id_semestre = s.id_semestre
+        JOIN Slot slot ON a.id_slot = slot.id_slot
+        JOIN Periodo p ON slot.id_periodo = p.id_periodo
+        ORDER BY curso, semestre, periodo, dia, slot.hora_inicio
+    """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            List<RelatorioAlocacao> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(new RelatorioAlocacao(
+                        rs.getString("curso"),
+                        rs.getString("semestre"),
+                        rs.getString("periodo"),
+                        rs.getString("dia"),
+                        rs.getString("horario"),
+                        rs.getString("materia"),
+                        rs.getString("professor")
+                ));
+            }
+            return list;
+        }
+    }
+
 }

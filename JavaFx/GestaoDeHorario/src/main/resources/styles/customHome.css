@@ -29,11 +29,11 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
 }
 
-.menu-button-accent {
-    -fx-background-color: linear-gradient(to right, #FF6B6B, #FF5252);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 10, 0, 0, 3);
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to right, #d85a5a, #bc3b3b);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(136, 15, 15, 0.3), 10, 0, 0, 4);
 }
 
 /* Área principal */

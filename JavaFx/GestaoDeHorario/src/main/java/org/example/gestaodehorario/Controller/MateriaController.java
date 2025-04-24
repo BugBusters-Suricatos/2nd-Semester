@@ -30,8 +30,8 @@ public class MateriaController {
     /** ComboBox para seleção do curso ao qual a matéria pertence. */
     @FXML private ComboBox<Curso> cbCurso;
 
-    /** Campo de texto para entrada da carga horária da matéria. */
-    @FXML private TextField txtCargaHoraria;
+    /** ComboBox para seleção da carga horária da matéria (2 ou 4 aulas semanais). */
+    @FXML private ComboBox<Integer> cbCargaHoraria;
 
     /** TableView que exibe a lista de matérias. */
     @FXML private TableView<Materia> tableMateria;
@@ -73,6 +73,7 @@ public class MateriaController {
     public void initialize() {
         configurarTabela();
         configurarComboBox();
+        cbCargaHoraria.getItems().addAll(2, 4); // Configura opções do ComboBox
         carregarDados();
         atualizarInterfaceParaEdicao();
     }
@@ -88,9 +89,6 @@ public class MateriaController {
         colCargaHoraria.setCellValueFactory(cellData -> cellData.getValue().cargaHorariaProperty().asObject());
 
         tableMateria.setItems(materiasList);
-        tableMateria.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldVal, newVal) -> selecionarMateria(newVal)
-        );
         tableMateria.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> preencherCampos(newVal)
         );
@@ -168,7 +166,7 @@ public class MateriaController {
     private void preencherCampos(Materia materia) {
         if (materia != null) {
             txtNomeMateria.setText(materia.getNome());
-            txtCargaHoraria.setText(String.valueOf(materia.getCargaHoraria()));
+            cbCargaHoraria.setValue(materia.getCargaHoraria());
             selecionarCursoNoComboBox(materia.getCurso());
         } else {
             limparCampos();
@@ -275,7 +273,7 @@ public class MateriaController {
             materia.setIdMateria(materiaEmEdicao.getIdMateria());
         }
         materia.setNome(txtNomeMateria.getText().trim());
-        materia.setCargaHoraria(Integer.parseInt(txtCargaHoraria.getText()));
+        materia.setCargaHoraria(cbCargaHoraria.getValue());
         materia.setCurso(cbCurso.getValue());
         return materia;
     }
@@ -287,15 +285,9 @@ public class MateriaController {
      */
     private boolean validarCampos() {
         if (txtNomeMateria.getText().isBlank() ||
-                txtCargaHoraria.getText().isBlank() ||
+                cbCargaHoraria.getValue() == null ||
                 cbCurso.getValue() == null) {
             mostrarAlerta("Preencha todos os campos!");
-            return false;
-        }
-        try {
-            Integer.parseInt(txtCargaHoraria.getText());
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Carga horária deve ser um número inteiro!");
             return false;
         }
         if (materiaEmEdicao == null) {
@@ -312,19 +304,6 @@ public class MateriaController {
             }
         }
         return true;
-    }
-
-    /**
-     * Atualiza campos do formulário para a matéria selecionada.
-     *
-     * @param materia matéria selecionada na tabela
-     */
-    private void selecionarMateria(Materia materia) {
-        if (materia != null) {
-            txtNomeMateria.setText(materia.getNome());
-            txtCargaHoraria.setText(String.valueOf(materia.getCargaHoraria()));
-            cbCurso.setValue(materia.getCurso());
-        }
     }
 
     /**
@@ -346,7 +325,7 @@ public class MateriaController {
     @FXML
     private void limparCampos() {
         txtNomeMateria.clear();
-        txtCargaHoraria.clear();
+        cbCargaHoraria.getSelectionModel().clearSelection();
         cbCurso.getSelectionModel().clearSelection();
         tableMateria.getSelectionModel().clearSelection();
         materiaEmEdicao = null;

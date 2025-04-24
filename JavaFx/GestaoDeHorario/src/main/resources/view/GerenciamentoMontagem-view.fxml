@@ -1,60 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestaodehorario.Controller.MontagemGradeController"
+            styleClass="root">
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.gestaodehorario.Controller.MontagemGradeController"
-      styleClass="root"
-      alignment="TOP_CENTER">
-
-    <!-- Cabeçalho -->
-    <Label text="Montagem da Grade Horária" styleClass="header">
-        <font>
-            <Font size="20"/>
-        </font>
-    </Label>
-
-    <!-- Filtros -->
-    <VBox spacing="10" styleClass="form-container">
-        <HBox spacing="10" alignment="CENTER_LEFT">
+    <!-- TOPO: seleção de curso, período e semestre -->
+    <top>
+        <HBox spacing="15" alignment="CENTER" styleClass="header-container">
             <Label text="Curso:" styleClass="form-label"/>
-            <ComboBox fx:id="cbCursos" styleClass="input-field" prefWidth="250"/>
-            <Label text="Semestre:" styleClass="form-label" style="-fx-padding: 0 0 0 20;"/>
-            <ComboBox fx:id="cbSemestres" styleClass="input-field" prefWidth="150"/>
-            <Label text="Matéria:" styleClass="form-label" style="-fx-padding: 0 0 0 20;"/>
-            <ComboBox fx:id="cbMaterias" styleClass="input-field" prefWidth="250"/>
+            <ComboBox fx:id="cbCursos" styleClass="combo-box"/>
+            <Label text="Período:" styleClass="form-label"/>
+            <ComboBox fx:id="cbPeriodos" styleClass="combo-box"/>
+            <Label text="Semestre:" styleClass="form-label"/>
+            <ComboBox fx:id="cbSemestres" styleClass="combo-box"/>
         </HBox>
-    </VBox>
+    </top>
 
-    <!-- Grade de Horários -->
-    <ScrollPane fitToWidth="true" styleClass="grade-scroll">
-        <GridPane fx:id="gradeAlocacao" styleClass="grade-pane-alocacao">
-            <columnConstraints>
-                <ColumnConstraints prefWidth="120" halignment="CENTER"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="150" halignment="CENTER" hgrow="ALWAYS"/>
-            </columnConstraints>
-        </GridPane>
-    </ScrollPane>
+    <!-- PAINEL LATERAL: Paleta de matérias -->
+    <left>
+        <VBox spacing="10" alignment="TOP_CENTER" prefWidth="220" styleClass="palette-box">
+            <Label text="Matérias disponíveis" styleClass="header-cell"/>
+            <ListView fx:id="lvMaterias" styleClass="matter-list" />
+        </VBox>
+    </left>
 
-    <!-- Botões -->
-    <HBox spacing="15" alignment="CENTER" styleClass="button-container">
-        <Button text="Salvar Alocações" styleClass="primary-button" onAction="#salvarAlocacoes"/>
-        <Button text="Voltar" styleClass="secondary-button" onAction="#btnVoltarClick"/>
-    </HBox>
+    <!-- GRADE PRINCIPAL: Dias × Horários -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="grade-scroll">
+            <GridPane fx:id="gradeAlocacao"
+                      gridLinesVisible="true"
+                      hgap="4" vgap="4"
+                      styleClass="grade-pane-alocacao" />
+        </ScrollPane>
+    </center>
 
-</VBox>
+    <!-- RODAPÉ: botões Salvar e Voltar -->
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
+            <Button text="Salvar Alocações" onAction="#salvarAlocacoes" styleClass="btn-primary" />
+            <Button text="Voltar" onAction="#btnVoltarClick" styleClass="btn-secondary" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

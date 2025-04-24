@@ -8,6 +8,7 @@ import org.example.gestaodehorario.dao.*;
 import org.example.gestaodehorario.model.*;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controlador JavaFX responsável por gerenciar a disponibilidade de horários (indisponibilidade) de um professor.
@@ -114,7 +115,9 @@ public class IndisponibilidadeController {
             Curso curso = cbCursos.getValue();
             Semestre semestre = cbSemestres.getValue();
             if (curso != null && semestre != null) {
-                List<Slot> slots = slotDAO.getByCursoSemestre(curso.getIdCurso(), semestre.getIdSemestre());
+                List<Slot> slots = slotDAO.getByCurso(curso.getIdCurso()).stream()
+                        .filter(s -> s.getIdPeriodo() == curso.getIdPeriodo())  // filtra matutino/noturno conforme curso
+                        .collect(Collectors.toList());
                 construirGrade(slots);
             }
         } catch (SQLException e) {

@@ -10,6 +10,7 @@ module org.example.gestaodehorario {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires itextpdf;
 
     opens org.example.gestaodehorario to javafx.fxml;
     exports org.example.gestaodehorario;

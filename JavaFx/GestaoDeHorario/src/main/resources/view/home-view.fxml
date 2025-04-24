@@ -30,7 +30,8 @@
                 <Button onAction="#btnMateriaClick" text="Matérias" styleClass="menu-button" />
                 <Button onAction="#btnProfessoresClick" text="Professores" styleClass="menu-button" />
                 <Button onAction="#btnHorariosClick" text="Horários" styleClass="menu-button" />
-                <Button onAction="#btnMontagemClick" text="Montar Horário" styleClass="menu-button-accent" />
+                <Button onAction="#btnMontagemClick" text="Montar Horário" styleClass="menu-button" />
+                <Button onAction="#btnRelatorioClick" text="Relatorio de Horário" styleClass="menu-button" />
             </VBox>
         </VBox>
     </left>
@@ -69,7 +70,7 @@
             </HBox>
 
             <!-- Rodapé -->
-            <Label text="Sistema de Gestão Acadêmica v2.0" styleClass="footer-text" />
+            <Label text="Sistema de Gestão Acadêmica v2.3" styleClass="footer-text" />
         </VBox>
     </center>
 

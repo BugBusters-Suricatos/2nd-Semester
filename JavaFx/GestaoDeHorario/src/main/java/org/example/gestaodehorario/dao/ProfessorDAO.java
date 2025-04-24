@@ -60,6 +60,7 @@ public class ProfessorDAO {
                         rs.getString("nome_materia")
                 );
                 Professor professor = new Professor(
+                        rs.getInt("id"),
                         rs.getString("nome_professor"),
                         rs.getString("email"),
                         materia
@@ -160,6 +161,30 @@ public class ProfessorDAO {
             return Optional.empty();
         }
     }
+
+    public List<Professor> getByMateria(int idMateria) throws SQLException {
+        String sql = "SELECT * FROM Professor WHERE materia_id = ?";
+        List<Professor> professores = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idMateria);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                professores.add(new Professor(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        new Materia(rs.getInt("materia_id"))
+                ));
+            }
+        }
+
+        return professores;
+    }
+
 
     /**
      * Retorna o número total de professores cadastrados no sistema
