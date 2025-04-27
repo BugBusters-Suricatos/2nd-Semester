@@ -81,16 +81,10 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 3. **Modelo Entidade-Relacionamento (ER)**  
    O sistema deve incluir um modelo ER claro e documentado, atualizado conforme mudanças no banco de dados.
 
-4. **Desempenho e Escalabilidade**  
-   O sistema deve lidar com alta carga de usuários simultâneos, sem degradação perceptível.
-
-5. **Segurança da Informação**  
-   O sistema deve implementar autenticação de usuários e garantir a integridade das informações armazenadas.
-
-6. **Usabilidade e Interface do Usuário**  
+4. **Usabilidade e Interface do Usuário**  
    O sistema deve possuir uma interface intuitiva e responsiva.
 
-7. **Documentação Técnica**  
+5. **Documentação Técnica**  
    O sistema deve incluir documentação para desenvolvedores, cobrindo arquitetura, API e processos.
 
 ---
@@ -129,6 +123,34 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 | Sprint 1    | 10/03/2025 à 30/03/2025 | Levantamento de requisitos, modelagem inicial, prototipagem, telas de cadastro      |
 | Sprint 2    | 07/04/2025 à 27/04/2025 | Funções avançadas e checagem de conflitos|
 | Sprint 3    | 05/05/2025 à 25/05/2025 | Sugestão de Alocação, Finalização, testes e elaboração de documentação.                  |
+
+## 📋 Sprint Backlog
+
+### 🏃‍♂️ Sprint 1 (Finalizada)
+**Período:** 30/03/2025 – 06/04/2025
+
+- [x] **User Story 4** – Gerenciar as disciplinas de cada semestre para organizar o cronograma do curso.
+- [x] **User Story 5** – Cadastrar e gerenciar cursos e disciplinas para manter o sistema atualizado.
+- [x] **User Story 6** – Cadastrar e gerenciar informações dos professores para ter controle sobre os recursos humanos do curso.
+
+---
+
+### 🏃‍♂️ Sprint 2 (Finalizada)
+**Período:** 07/04/2025 – 14/04/2025
+
+- [x] **User Story 1** – Definir os horários de aula para um semestre para organizar o calendário de aulas.
+- [x] **User Story 7** – Gerenciar os horários de aula considerando a padronização de 50 minutos e variações de intervalos para adequar o calendário ao curso.
+
+---
+
+### 🏃‍♂️ Sprint 3 (Em andamento)
+**Período:** 21/04/2025 – 28/04/2025
+
+- [ ] **User Story 2** – Evitar sobreposição de horários para garantir que os professores não tenham conflitos de horários.
+- [ ] **User Story 3** – Receber sugestões de alocação de horários para otimizar a definição do calendário de aulas.
+
+---
+
 
 ---
 🔥 Vamos com tudo! #GoSuricatos 🚀  
