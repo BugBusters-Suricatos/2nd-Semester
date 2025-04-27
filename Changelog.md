@@ -1,6 +1,59 @@
-# Changelog
+# 📜 Changelog
 
-Todas as alterações significativas neste projeto serão documentadas neste arquivo.
+Todas as mudanças importantes deste projeto serão documentadas aqui.
+
+O formato segue as diretrizes de [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [v1.4.0] - 2025-04-27
+
+### ✨ Adicionado
+- Implementação inicial da interface gráfica para gestão de horários usando **JavaFX**.
+- Criação do `MontagemGradeController` para montagem dinâmica da grade de horários com **checkboxes**.
+- Implementação de **DAOs** para carregar dados de professores e disciplinas.
+- Tela de **seleção de horários** com preenchimento automático baseado nos dados de DAO.
+- Funcionalidade inicial de **salvar horários selecionados**.
+- Estrutura base de **integração futura** com backend para persistência dos dados.
+
+### 🛠️ Alterado
+- Ajustes no **layout das telas** para melhor responsividade e melhor experiência do usuário.
+- Refatoração da estrutura de pacotes, separando **Controllers**, **DAOs** e **Models**.
+- Melhorias de **performance** no carregamento de dados da grade de horários.
+
+### 🐞 Corrigido
+- Correção de falha que permitia **seleção múltipla incorreta** de horários.
+- Correção de bug onde **checkboxes não atualizavam** ao trocar a disciplina ou professor selecionado.
+
+---
+
+# 📅 Histórico de Reuniões
+
+## 🔹 Reuniões Internas da Equipe (Segundas-feiras)
+- **30/03/2025**: Definição inicial do escopo e divisão de tarefas.
+- **07/04/2025**: Revisão do protótipo da interface gráfica e ajustes nos DAOs.
+- **14/04/2025**: Discussão sobre melhorias de performance e estruturação da montagem da grade.
+- **21/04/2025**: Refatoração dos Controllers e definição da estratégia para persistência dos dados.
+- **28/04/2025**: Planejamento de melhorias visuais e roadmap de testes de usabilidade.
+
+## 🔹 Reuniões com o Cliente (Quartas-feiras)
+- **09/04/2025**: Demonstração do protótipo funcional em aula.
+- **16/04/2025**: Coleta de feedback via Slack.
+- **23/04/2025**: Validação da estrutura UML.
+- **30/04/2025**: Apresentação da versão beta para aprovação e feedback final.
+
+---
+
+# 🚀 Próximos Passos
+- Finalizar a **persistência dos dados** selecionados no banco de dados.
+- Realizar **testes de usabilidade**.
+- Aplicar **correções** baseadas nos feedbacks do cliente.
+- **Entrega da primeira versão funcional** prevista para **maio de 2025**.
+
+---
+
+# 🔗 Links Úteis
+- [Projeto Principal no GitHub](https://github.com/BugBusters-Suricatos/2nd-Semester)
+
+
 
 ## [1.3.0] - 2025-03-30
 ### Adicionado
