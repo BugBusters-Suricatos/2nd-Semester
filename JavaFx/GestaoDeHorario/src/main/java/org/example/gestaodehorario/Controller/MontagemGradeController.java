@@ -97,25 +97,37 @@ public class MontagemGradeController implements Initializable {
             lvMaterias.setOnDragDropped(evt -> {
                 Dragboard db = evt.getDragboard();
                 boolean ok = false;
-                if (db.hasString() && evt.getGestureSource() instanceof StackPane) {
+                // Se o drag veio de um StackPane (ou seja, da grade)
+                if (db.hasString() && evt.getGestureSource() instanceof StackPane spSrc) {
                     int id = Integer.parseInt(db.getString());
                     try {
+                        // Encontra a Materia
                         Materia m = materiaDAO.getAll().stream()
                                 .filter(x -> x.getIdMateria() == id)
-                                .findFirst().orElse(null);
+                                .findFirst()
+                                .orElse(null);
                         if (m != null) {
+                            // 1) Reinsere UMA instância na lista
                             lvMaterias.getItems().add(m);
                             sortMaterias();
+
+                            // 2) Remove o StackPane da célula de origem
+                            Object origemObj = spSrc.getProperties().get("origem");
+                            if (origemObj instanceof StackPane origemCell) {
+                                origemCell.getChildren().remove(spSrc);
+                            }
+
                             ok = true;
                         }
                     } catch (SQLException e) {
                         LOGGER.log(Level.SEVERE, "Erro ao devolver matéria", e);
-                        showError("Erro: " + e.getMessage());
+                        showError("Erro ao devolver matéria:\n" + e.getMessage());
                     }
                 }
                 evt.setDropCompleted(ok);
                 evt.consume();
             });
+
 
             rebuildUI();
         } catch (Exception e) {
@@ -206,63 +218,98 @@ public class MontagemGradeController implements Initializable {
             LOGGER.log(Level.SEVERE, "Erro rebuild", e);
             showError("Erro rebuild: " + e.getMessage());
         }
-    }
-
-    private void configureDropTarget(StackPane cell, String dia, String horaRange) {
+    }private void configureDropTarget(StackPane cell, String dia, String horaRange) {
+        // aceita drag-over só se estiver vazia
         cell.setOnDragOver(evt -> {
-            if (evt.getGestureSource() != cell && evt.getDragboard().hasString())
+            if (evt.getGestureSource() != cell
+                    && evt.getDragboard().hasString()
+                    && cell.getChildren().isEmpty()) {
                 evt.acceptTransferModes(TransferMode.MOVE);
+            }
             evt.consume();
         });
 
         cell.setOnDragDropped(evt -> {
             Dragboard db = evt.getDragboard();
-            boolean success = false;
+            boolean sucesso = false;
             if (db.hasString()) {
-                int id = Integer.parseInt(db.getString());
-                try {
-                    Materia m = materiaDAO.getAll().stream()
-                            .filter(x -> x.getIdMateria() == id)
-                            .findFirst().orElse(null);
-                    if (m != null) {
-                        StackPane sp = createMateriaNode(m, dia, horaRange);
-                        cell.getChildren().add(sp);
+                // se já tem algo, alerta e recusa
+                if (!cell.getChildren().isEmpty()) {
+                    showError("Já existe uma disciplina alocada neste horário!");
+                } else {
+                    int idMat = Integer.parseInt(db.getString());
+                    try {
+                        Materia m = materiaDAO.getAll().stream()
+                                .filter(x -> x.getIdMateria() == idMat)
+                                .findFirst().orElse(null);
+                        if (m != null) {
+                            Object src = evt.getGestureSource();
 
-                        for (int i = 0; i < lvMaterias.getItems().size(); i++) {
-                            if (lvMaterias.getItems().get(i).getIdMateria() == id) {
-                                lvMaterias.getItems().remove(i);
-                                break;
+                            if (src instanceof ListCell<?>) {
+                                // veio da lista: cria novo node e remove só UMA instância
+                                StackPane novo = createMateriaNode(m, dia, horaRange);
+                                cell.getChildren().add(novo);
+                                List<Materia> lista = lvMaterias.getItems();
+                                for (int i = 0; i < lista.size(); i++) {
+                                    if (lista.get(i).getIdMateria() == idMat) {
+                                        lista.remove(i);
+                                        break;
+                                    }
+                                }
+
+                            } else if (src instanceof StackPane spSrc) {
+                                // veio de outra célula: move o mesmo StackPane
+                                StackPane origem = (StackPane) spSrc.getProperties().get("origem");
+                                if (origem != null) {
+                                    origem.getChildren().remove(spSrc);
+                                }
+                                cell.getChildren().add(spSrc);
                             }
+
+                            sucesso = true;
                         }
-                        success = true;
+                    } catch (SQLException ex) {
+                        LOGGER.log(Level.SEVERE, "Erro no drop da grade", ex);
+                        showError("Erro ao alocar matéria:\n" + ex.getMessage());
                     }
-                } catch (SQLException e) {
-                    LOGGER.log(Level.SEVERE, "Erro no drop da grade", e);
-                    showError("Erro: " + e.getMessage());
                 }
             }
-            evt.setDropCompleted(success);
+            evt.setDropCompleted(sucesso);
             evt.consume();
         });
     }
 
+
     private StackPane createMateriaNode(Materia m, String dia, String hr) {
-        Rectangle r = new Rectangle(100, 60);
-        r.setFill(Color.LIGHTBLUE);
+        Rectangle bg = new Rectangle(100, 60);
+        bg.setFill(Color.LIGHTBLUE);
         Label lbl = new Label(m.getNome());
-        StackPane sp = new StackPane(r, lbl);
+        StackPane sp = new StackPane(bg, lbl);
         sp.setUserData(Map.of("materia", m, "dia", dia, "hora", hr));
 
+        // Inicia o drag, guardando a célula de origem
         sp.setOnDragDetected(evt -> {
+            StackPane origem = (StackPane) sp.getParent();
+            sp.getProperties().put("origem", origem);
+
             Dragboard db = sp.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent cc = new ClipboardContent();
             cc.putString(String.valueOf(m.getIdMateria()));
             db.setContent(cc);
-            ((StackPane) sp.getParent()).getChildren().remove(sp);
             evt.consume();
         });
+
+        // Só remove o userData de origem se o MOVE tiver ocorrido
+        sp.setOnDragDone(evt -> {
+            if (evt.getTransferMode() == TransferMode.MOVE) {
+                sp.getProperties().remove("origem");
+            }
+            evt.consume();
+        });
+
         return sp;
     }
+
 
     @FXML private void salvarAlocacoes() {
         try {

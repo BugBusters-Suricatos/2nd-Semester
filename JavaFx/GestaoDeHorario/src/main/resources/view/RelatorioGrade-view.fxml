@@ -20,7 +20,10 @@
             </columns>
         </TableView>
         <HBox alignment="CENTER_RIGHT" spacing="10">
-            <Button text="Exportar PDF" fx:id="btnExportPdf" />
+            <Button fx:id="btnExportPdf"
+                    text="Exportar PDF"
+                    onAction="#exportToPdf"
+                    styleClass="btn-primary"/>
         </HBox>
     </VBox>
 </AnchorPane>
