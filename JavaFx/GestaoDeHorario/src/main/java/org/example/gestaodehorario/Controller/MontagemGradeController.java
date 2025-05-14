@@ -1,3 +1,4 @@
+// Arquivo: MontagemGradeController.java
 package org.example.gestaodehorario.Controller;
 
 import javafx.beans.value.ChangeListener;
@@ -47,205 +48,197 @@ public class MontagemGradeController implements Initializable {
     private final AlocacaoDAO alocacaoDAO = new AlocacaoDAO();
     private final ProfessorDAO professorDAO = new ProfessorDAO();
 
+    private void sortMaterias() {
+        lvMaterias.getItems().sort(Comparator.comparing(m -> m.getNome().toLowerCase()));
+    }
+
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        ChangeListener<Object> reloadListener = (obs, oldVal, newVal) -> rebuildUI();
+    public void initialize(URL url, ResourceBundle rb) {
+        ChangeListener<Object> reloadL = (obs, o, n) -> rebuildUI();
         try {
-            // Configura conversores e itens dos combo boxes
-            if (cbPeriodos != null) {
-                cbPeriodos.setConverter(new StringConverter<Periodo>() {
-                    @Override public String toString(Periodo p) { return p != null ? p.getNome() : ""; }
-                    @Override public Periodo fromString(String s) { return null; }
-                });
-                cbPeriodos.getItems().setAll(periodoDAO.getAll());
-                cbPeriodos.valueProperty().addListener(reloadListener);
-            }
+            cbPeriodos.setConverter(new StringConverter<Periodo>() {
+                @Override public String toString(Periodo p) { return p != null ? p.getNome() : ""; }
+                @Override public Periodo fromString(String s) { return null; }
+            });
+            cbPeriodos.getItems().setAll(periodoDAO.getAll());
+            cbPeriodos.valueProperty().addListener(reloadL);
+
             cbCursos.getItems().setAll(cursoDAO.getAll());
             cbSemestres.getItems().setAll(semestreDAO.getAll());
-            cbCursos.valueProperty().addListener(reloadListener);
-            cbSemestres.valueProperty().addListener(reloadListener);
+            cbCursos.valueProperty().addListener(reloadL);
+            cbSemestres.valueProperty().addListener(reloadL);
 
-            lvMaterias.setCellFactory(lv -> new ListCell<>() {
-                @Override protected void updateItem(Materia m, boolean empty) {
-                    super.updateItem(m, empty);
-                    setText(empty || m == null ? "" : m.getNome());
+            lvMaterias.setCellFactory(lv -> {
+                ListCell<Materia> cell = new ListCell<>() {
+                    @Override protected void updateItem(Materia m, boolean empty) {
+                        super.updateItem(m, empty);
+                        setText(empty || m == null ? "" : m.getNome());
+                    }
+                };
+                cell.setOnDragDetected(evt -> {
+                    Materia m = cell.getItem();
+                    if (m == null) return;
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(String.valueOf(m.getIdMateria()));
+                    db.setContent(cc);
+                    evt.consume();
+                });
+                return cell;
+            });
+
+            lvMaterias.setOnDragOver(evt -> {
+                if (evt.getGestureSource() != lvMaterias && evt.getDragboard().hasString()) {
+                    evt.acceptTransferModes(TransferMode.MOVE);
                 }
+                evt.consume();
+            });
+
+            lvMaterias.setOnDragDropped(evt -> {
+                Dragboard db = evt.getDragboard();
+                boolean ok = false;
+                if (db.hasString() && evt.getGestureSource() instanceof StackPane) {
+                    int id = Integer.parseInt(db.getString());
+                    try {
+                        Materia m = materiaDAO.getAll().stream()
+                                .filter(x -> x.getIdMateria() == id)
+                                .findFirst().orElse(null);
+                        if (m != null) {
+                            lvMaterias.getItems().add(m);
+                            sortMaterias();
+                            ok = true;
+                        }
+                    } catch (SQLException e) {
+                        LOGGER.log(Level.SEVERE, "Erro ao devolver matéria", e);
+                        showError("Erro: " + e.getMessage());
+                    }
+                }
+                evt.setDropCompleted(ok);
+                evt.consume();
             });
 
             rebuildUI();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao inicializar", e);
-            showError("Erro ao inicializar: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Erro init", e);
+            showError("Erro init: " + e.getMessage());
         }
     }
 
     private void rebuildUI() {
         try {
-            // Limpa grade e paleta
             gradeAlocacao.getChildren().clear();
             lvMaterias.getItems().clear();
-            // Popula apenas se todos selecionados
-            Curso curso = cbCursos.getValue();
-            Semestre sem = cbSemestres.getValue();
-            Periodo per = cbPeriodos.getValue();
-            if (curso == null || sem == null || per == null) {
-                return;
-            }
-            updateMaterias();
-            buildGrid();
-            configureDragFromPalette();
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao reconstruir UI", e);
-            showError("Erro ao reconstruir UI: " + e.getMessage());
-        }
-    }
 
-    private void updateMaterias() throws SQLException {
-        Curso curso = cbCursos.getValue();
-        Semestre sem = cbSemestres.getValue();
-        Periodo per = cbPeriodos.getValue();
+            Curso c = cbCursos.getValue();
+            Semestre s = cbSemestres.getValue();
+            Periodo p = cbPeriodos.getValue();
+            if (c == null || s == null || p == null) return;
 
-        // 1) Monta lista “bruta” com cada matéria repetida conforme carga horária
-        List<Materia> list = new ArrayList<>();
-        for (Materia m : materiaDAO.getAll()) {
-            if (m.getCurso().getIdCurso() == curso.getIdCurso()) {
-                for (int i = 0; i < m.getCargaHoraria(); i++) {
-                    list.add(m);
-                }
-            }
-        }
-
-        // 2) Pega IDs das matérias já salvas para este semestre/período
-        Set<Integer> savedIds = alocacaoDAO.getBySemestre(sem.getIdSemestre()).stream()
-                .filter(a -> a.getSlot().getIdPeriodo() == per.getIdPeriodo())
-                .filter(a -> a.getMateria().getCurso().getIdCurso() == curso.getIdCurso())
-                .map(a -> a.getMateria().getIdMateria())
-                .collect(Collectors.toSet());
-
-        // 3) Remove **todas** as instâncias cujo ID está em savedIds
-        list.removeIf(m -> savedIds.contains(m.getIdMateria()));
-
-        // 4) Atualiza a ListView
-        lvMaterias.getItems().setAll(list);
-    }
-
-    private void buildGrid() {
-        try {
-            Curso curso = cbCursos.getValue();
-            Semestre sem = cbSemestres.getValue();
-            Periodo per = cbPeriodos.getValue();
-            List<Slot> slots = slotDAO.getByCurso(curso.getIdCurso()).stream()
-                    .filter(s -> s.getIdPeriodo() == per.getIdPeriodo())
+            List<Materia> materias = materiaDAO.getAll().stream()
+                    .filter(m -> m.getCurso().getIdCurso() == c.getIdCurso())
+                    .flatMap(m -> Collections.nCopies(m.getCargaHoraria(), m).stream())
                     .collect(Collectors.toList());
 
-            List<String> dias = Arrays.asList("Segunda","Terça","Quarta","Quinta","Sexta","Sábado");
-            List<String> horarios = slots.stream()
-                    .map(s -> s.getHora_inicio() + " - " + s.getHora_fim())
-                    .distinct().sorted().toList();
+            Set<Integer> jaAlocadas = alocacaoDAO.getBySemestre(s.getIdSemestre()).stream()
+                    .filter(a -> a.getSlot().getIdPeriodo() == p.getIdPeriodo())
+                    .filter(a -> a.getMateria().getCurso().getIdCurso() == c.getIdCurso())
+                    .map(a -> a.getMateria().getIdMateria())
+                    .collect(Collectors.toSet());
 
-            // Cabeçalhos de dias e horários
+            materias.removeIf(m -> jaAlocadas.contains(m.getIdMateria()));
+            lvMaterias.getItems().setAll(materias);
+            sortMaterias();
+
+            List<Slot> slots = slotDAO.getByCurso(c.getIdCurso()).stream()
+                    .filter(sl -> sl.getIdPeriodo() == p.getIdPeriodo())
+                    .collect(Collectors.toList());
+
+            List<String> dias = Arrays.asList("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado");
+            List<String> horas = slots.stream()
+                    .map(sl -> sl.getHora_inicio() + " - " + sl.getHora_fim())
+                    .distinct().sorted().collect(Collectors.toList());
+
             for (int i = 0; i < dias.size(); i++) {
                 Label l = new Label(dias.get(i));
                 GridPane.setHalignment(l, HPos.CENTER);
                 GridPane.setValignment(l, VPos.CENTER);
                 gradeAlocacao.add(l, i + 1, 0);
             }
-            for (int i = 0; i < horarios.size(); i++) {
-                Label l = new Label(horarios.get(i));
+            for (int i = 0; i < horas.size(); i++) {
+                Label l = new Label(horas.get(i));
                 GridPane.setHalignment(l, HPos.CENTER);
                 GridPane.setValignment(l, VPos.CENTER);
                 gradeAlocacao.add(l, 0, i + 1);
             }
 
-            // Células de alocação
-            for (int r = 1; r <= horarios.size(); r++) {
-                for (int c = 1; c <= dias.size(); c++) {
+            for (int row = 1; row <= horas.size(); row++) {
+                for (int col = 1; col <= dias.size(); col++) {
+                    String dia = dias.get(col - 1);
+                    String hora = horas.get(row - 1);
                     StackPane cell = new StackPane();
                     cell.setPrefSize(120, 80);
-                    configureDropTarget(cell, dias.get(c - 1), horarios.get(r - 1));
-                    gradeAlocacao.add(cell, c, r);
+                    configureDropTarget(cell, dia, hora);
+                    gradeAlocacao.add(cell, col, row);
                 }
             }
 
-            loadSavedAlocacoes(curso, sem, per, slots, dias, horarios);
+            for (Alocacao a : alocacaoDAO.getBySemestre(s.getIdSemestre()).stream()
+                    .filter(a -> a.getMateria().getCurso().getIdCurso() == c.getIdCurso())
+                    .filter(a -> a.getSlot().getIdPeriodo() == p.getIdPeriodo())
+                    .collect(Collectors.toList())) {
+
+                String range = a.getSlot().getHora_inicio() + " - " + a.getSlot().getHora_fim();
+                String dia = a.getSlot().getDia_semana();
+                int row = horas.indexOf(range) + 1;
+                int col = dias.indexOf(dia) + 1;
+                StackPane sp = createMateriaNode(a.getMateria(), dia, range);
+
+                for (Node node : gradeAlocacao.getChildren()) {
+                    Integer rr = GridPane.getRowIndex(node);
+                    Integer cc = GridPane.getColumnIndex(node);
+                    if (rr != null && cc != null && rr == row && cc == col && node instanceof StackPane st) {
+                        st.getChildren().add(sp);
+                        break;
+                    }
+                }
+            }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao construir grade", e);
-            showError("Erro ao construir grade: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Erro rebuild", e);
+            showError("Erro rebuild: " + e.getMessage());
         }
-    }
-
-    private void loadSavedAlocacoes(Curso curso, Semestre sem, Periodo per,
-                                    List<Slot> slots, List<String> dias, List<String> horarios) throws SQLException {
-        Set<Integer> slotIds = new HashSet<>();
-        slots.forEach(s -> slotIds.add(s.getId_slot()));
-
-        // Filtra alocações apenas do curso e período atuais
-        List<Alocacao> alocs = alocacaoDAO.getBySemestre(sem.getIdSemestre()).stream()
-                .filter(a -> a.getMateria().getCurso().getIdCurso() == curso.getIdCurso())
-                .filter(a -> a.getSlot().getIdPeriodo() == per.getIdPeriodo())
-                .collect(Collectors.toList());
-
-        for (Alocacao a : alocs) {
-            Slot s = a.getSlot();
-            String range = s.getHora_inicio() + " - " + s.getHora_fim();
-            Materia m = a.getMateria();
-            StackPane sp = createMateriaNode(m, s.getDia_semana(), range);
-            int row = horarios.indexOf(range) + 1;
-            int col = dias.indexOf(s.getDia_semana()) + 1;
-            for (Node node : gradeAlocacao.getChildren()) {
-                Integer r = GridPane.getRowIndex(node);
-                Integer c = GridPane.getColumnIndex(node);
-                if (r != null && c != null && r == row && c == col && node instanceof StackPane cell) {
-                    cell.getChildren().add(sp);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void configureDragFromPalette() {
-        lvMaterias.setOnDragDetected(evt -> {
-            Materia m = lvMaterias.getSelectionModel().getSelectedItem();
-            if (m == null) return;
-            Dragboard db = lvMaterias.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent cc = new ClipboardContent();
-            cc.putString(String.valueOf(m.getIdMateria()));
-            db.setContent(cc);
-            /* Remove imediatamente da paleta ao arrastar */
-            lvMaterias.getItems().remove(m);
-            evt.consume();
-        });
     }
 
     private void configureDropTarget(StackPane cell, String dia, String horaRange) {
         cell.setOnDragOver(evt -> {
-            if (evt.getGestureSource() != cell && evt.getDragboard().hasString()) {
+            if (evt.getGestureSource() != cell && evt.getDragboard().hasString())
                 evt.acceptTransferModes(TransferMode.MOVE);
-            }
             evt.consume();
         });
+
         cell.setOnDragDropped(evt -> {
             Dragboard db = evt.getDragboard();
             boolean success = false;
             if (db.hasString()) {
                 int id = Integer.parseInt(db.getString());
-                Materia m = null;
                 try {
-                    for (Materia m2 : materiaDAO.getAll()) {
-                        if (m2.getIdMateria() == id) {
-                            m = m2;
-                            break;
+                    Materia m = materiaDAO.getAll().stream()
+                            .filter(x -> x.getIdMateria() == id)
+                            .findFirst().orElse(null);
+                    if (m != null) {
+                        StackPane sp = createMateriaNode(m, dia, horaRange);
+                        cell.getChildren().add(sp);
+
+                        for (int i = 0; i < lvMaterias.getItems().size(); i++) {
+                            if (lvMaterias.getItems().get(i).getIdMateria() == id) {
+                                lvMaterias.getItems().remove(i);
+                                break;
+                            }
                         }
+                        success = true;
                     }
                 } catch (SQLException e) {
-                    LOGGER.log(Level.SEVERE, "Erro ao carregar matéria durante drop", e);
-                    showError("Erro ao recuperar matéria: " + e.getMessage());
-                }
-
-                if (m != null) {
-                    StackPane sp = createMateriaNode(m, dia, horaRange);
-                    cell.getChildren().add(sp);
-                    success = true;
+                    LOGGER.log(Level.SEVERE, "Erro no drop da grade", e);
+                    showError("Erro: " + e.getMessage());
                 }
             }
             evt.setDropCompleted(success);
@@ -253,49 +246,49 @@ public class MontagemGradeController implements Initializable {
         });
     }
 
-    private StackPane createMateriaNode(Materia m, String dia, String hora) {
-        Rectangle rect = new Rectangle(100, 60);
-        rect.setFill(Color.LIGHTBLUE);
+    private StackPane createMateriaNode(Materia m, String dia, String hr) {
+        Rectangle r = new Rectangle(100, 60);
+        r.setFill(Color.LIGHTBLUE);
         Label lbl = new Label(m.getNome());
-        StackPane sp = new StackPane(rect, lbl);
-        sp.setUserData(Map.of("materia", m, "dia", dia, "hora", hora));
+        StackPane sp = new StackPane(r, lbl);
+        sp.setUserData(Map.of("materia", m, "dia", dia, "hora", hr));
+
         sp.setOnDragDetected(evt -> {
             Dragboard db = sp.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent cc = new ClipboardContent();
             cc.putString(String.valueOf(m.getIdMateria()));
             db.setContent(cc);
-            /* Remove do grid ao iniciar arraste */
             ((StackPane) sp.getParent()).getChildren().remove(sp);
             evt.consume();
         });
         return sp;
     }
 
-    @FXML
-    private void salvarAlocacoes() {
+    @FXML private void salvarAlocacoes() {
         try {
-            Curso curso = cbCursos.getValue();
-            Semestre sem = cbSemestres.getValue();
-            Periodo per = cbPeriodos.getValue();
-            if (curso == null || sem == null || per == null) {
+            Curso c = cbCursos.getValue();
+            Semestre s = cbSemestres.getValue();
+            Periodo p = cbPeriodos.getValue();
+            if (c == null || s == null || p == null) {
                 showError("Selecione curso, semestre e período!");
                 return;
             }
             List<Alocacao> lista = new ArrayList<>();
             for (Node node : gradeAlocacao.getChildren()) {
                 if (node instanceof StackPane cell) {
-                    for (Node child : cell.getChildren()) {
-                        if (child instanceof StackPane sp) {
+                    for (Node ch : cell.getChildren()) {
+                        if (ch instanceof StackPane sp) {
                             @SuppressWarnings("unchecked")
-                            Map<String, Object> data = (Map<String, Object>) sp.getUserData();
-                            Materia m = (Materia) data.get("materia");
-                            String dia = (String) data.get("dia");
-                            String hi = ((String) data.get("hora")).split(" - ")[0].trim();
-                            Professor p = professorDAO.getByMateria(m.getIdMateria()).stream()
-                                    .findFirst().orElseThrow(() -> new Exception("Professor não encontrado"));
-                            Slot s = slotDAO.getByHorarioDia(hi, dia, per.getIdPeriodo())
+                            Map<String, Object> dt = (Map<String, Object>) sp.getUserData();
+                            Materia m = (Materia) dt.get("materia");
+                            String dia = (String) dt.get("dia");
+                            String hi = ((String) dt.get("hora")).split(" - ")[0].trim();
+                            Professor pof = professorDAO.getByMateria(m.getIdMateria())
+                                    .stream().findFirst()
+                                    .orElseThrow(() -> new Exception("Professor não encontrado"));
+                            Slot sld = slotDAO.getByHorarioDia(hi, dia, p.getIdPeriodo())
                                     .orElseThrow(() -> new Exception("Slot não encontrado"));
-                            lista.add(new Alocacao(p, m, s, sem));
+                            lista.add(new Alocacao(pof, m, sld, s));
                         }
                     }
                 }
@@ -303,13 +296,12 @@ public class MontagemGradeController implements Initializable {
             alocacaoDAO.salvar(lista);
             showInfo(lista.size() + " alocações salvas com sucesso!");
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao salvar alocações", e);
-            showError("Erro: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Erro save", e);
+            showError("Erro save: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void btnVoltarClick() {
+    @FXML private void btnVoltarClick() {
         ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
     }
 
