@@ -1,66 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
+
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController"
-      styleClass="root"
-      alignment="TOP_CENTER"
-      spacing="25">
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController">
 
-    <padding>
-        <Insets top="30" right="40" bottom="30" left="40"/>
-    </padding>
+    <children>
 
-    <!-- Cabeçalho -->
-    <HBox alignment="CENTER" spacing="15" styleClass="header-container">
-        <Label text="🚫 Registo de Indisponibilidade" styleClass="title-label"/>
-        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
-    </HBox>
+        <Label layoutX="30" layoutY="20" text="Cadastro de Indisponibilidade" style="-fx-font-size: 18px;"/>
 
-    <!-- Seção de Filtros -->
-    <GridPane styleClass="filter-container" hgap="20" vgap="15">
-        <Label text="Professor:" styleClass="filter-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbProfessores" styleClass="modern-combo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label layoutX="30" layoutY="60" text="Curso:"/>
+        <ComboBox fx:id="cbCursos" layoutX="100" layoutY="56" prefWidth="180"/>
 
-        <Label text="Curso:" styleClass="filter-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbCursos" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label layoutX="30" layoutY="100" text="Semestre:"/>
+        <ComboBox fx:id="cbSemestres" layoutX="100" layoutY="96" prefWidth="180"/>
 
-        <Label text="Semestre:" styleClass="filter-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbSemestres" styleClass="modern-combo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    </GridPane>
+        <Label layoutX="300" layoutY="60" text="Professor:"/>
+        <ComboBox fx:id="cbProfessores" layoutX="380" layoutY="56" prefWidth="180"/>
 
-    <!-- Grade Interativa -->
-    <ScrollPane fitToWidth="true" styleClass="grade-scroll" vmax="500">
-        <GridPane fx:id="gradeHoraria" styleClass="interactive-grid">
-            <columnConstraints>
-                <ColumnConstraints prefWidth="120" halignment="CENTER"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-                <ColumnConstraints prefWidth="160" hgrow="ALWAYS"/>
-            </columnConstraints>
-        </GridPane>
-    </ScrollPane>
+        <Label layoutX="590" layoutY="60" text="Dia da Semana:"/>
+        <ComboBox fx:id="cbDiaSemana" layoutX="700" layoutY="56" prefWidth="120"/>
 
-    <!-- Ações -->
-    <VBox spacing="15" alignment="CENTER">
-        <Label fx:id="lblMensagem" styleClass="status-message"/>
-        <HBox spacing="20" alignment="CENTER">
-            <Button text="💾 Salvar Indisponibilidade"
-                    styleClass="save-button"
-                    onAction="#salvarIndisponibilidade"/>
-            <Button text="🔄 Limpar Seleção"
-                    styleClass="clear-button"
-                    onAction="#limparSelecao"/>
-        </HBox>
-    </VBox>
+        <Label layoutX="840" layoutY="60" text="Hora Início:"/>
+        <TextField fx:id="txtHoraInicio" layoutX="930" layoutY="56" prefWidth="60"/>
 
-</VBox>
+        <Label layoutX="1010" layoutY="60" text="Hora Fim:"/>
+        <TextField fx:id="txtHoraFim" layoutX="1080" layoutY="56" prefWidth="60"/>
+
+        <!-- Botão Adicionar alinhado ao lado dos campos -->
+        <Button fx:id="btnAdicionar" text="Adicionar" layoutX="1160" layoutY="56" onAction="#onAdicionarClick"/>
+
+        <TableView fx:id="tabelaIndisponibilidades" layoutX="30" layoutY="120" prefWidth="1150" prefHeight="260">
+            <columns>
+                <TableColumn fx:id="colCurso" text="Curso" prefWidth="150"/>
+                <TableColumn fx:id="colProfessor" text="Professor" prefWidth="180"/>
+                <TableColumn fx:id="colDiaSemana" text="Dia da Semana" prefWidth="120"/>
+                <TableColumn fx:id="colHoraInicio" text="Hora Início" prefWidth="90"/>
+                <TableColumn fx:id="colHoraFim" text="Hora Fim" prefWidth="90"/>
+            </columns>
+        </TableView>
+
+        <Button fx:id="btnRemover" layoutX="30" layoutY="400" text="Remover Selecionado"/>
+        <Button fx:id="btnSalvar" layoutX="1100" layoutY="400" text="Salvar Todas" onAction="#onSalvarTodasClick"/>
+
+
+    </children>
+</AnchorPane>

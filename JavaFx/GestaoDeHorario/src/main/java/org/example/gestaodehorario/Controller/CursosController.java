@@ -352,6 +352,6 @@ public class CursosController {
      */
     @FXML
     private void btnVoltarClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
+        ScreenManager.changeScreen("/view/home-view.fxml", "/styles/customHome.css");
     }
 }

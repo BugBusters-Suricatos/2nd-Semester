@@ -1,5 +1,12 @@
 package org.example.gestaodehorario.model;
 
+import org.example.gestaodehorario.connect.DatabaseManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Representa um período de indisponibilidade de um professor, vinculado a um curso e semestre específicos.
  * Define um intervalo de tempo em que o professor não pode ser alocado para ministrar aulas.
@@ -164,4 +171,6 @@ public class Indisponibilidade {
     public void setId_semestre(Integer id_semestre) {
         this.id_semestre = id_semestre;
     }
+
+
 }

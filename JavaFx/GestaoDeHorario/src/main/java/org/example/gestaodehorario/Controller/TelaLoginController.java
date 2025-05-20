@@ -45,7 +45,7 @@ public class TelaLoginController {
 
         try {
             if (autenticar(usuario, senha)) {
-                ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
+                ScreenManager.changeScreen("/view/home-view.fxml", "/styles/customHome.css");
             } else {
                 mostrarErro("Falha no login", "Credenciais inválidas.");
             }

@@ -43,14 +43,14 @@ public class ScreenManager {
      */
     public static void changeScreen(String fxmlPath, String cssPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource("/" + fxmlPath));
+            FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
 
             // Aplica CSS específico se fornecido
             if (cssPath != null && !cssPath.isEmpty()) {
-                URL cssResource = ScreenManager.class.getResource("/" + cssPath);
+                URL cssResource = ScreenManager.class.getResource(cssPath);
                 if (cssResource != null) {
                     scene.getStylesheets().add(cssResource.toExternalForm());
                 }
@@ -69,4 +69,5 @@ public class ScreenManager {
             e.printStackTrace();
         }
     }
+
 }

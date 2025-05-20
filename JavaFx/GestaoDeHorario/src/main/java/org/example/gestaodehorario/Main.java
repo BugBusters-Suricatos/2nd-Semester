@@ -36,7 +36,7 @@ public class Main extends Application {
 
         // Configuração inicial da interface
         ScreenManager.setPrimaryStage(stage);
-        ScreenManager.changeScreen("view/login-view.fxml", "styles/customlogin.css");
+        ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
         stage.show();
     }
 

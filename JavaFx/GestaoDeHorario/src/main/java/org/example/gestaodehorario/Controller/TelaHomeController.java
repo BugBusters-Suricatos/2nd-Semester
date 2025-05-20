@@ -78,31 +78,31 @@ public class TelaHomeController {
     // Métodos de navegação (mantidos)
     @FXML
     private void btnCursosClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoCursos-view.fxml", "styles/customGerenciamentoCursos.css");
+        ScreenManager.changeScreen("/view/GerenciamentoCursos-view.fxml", "/styles/customGerenciamentoCursos.css");
     }
 
     @FXML
     private void btnMateriaClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoMateria-view.fxml", "styles/customGerenciamentoMateria.css");
+        ScreenManager.changeScreen("/view/GerenciamentoMateria-view.fxml", "/styles/customGerenciamentoMateria.css");
     }
 
     @FXML
     private void btnProfessoresClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoProfessores-view.fxml", "styles/customGerenciamentoProfessores.css");
+        ScreenManager.changeScreen("/view/GerenciamentoProfessores-view.fxml", "/styles/customGerenciamentoProfessores.css");
     }
 
     @FXML
     private void btnHorariosClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoIndisponibilidade-view.fxml", "styles/customGerenciamentoIndisponibilidade.css");
+        ScreenManager.changeScreen("/view/GerenciamentoIndisponibilidade-view.fxml", "/styles/customGerenciamentoIndisponibilidade.css");
     }
 
     @FXML
     private void btnMontagemClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/GerenciamentoMontagem-view.fxml", "styles/customGerenciamentoMontagem.css");
+        ScreenManager.changeScreen("/view/GerenciamentoMontagem-view.fxml", "/styles/customGerenciamentoIndisponibilidade.css");
     }
 
     @FXML
     private void btnRelatorioClick(ActionEvent event) {
-        ScreenManager.changeScreen("view/RelatorioGrade-view.fxml", "styles/customRelatorioGrade.css");
+        ScreenManager.changeScreen("/view/RelatorioGrade-view.fxml", "/styles/customRelatorioGrade.css");
     }
 }

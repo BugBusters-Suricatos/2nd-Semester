@@ -1,205 +1,152 @@
 package org.example.gestaodehorario.Controller;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import org.example.gestaodehorario.ScreenManager;
 import org.example.gestaodehorario.dao.*;
 import org.example.gestaodehorario.model.*;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
 
-/**
- * Controlador JavaFX responsável por gerenciar a disponibilidade de horários (indisponibilidade) de um professor.
- * <p>
- * Permite selecionar curso e semestre, marcar slots de tempo indisponíveis e salvar essas informações na base de dados.
- * </p>
- */
+import java.sql.SQLException;
+import java.util.List;
+
 public class IndisponibilidadeController {
 
-    /** Painel que exibe a grade horária com checkboxes para marcação de indisponibilidade. */
-    @FXML private GridPane gradeHoraria;
-
-    /** ComboBox para seleção do curso cujos slots serão exibidos. */
     @FXML private ComboBox<Curso> cbCursos;
+    @FXML private ComboBox<Professor> cbProfessores;
+    @FXML private ComboBox<String> cbDiaSemana;
+    @FXML private TextField txtHoraInicio;
+    @FXML private TextField txtHoraFim;
+    @FXML private TableView<Indisponibilidade> tabelaIndisponibilidades;
+    @FXML private TableColumn<Indisponibilidade, String> colCurso;
+    @FXML private TableColumn<Indisponibilidade, String> colProfessor;
+    @FXML private TableColumn<Indisponibilidade, String> colDiaSemana;
+    @FXML private TableColumn<Indisponibilidade, String> colHoraInicio;
+    @FXML private TableColumn<Indisponibilidade, String> colHoraFim;
 
-    /** ComboBox para seleção do semestre cujos slots serão exibidos. */
-    @FXML private ComboBox<Semestre> cbSemestres;
 
-    /** Label para fazer a limpeza da seleçao. */
-    @FXML private Label lblMensagem;
 
-    /**
-     * Estrutura que mapeia dia da semana e horário de início para o checkbox correspondente na grade.
-     */
-    private final Map<String, Map<String, CheckBox>> grade = new HashMap<>();
-
-    /** DAO para acesso aos slots de horários disponíveis no sistema. */
-    private final SlotDAO slotDAO = new SlotDAO();
-
-    /** DAO para acesso a dados de cursos. */
     private final CursoDAO cursoDAO = new CursoDAO();
-
-    /** DAO para acesso a dados de semestres. */
-    private final SemestreDAO semestreDAO = new SemestreDAO();
-
-    /** DAO para persistência das indisponibilidades marcadas. */
+    private final ProfessorDAO professorDAO = new ProfessorDAO();
     private final IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
 
-    /** Professor atualmente autenticado, cujas indisponibilidades serão salvas. */
-    private Professor professorLogado;
+    private ObservableList<Indisponibilidade> listaIndisponibilidades = FXCollections.observableArrayList();
 
-    /**
-     * Inicializa o controlador após a injeção dos componentes FXML.
-     * <p>
-     * Carrega cursos e semestres disponíveis e configura listeners para atualizar a grade.
-     * </p>
-     */
     @FXML
     public void initialize() {
         try {
-            carregarDadosIniciais();
-            configurarListeners();
+            cbCursos.getItems().setAll(cursoDAO.getAll());
+            cbProfessores.getItems().setAll(professorDAO.getAllComMaterias());
+
+            cbDiaSemana.getItems().setAll("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado");
+
+            configurarColunasTabela();
+            atualizarTabela();
         } catch (SQLException e) {
-            mostrarErro("Erro ao carregar dados: " + e.getMessage());
+            mostrarErro("Erro ao carregar dados iniciais: " + e.getMessage());
         }
     }
 
-    /**
-     * Define o professor logado no sistema.
-     *
-     * @param professor instância de {@link Professor} autenticado
-     */
-    public void setProfessorLogado(Professor professor) {
-        this.professorLogado = professor;
-    }
-
-    /**
-     * Carrega dados iniciais de cursos e semestres para os ComboBoxes.
-     *
-     * @throws SQLException se ocorrer erro de acesso ao banco de dados
-     */
-    private void carregarDadosIniciais() throws SQLException {
-        cbCursos.getItems().setAll(cursoDAO.getAll());
-        cbSemestres.getItems().setAll(semestreDAO.getAll());
-    }
-
-    /**
-     * Configura listeners para ComboBoxes de curso e semestre, invocando atualização da grade.
-     */
-    private void configurarListeners() {
-        cbCursos.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
-        cbSemestres.valueProperty().addListener((obs, oldVal, newVal) -> atualizarGrade());
-    }
-
-    /**
-     * Configura a limpeza das seleçoes.
-     */
-    @FXML
-    private void limparSelecao() {
-        grade.values().forEach(horarios ->
-                horarios.values().forEach(checkBox ->
-                        checkBox.setSelected(false)
-                )
+    private void configurarColunasTabela() {
+        colCurso.setCellValueFactory(data ->
+                new SimpleStringProperty(
+                        data.getValue().getId_curso() != null && cbCursos.getItems() != null
+                                ? getCursoNomeById(data.getValue().getId_curso()) : "")
         );
-        lblMensagem.setText("");
-        lblMensagem.getStyleClass().removeAll("success", "error");
+        colProfessor.setCellValueFactory(data ->
+                new SimpleStringProperty(
+                        data.getValue().getId_professor() != null && cbProfessores.getItems() != null
+                                ? getProfessorNomeById(data.getValue().getId_professor()) : "")
+        );
+        colDiaSemana.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDia_semana()));
+        colHoraInicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHora_inicio()));
+        colHoraFim.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHora_fim()));
+        tabelaIndisponibilidades.setItems(listaIndisponibilidades);
     }
 
-    /**
-     * Atualiza a grade horária exibida com base no curso e semestre selecionados.
-     */
-    private void atualizarGrade() {
-        try {
-            Curso curso = cbCursos.getValue();
-            Semestre semestre = cbSemestres.getValue();
-            if (curso != null && semestre != null) {
-                List<Slot> slots = slotDAO.getByCurso(curso.getIdCurso()).stream()
-                        .filter(s -> s.getIdPeriodo() == curso.getIdPeriodo())  // filtra matutino/noturno conforme curso
-                        .collect(Collectors.toList());
-                construirGrade(slots);
-            }
-        } catch (SQLException e) {
-            mostrarErro("Erro ao carregar grade: " + e.getMessage());
-        }
+    private String getCursoNomeById(Integer idCurso) {
+        if (idCurso == null) return "";
+        return cbCursos.getItems().stream()
+                .filter(c -> c.getIdCurso() == idCurso)
+                .map(Curso::getNome)
+                .findFirst().orElse("");
     }
 
-    /**
-     * Constrói a grade de horários, adicionando labels de dias e horários e checkboxes para cada slot.
-     *
-     * @param slots lista de {@link Slot} contendo informações de dia, hora e status
-     */
-    private void construirGrade(List<Slot> slots) {
-        gradeHoraria.getChildren().clear();
-        grade.clear();
-
-        String[] dias = {"Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
-        for (int i = 0; i < dias.length; i++) {
-            gradeHoraria.add(new Label(dias[i]), i + 1, 0);
-            grade.put(dias[i], new HashMap<>());
-        }
-
-        Map<String, Integer> linhaHorario = new HashMap<>();
-        int linhaAtual = 1;
-
-        for (Slot slot : slots) {
-            String horario = slot.getHora_inicio() + " - " + slot.getHora_fim();
-            if (!linhaHorario.containsKey(horario)) {
-                gradeHoraria.add(new Label(horario), 0, linhaAtual);
-                linhaHorario.put(horario, linhaAtual);
-                linhaAtual++;
-            }
-            CheckBox checkBox = new CheckBox();
-            checkBox.setDisable("Ocupado".equals(slot.getStatus()));
-            int colunaDia = Arrays.asList(dias).indexOf(slot.getDia_semana()) + 1;
-            gradeHoraria.add(checkBox, colunaDia, linhaHorario.get(horario));
-            grade.get(slot.getDia_semana()).put(slot.getHora_inicio(), checkBox);
-        }
+    private String getProfessorNomeById(Integer idProfessor) {
+        if (idProfessor == null) return "";
+        return cbProfessores.getItems().stream()
+                .filter(p -> p.getId() == idProfessor)
+                .map(Professor::getNome)
+                .findFirst().orElse("");
     }
 
-    /**
-     * Persiste as indisponibilidades selecionadas pelo professor no banco de dados.
-     */
     @FXML
-    private void salvarIndisponibilidade() {
-        try {
-            Curso curso = cbCursos.getValue();
-            Semestre semestre = cbSemestres.getValue();
+    private void onAdicionarClick() {
+        Curso curso = cbCursos.getValue();
+        Professor professor = cbProfessores.getValue();
+        String diaSemana = cbDiaSemana.getValue();
+        String horaInicio = txtHoraInicio.getText();
+        String horaFim = txtHoraFim.getText();
 
-            if (professorLogado == null || curso == null || semestre == null) {
-                mostrarErro("Selecione todos os campos obrigatórios!");
-                return;
-            }
+        if (professor == null || diaSemana == null || horaInicio.isEmpty() || horaFim.isEmpty()) {
+            mostrarErro("Preencha todos os campos obrigatórios.");
+            return;
+        }
 
-            List<Indisponibilidade> indisponibilidades = new ArrayList<>();
-            grade.forEach((dia, horarios) -> {
-                horarios.forEach((horaInicio, checkBox) -> {
-                    if (checkBox.isSelected()) {
-                        try {
-                            String horaFim = slotDAO.findHoraFimByHoraInicio(horaInicio, curso.getIdPeriodo());
-                            indisponibilidades.add(new Indisponibilidade(
-                                    professorLogado.getId(), dia, horaInicio, horaFim,
-                                    curso.getIdCurso(), semestre.getIdSemestre()));
-                        } catch (SQLException e) {
-                            mostrarErro("Erro ao obter hora fim: " + e.getMessage());
-                        }
-                    }
-                });
-            });
+        Indisponibilidade nova = new Indisponibilidade();
+        nova.setId_professor(professor.getId());
+        nova.setDia_semana(diaSemana);
+        nova.setHora_inicio(horaInicio);
+        nova.setHora_fim(horaFim);
 
-            indisponibilidadeDAO.salvar(indisponibilidades);
-            mostrarSucesso("Indisponibilidades salvas com sucesso!");
-        } catch (Exception e) {
-            mostrarErro("Erro ao salvar: " + e.getMessage());
+        // opcional: setar curso (se ainda quiser mostrar na tabela)
+        nova.setId_curso(curso != null ? curso.getIdCurso() : null);
+
+        listaIndisponibilidades.add(nova);
+        limparCampos();
+    }
+
+    @FXML
+    private void onRemoverSelecionadoClick() {
+        Indisponibilidade selecionada = tabelaIndisponibilidades.getSelectionModel().getSelectedItem();
+        if (selecionada != null) {
+            listaIndisponibilidades.remove(selecionada);
         }
     }
 
-    /**
-     * Exibe um alerta de erro com a mensagem informada.
-     *
-     * @param mensagem texto a ser exibido no alerta de erro
-     */
+    @FXML
+    private void onSalvarTodasClick() {
+        try {
+            ObservableList<Indisponibilidade> indisponibilidades = tabelaIndisponibilidades.getItems();
+            for (Indisponibilidade ind : indisponibilidades) {
+                indisponibilidadeDAO.salvarIndisponibilidade(ind);
+            }
+            mostrarSucesso("Todas as indisponibilidades foram salvas no banco de dados!");
+            // Após salvar, pode limpar a tabela se quiser:
+            // tabelaIndisponibilidades.getItems().clear();
+        } catch (Exception e) {
+            mostrarErro("Erro ao salvar todas as indisponibilidades: " + e.getMessage());
+        }
+    }
+
+    private void atualizarTabela() {
+        try {
+            // Se quiser mostrar as já salvas no banco, implemente getAll()
+            // List<Indisponibilidade> lista = indisponibilidadeDAO.getAll();
+            // listaIndisponibilidades.setAll(lista);
+        } catch (Exception e) {
+            // Não exibe erro se não usar
+        }
+    }
+
+    private void limparCampos() {
+        cbDiaSemana.getSelectionModel().clearSelection();
+        txtHoraInicio.clear();
+        txtHoraFim.clear();
+    }
+
     private void mostrarErro(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erro");
@@ -208,11 +155,6 @@ public class IndisponibilidadeController {
         alert.showAndWait();
     }
 
-    /**
-     * Exibe um alerta de informação com a mensagem informada.
-     *
-     * @param mensagem texto a ser exibido no alerta de sucesso
-     */
     private void mostrarSucesso(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
@@ -221,9 +163,6 @@ public class IndisponibilidadeController {
         alert.showAndWait();
     }
 
-    /**
-     * Ação executada ao clicar no botão de voltar, retorna para a tela principal.
-     */
     @FXML
     private void btnVoltarClick() {
         ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
