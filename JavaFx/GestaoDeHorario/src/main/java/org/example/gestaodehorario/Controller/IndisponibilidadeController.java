@@ -1,170 +1,144 @@
 package org.example.gestaodehorario.Controller;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.gestaodehorario.ScreenManager;
-import org.example.gestaodehorario.dao.*;
-import org.example.gestaodehorario.model.*;
+import javafx.scene.layout.GridPane;
+import org.example.gestaodehorario.dao.IndisponibilidadeDAO;
+import org.example.gestaodehorario.dao.ProfessorDAO;
+import org.example.gestaodehorario.dao.SlotDAO;
+import org.example.gestaodehorario.model.Professor;
+import org.example.gestaodehorario.model.Slot;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 public class IndisponibilidadeController {
 
-    @FXML private ComboBox<Curso> cbCursos;
-    @FXML private ComboBox<Professor> cbProfessores;
-    @FXML private ComboBox<String> cbDiaSemana;
-    @FXML private TextField txtHoraInicio;
-    @FXML private TextField txtHoraFim;
-    @FXML private TableView<Indisponibilidade> tabelaIndisponibilidades;
-    @FXML private TableColumn<Indisponibilidade, String> colCurso;
-    @FXML private TableColumn<Indisponibilidade, String> colProfessor;
-    @FXML private TableColumn<Indisponibilidade, String> colDiaSemana;
-    @FXML private TableColumn<Indisponibilidade, String> colHoraInicio;
-    @FXML private TableColumn<Indisponibilidade, String> colHoraFim;
+    @FXML
+    private ComboBox<String> cbCursos;
+    @FXML
+    private ComboBox<String> cbSemestres;
+    @FXML
+    private ComboBox<Professor> cbProfessores;
+    @FXML
+    private Button btnSalvarTodas;
+    @FXML
+    private GridPane gridSlots;
 
-
-
-    private final CursoDAO cursoDAO = new CursoDAO();
-    private final ProfessorDAO professorDAO = new ProfessorDAO();
-    private final IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
-
-    private ObservableList<Indisponibilidade> listaIndisponibilidades = FXCollections.observableArrayList();
+    private Map<Slot, CheckBox> slotCheckBoxMap = new HashMap<>();
+    private List<Slot> slots = new ArrayList<>();
 
     @FXML
     public void initialize() {
+        carregarCursos();
+        carregarSemestres();
+        carregarProfessores();
+
+        cbProfessores.setOnAction(e -> montarGridSlots());
+        btnSalvarTodas.setOnAction(e -> salvarIndisponibilidades());
+    }
+
+    private void carregarCursos() {
+        cbCursos.getItems().clear();
+        cbCursos.getItems().add("Banco de Dados (Noite)");
+        cbCursos.getItems().add("Análise e Desenvolvimento de Sistemas");
+    }
+
+    private void carregarSemestres() {
+        cbSemestres.getItems().clear();
+        cbSemestres.getItems().addAll("1", "2", "3", "4");
+    }
+
+    private void carregarProfessores() {
+        ProfessorDAO professorDAO = new ProfessorDAO();
+        List<Professor> listaProf = new ArrayList<>();
         try {
-            cbCursos.getItems().setAll(cursoDAO.getAll());
-            cbProfessores.getItems().setAll(professorDAO.getAllComMaterias());
-
-            cbDiaSemana.getItems().setAll("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado");
-
-            configurarColunasTabela();
-            atualizarTabela();
-        } catch (SQLException e) {
-            mostrarErro("Erro ao carregar dados iniciais: " + e.getMessage());
+            listaProf = professorDAO.getAllComMaterias(); // NOME REAL DO MÉTODO
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        cbProfessores.getItems().clear();
+        cbProfessores.getItems().addAll(listaProf);
     }
 
-    private void configurarColunasTabela() {
-        colCurso.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getId_curso() != null && cbCursos.getItems() != null
-                                ? getCursoNomeById(data.getValue().getId_curso()) : "")
-        );
-        colProfessor.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getId_professor() != null && cbProfessores.getItems() != null
-                                ? getProfessorNomeById(data.getValue().getId_professor()) : "")
-        );
-        colDiaSemana.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDia_semana()));
-        colHoraInicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHora_inicio()));
-        colHoraFim.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHora_fim()));
-        tabelaIndisponibilidades.setItems(listaIndisponibilidades);
-    }
+    private void montarGridSlots() {
+        gridSlots.getChildren().clear();
+        slotCheckBoxMap.clear();
 
-    private String getCursoNomeById(Integer idCurso) {
-        if (idCurso == null) return "";
-        return cbCursos.getItems().stream()
-                .filter(c -> c.getIdCurso() == idCurso)
-                .map(Curso::getNome)
-                .findFirst().orElse("");
-    }
-
-    private String getProfessorNomeById(Integer idProfessor) {
-        if (idProfessor == null) return "";
-        return cbProfessores.getItems().stream()
-                .filter(p -> p.getId() == idProfessor)
-                .map(Professor::getNome)
-                .findFirst().orElse("");
-    }
-
-    @FXML
-    private void onAdicionarClick() {
-        Curso curso = cbCursos.getValue();
         Professor professor = cbProfessores.getValue();
-        String diaSemana = cbDiaSemana.getValue();
-        String horaInicio = txtHoraInicio.getText();
-        String horaFim = txtHoraFim.getText();
+        if (professor == null) return;
 
-        if (professor == null || diaSemana == null || horaInicio.isEmpty() || horaFim.isEmpty()) {
-            mostrarErro("Preencha todos os campos obrigatórios.");
+        SlotDAO slotDAO = new SlotDAO();
+        try {
+            slots = slotDAO.getAll(); // NOME REAL DO MÉTODO
+        } catch (SQLException e) {
+            e.printStackTrace();
             return;
         }
 
-        Indisponibilidade nova = new Indisponibilidade();
-        nova.setId_professor(professor.getId());
-        nova.setDia_semana(diaSemana);
-        nova.setHora_inicio(horaInicio);
-        nova.setHora_fim(horaFim);
+        IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
+        List<Integer> indisponiveisIds = indisponibilidadeDAO.getSlotIdsPorProfessor(professor.getId());
 
-        // opcional: setar curso (se ainda quiser mostrar na tabela)
-        nova.setId_curso(curso != null ? curso.getIdCurso() : null);
-
-        listaIndisponibilidades.add(nova);
-        limparCampos();
-    }
-
-    @FXML
-    private void onRemoverSelecionadoClick() {
-        Indisponibilidade selecionada = tabelaIndisponibilidades.getSelectionModel().getSelectedItem();
-        if (selecionada != null) {
-            listaIndisponibilidades.remove(selecionada);
+        // Descobrir todos os dias e horários únicos
+        List<String> dias = new ArrayList<>();
+        List<String> horarios = new ArrayList<>();
+        for (Slot s : slots) {
+            if (!dias.contains(s.getDia_semana())) dias.add(s.getDia_semana());
+            String horaStr = s.getHora_inicio() + " - " + s.getHora_fim();
+            if (!horarios.contains(horaStr)) horarios.add(horaStr);
         }
-    }
 
-    @FXML
-    private void onSalvarTodasClick() {
-        try {
-            ObservableList<Indisponibilidade> indisponibilidades = tabelaIndisponibilidades.getItems();
-            for (Indisponibilidade ind : indisponibilidades) {
-                indisponibilidadeDAO.salvarIndisponibilidade(ind);
+        // Cabeçalhos
+        for (int col = 0; col < dias.size(); col++) {
+            Label diaLabel = new Label(dias.get(col));
+            gridSlots.add(diaLabel, col + 1, 0);
+        }
+        for (int row = 0; row < horarios.size(); row++) {
+            Label horaLabel = new Label(horarios.get(row));
+            gridSlots.add(horaLabel, 0, row + 1);
+        }
+
+        // Preencher o grid com checkboxes
+        for (int row = 0; row < horarios.size(); row++) {
+            String horario = horarios.get(row);
+            for (int col = 0; col < dias.size(); col++) {
+                String dia = dias.get(col);
+                Slot slotAchado = null;
+                for (Slot s : slots) {
+                    String horaStr = s.getHora_inicio() + " - " + s.getHora_fim();
+                    if (s.getDia_semana().equals(dia) && horaStr.equals(horario)) {
+                        slotAchado = s;
+                        break;
+                    }
+                }
+                CheckBox cb = new CheckBox();
+                if (slotAchado != null && indisponiveisIds.contains(slotAchado.getId_slot())) {
+                    cb.setSelected(true);
+                }
+                if (slotAchado != null) {
+                    slotCheckBoxMap.put(slotAchado, cb);
+                } else {
+                    cb.setDisable(true);
+                }
+                gridSlots.add(cb, col + 1, row + 1);
             }
-            mostrarSucesso("Todas as indisponibilidades foram salvas no banco de dados!");
-            // Após salvar, pode limpar a tabela se quiser:
-            // tabelaIndisponibilidades.getItems().clear();
-        } catch (Exception e) {
-            mostrarErro("Erro ao salvar todas as indisponibilidades: " + e.getMessage());
         }
     }
 
-    private void atualizarTabela() {
-        try {
-            // Se quiser mostrar as já salvas no banco, implemente getAll()
-            // List<Indisponibilidade> lista = indisponibilidadeDAO.getAll();
-            // listaIndisponibilidades.setAll(lista);
-        } catch (Exception e) {
-            // Não exibe erro se não usar
+    private void salvarIndisponibilidades() {
+        Professor professor = cbProfessores.getValue();
+        if (professor == null) return;
+
+        IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
+        List<Integer> slotsMarcados = new ArrayList<>();
+        for (Slot slot : slotCheckBoxMap.keySet()) {
+            if (slotCheckBoxMap.get(slot).isSelected()) {
+                slotsMarcados.add(slot.getId_slot());
+            }
         }
-    }
+        indisponibilidadeDAO.salvarSlotsIndisponiveis(professor.getId(), slotsMarcados);
 
-    private void limparCampos() {
-        cbDiaSemana.getSelectionModel().clearSelection();
-        txtHoraInicio.clear();
-        txtHoraFim.clear();
-    }
-
-    private void mostrarErro(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Indisponibilidades salvas com sucesso!");
         alert.showAndWait();
-    }
-
-    private void mostrarSucesso(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void btnVoltarClick() {
-        ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
     }
 }

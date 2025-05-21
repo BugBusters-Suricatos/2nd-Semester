@@ -1,4 +1,3 @@
-// Arquivo: MontagemGradeController.java
 package org.example.gestaodehorario.Controller;
 
 import javafx.beans.value.ChangeListener;
@@ -7,11 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -47,6 +42,10 @@ public class MontagemGradeController implements Initializable {
     private final SlotDAO slotDAO = new SlotDAO();
     private final AlocacaoDAO alocacaoDAO = new AlocacaoDAO();
     private final ProfessorDAO professorDAO = new ProfessorDAO();
+    private final IndisponibilidadeDAO indisponibilidadeDAO = new IndisponibilidadeDAO();
+
+    // Açúcar: guarda slots indisponíveis para cada professor (carrega uma vez por rebuild)
+    private Map<Integer, Set<Integer>> indisponibilidadesPorProfessor = new HashMap<>();
 
     private void sortMaterias() {
         lvMaterias.getItems().sort(Comparator.comparing(m -> m.getNome().toLowerCase()));
@@ -128,7 +127,6 @@ public class MontagemGradeController implements Initializable {
                 evt.consume();
             });
 
-
             rebuildUI();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erro init", e);
@@ -136,8 +134,27 @@ public class MontagemGradeController implements Initializable {
         }
     }
 
+    // Açúcar: carregar indisponibilidades de todos os professores do sistema
+    private void carregarIndisponibilidades() {
+        indisponibilidadesPorProfessor.clear();
+        try {
+            // Aqui supõe que você tem um método getAll() no DAO ou equivalente
+            List<Indisponibilidade> lista = indisponibilidadeDAO.getAll();
+            for (Indisponibilidade ind : lista) {
+                indisponibilidadesPorProfessor
+                        .computeIfAbsent(ind.getIdProfessor(), k -> new HashSet<>())
+                        .add(ind.getIdSlot());
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao carregar indisponibilidades", e);
+        }
+    }
+
     private void rebuildUI() {
         try {
+            // Carrega as indisponibilidades antes de montar a grade
+            carregarIndisponibilidades();
+
             gradeAlocacao.getChildren().clear();
             lvMaterias.getItems().clear();
 
@@ -218,8 +235,10 @@ public class MontagemGradeController implements Initializable {
             LOGGER.log(Level.SEVERE, "Erro rebuild", e);
             showError("Erro rebuild: " + e.getMessage());
         }
-    }private void configureDropTarget(StackPane cell, String dia, String horaRange) {
-        // aceita drag-over só se estiver vazia
+    }
+
+    // Açúcar: checa se professor está indisponível no slot ANTES de permitir alocação
+    private void configureDropTarget(StackPane cell, String dia, String horaRange) {
         cell.setOnDragOver(evt -> {
             if (evt.getGestureSource() != cell
                     && evt.getDragboard().hasString()
@@ -233,52 +252,75 @@ public class MontagemGradeController implements Initializable {
             Dragboard db = evt.getDragboard();
             boolean sucesso = false;
             if (db.hasString()) {
-                // se já tem algo, alerta e recusa
-                if (!cell.getChildren().isEmpty()) {
-                    showError("Já existe uma disciplina alocada neste horário!");
-                } else {
-                    int idMat = Integer.parseInt(db.getString());
-                    try {
-                        Materia m = materiaDAO.getAll().stream()
-                                .filter(x -> x.getIdMateria() == idMat)
-                                .findFirst().orElse(null);
-                        if (m != null) {
-                            Object src = evt.getGestureSource();
+                int idMat = Integer.parseInt(db.getString());
+                try {
+                    Materia m = materiaDAO.getAll().stream()
+                            .filter(x -> x.getIdMateria() == idMat)
+                            .findFirst().orElse(null);
+                    if (m != null) {
+                        // Descobre professor da matéria
+                        Professor prof = professorDAO.getByMateria(m.getIdMateria())
+                                .stream().findFirst().orElse(null);
+                        if (prof == null) {
+                            showError("Professor não encontrado para a matéria!");
+                            evt.setDropCompleted(false);
+                            evt.consume();
+                            return;
+                        }
 
-                            if (src instanceof ListCell<?>) {
-                                // veio da lista: cria novo node e remove só UMA instância
-                                StackPane novo = createMateriaNode(m, dia, horaRange);
-                                cell.getChildren().add(novo);
-                                List<Materia> lista = lvMaterias.getItems();
-                                for (int i = 0; i < lista.size(); i++) {
-                                    if (lista.get(i).getIdMateria() == idMat) {
-                                        lista.remove(i);
-                                        break;
-                                    }
-                                }
+                        // Descobre o slot correto (id) baseado em horário e dia
+                        Curso c = cbCursos.getValue();
+                        Periodo p = cbPeriodos.getValue();
+                        Slot slot = slotDAO.getByHorarioDia(horaRange.split(" - ")[0].trim(), dia, p.getIdPeriodo())
+                                .orElse(null);
+                        if (slot == null) {
+                            showError("Slot não encontrado!");
+                            evt.setDropCompleted(false);
+                            evt.consume();
+                            return;
+                        }
 
-                            } else if (src instanceof StackPane spSrc) {
-                                // veio de outra célula: move o mesmo StackPane
-                                StackPane origem = (StackPane) spSrc.getProperties().get("origem");
-                                if (origem != null) {
-                                    origem.getChildren().remove(spSrc);
+                        // Checa indisponibilidade desse professor nesse slot
+                        Set<Integer> indisponiveis = indisponibilidadesPorProfessor.get(prof.getId());
+                        if (indisponiveis != null && indisponiveis.contains(slot.getId_slot())) {
+                            showError("Este professor está indisponível neste horário!");
+                            evt.setDropCompleted(false);
+                            evt.consume();
+                            return;
+                        }
+
+                        Object src = evt.getGestureSource();
+
+                        if (src instanceof ListCell<?>) {
+                            StackPane novo = createMateriaNode(m, dia, horaRange);
+                            cell.getChildren().add(novo);
+                            List<Materia> lista = lvMaterias.getItems();
+                            for (int i = 0; i < lista.size(); i++) {
+                                if (lista.get(i).getIdMateria() == idMat) {
+                                    lista.remove(i);
+                                    break;
                                 }
-                                cell.getChildren().add(spSrc);
                             }
 
-                            sucesso = true;
+                        } else if (src instanceof StackPane spSrc) {
+                            StackPane origem = (StackPane) spSrc.getProperties().get("origem");
+                            if (origem != null) {
+                                origem.getChildren().remove(spSrc);
+                            }
+                            cell.getChildren().add(spSrc);
                         }
-                    } catch (SQLException ex) {
-                        LOGGER.log(Level.SEVERE, "Erro no drop da grade", ex);
-                        showError("Erro ao alocar matéria:\n" + ex.getMessage());
+
+                        sucesso = true;
                     }
+                } catch (SQLException ex) {
+                    LOGGER.log(Level.SEVERE, "Erro no drop da grade", ex);
+                    showError("Erro ao alocar matéria:\n" + ex.getMessage());
                 }
             }
             evt.setDropCompleted(sucesso);
             evt.consume();
         });
     }
-
 
     private StackPane createMateriaNode(Materia m, String dia, String hr) {
         Rectangle bg = new Rectangle(100, 60);
@@ -287,7 +329,6 @@ public class MontagemGradeController implements Initializable {
         StackPane sp = new StackPane(bg, lbl);
         sp.setUserData(Map.of("materia", m, "dia", dia, "hora", hr));
 
-        // Inicia o drag, guardando a célula de origem
         sp.setOnDragDetected(evt -> {
             StackPane origem = (StackPane) sp.getParent();
             sp.getProperties().put("origem", origem);
@@ -299,7 +340,6 @@ public class MontagemGradeController implements Initializable {
             evt.consume();
         });
 
-        // Só remove o userData de origem se o MOVE tiver ocorrido
         sp.setOnDragDone(evt -> {
             if (evt.getTransferMode() == TransferMode.MOVE) {
                 sp.getProperties().remove("origem");
@@ -309,7 +349,6 @@ public class MontagemGradeController implements Initializable {
 
         return sp;
     }
-
 
     @FXML private void salvarAlocacoes() {
         try {
@@ -349,7 +388,7 @@ public class MontagemGradeController implements Initializable {
     }
 
     @FXML private void btnVoltarClick() {
-        ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
+        ScreenManager.changeScreen("/view/home-view.fxml", "styles/customHome.css");
     }
 
     private void showError(String msg) {

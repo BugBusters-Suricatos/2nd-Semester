@@ -8,43 +8,23 @@
             fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController">
 
     <children>
-
         <Label layoutX="30" layoutY="20" text="Cadastro de Indisponibilidade" style="-fx-font-size: 18px;"/>
 
         <Label layoutX="30" layoutY="60" text="Curso:"/>
         <ComboBox fx:id="cbCursos" layoutX="100" layoutY="56" prefWidth="180"/>
 
-        <Label layoutX="30" layoutY="100" text="Semestre:"/>
-        <ComboBox fx:id="cbSemestres" layoutX="100" layoutY="96" prefWidth="180"/>
+        <Label layoutX="320" layoutY="60" text="Semestre:"/>
+        <ComboBox fx:id="cbSemestres" layoutX="400" layoutY="56" prefWidth="100"/>
 
-        <Label layoutX="300" layoutY="60" text="Professor:"/>
-        <ComboBox fx:id="cbProfessores" layoutX="380" layoutY="56" prefWidth="180"/>
+        <Label layoutX="520" layoutY="60" text="Professor:"/>
+        <ComboBox fx:id="cbProfessores" layoutX="600" layoutY="56" prefWidth="220"/>
 
-        <Label layoutX="590" layoutY="60" text="Dia da Semana:"/>
-        <ComboBox fx:id="cbDiaSemana" layoutX="700" layoutY="56" prefWidth="120"/>
+        <Button text="Salvar Todas" fx:id="btnSalvarTodas" layoutX="830" layoutY="56" prefWidth="120"/>
 
-        <Label layoutX="840" layoutY="60" text="Hora Início:"/>
-        <TextField fx:id="txtHoraInicio" layoutX="930" layoutY="56" prefWidth="60"/>
-
-        <Label layoutX="1010" layoutY="60" text="Hora Fim:"/>
-        <TextField fx:id="txtHoraFim" layoutX="1080" layoutY="56" prefWidth="60"/>
-
-        <!-- Botão Adicionar alinhado ao lado dos campos -->
-        <Button fx:id="btnAdicionar" text="Adicionar" layoutX="1160" layoutY="56" onAction="#onAdicionarClick"/>
-
-        <TableView fx:id="tabelaIndisponibilidades" layoutX="30" layoutY="120" prefWidth="1150" prefHeight="260">
-            <columns>
-                <TableColumn fx:id="colCurso" text="Curso" prefWidth="150"/>
-                <TableColumn fx:id="colProfessor" text="Professor" prefWidth="180"/>
-                <TableColumn fx:id="colDiaSemana" text="Dia da Semana" prefWidth="120"/>
-                <TableColumn fx:id="colHoraInicio" text="Hora Início" prefWidth="90"/>
-                <TableColumn fx:id="colHoraFim" text="Hora Fim" prefWidth="90"/>
-            </columns>
-        </TableView>
-
-        <Button fx:id="btnRemover" layoutX="30" layoutY="400" text="Remover Selecionado"/>
-        <Button fx:id="btnSalvar" layoutX="1100" layoutY="400" text="Salvar Todas" onAction="#onSalvarTodasClick"/>
-
-
+        <ScrollPane fx:id="scrollPane" layoutX="30" layoutY="100" prefWidth="920" prefHeight="450">
+            <content>
+                <GridPane fx:id="gridSlots" hgap="5" vgap="5" />
+            </content>
+        </ScrollPane>
     </children>
 </AnchorPane>

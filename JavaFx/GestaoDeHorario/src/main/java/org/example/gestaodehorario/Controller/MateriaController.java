@@ -337,6 +337,6 @@ public class MateriaController {
      */
     @FXML
     private void btnVoltarClick() {
-        ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
+        ScreenManager.changeScreen("/view/home-view.fxml", "/styles/customHome.css");
     }
 }

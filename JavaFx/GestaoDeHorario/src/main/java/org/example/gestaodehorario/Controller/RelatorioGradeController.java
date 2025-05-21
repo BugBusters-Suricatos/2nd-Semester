@@ -150,6 +150,6 @@ public class RelatorioGradeController implements Initializable {
 
     @FXML
     private void btnVoltarClick() {
-        ScreenManager.changeScreen("view/home-view.fxml", "styles/customHome.css");
+        ScreenManager.changeScreen("/view/home-view.fxml", "styles/customHome.css");
     }
 }

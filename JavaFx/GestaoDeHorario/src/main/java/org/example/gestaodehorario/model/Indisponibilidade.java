@@ -67,6 +67,27 @@ public class Indisponibilidade {
         this.id_semestre = id_semestre;
     }
 
+    // Construtor para uso com id, id_professor, id_slot
+    public Indisponibilidade(Integer id, Integer id_professor, Integer id_slot) {
+        this.id = id;
+        this.id_professor = id_professor;
+        this.id_curso = null;
+        this.id_semestre = null;
+        this.dia_semana = null;
+        this.hora_inicio = null;
+        this.hora_fim = null;
+        // Só esses três são usados nesse cenário
+        // O resto fica null e não atrapalha os outros métodos
+        // Se preferir pode remover esses atributos não usados depois!
+        this.id_slot = id_slot; // ADICIONE ISSO NA SUA CLASSE!
+    }
+    // Adicione também o atributo:
+    private Integer id_slot;
+    // ...e o getter:
+    public Integer getIdSlot() {
+        return id_slot;
+    }
+
     /**
      * @return ID único desta indisponibilidade
      */
@@ -172,5 +193,7 @@ public class Indisponibilidade {
         this.id_semestre = id_semestre;
     }
 
+
+    public Integer getIdProfessor() { return id_professor; }
 
 }
