@@ -1,7 +1,10 @@
 package org.example.gestaodehorario;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
@@ -17,28 +20,17 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    /**
-     * Método de inicialização da aplicação JavaFX
-     * @param stage Palco principal fornecido pelo JavaFX
-     */
-    @Override
-    public void start(Stage stage) {
-        // Configuração de exemplo para tratamento global de erros (desativado)
-        /*
-        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro Crítico");
-            alert.setHeaderText("Ocorreu um erro inesperado");
-            alert.setContentText(throwable.getMessage());
-            alert.showAndWait();
-        });
-        */
 
-        // Configuração inicial da interface
-        ScreenManager.setPrimaryStage(stage);
+    @Override
+
+    public void start(Stage primaryStage) {
+        ScreenManager.setPrimaryStage(primaryStage);
         ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
-        stage.show();
+
+
+
     }
+
 
     /**
      * Ponto de entrada padrão para aplicações JavaFX

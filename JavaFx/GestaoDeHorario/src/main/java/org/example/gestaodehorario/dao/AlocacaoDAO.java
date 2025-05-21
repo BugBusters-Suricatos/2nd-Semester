@@ -236,4 +236,19 @@ public class AlocacaoDAO {
         }
         return list;
     }
+    public void excluirPorCursoSemestrePeriodo(int idCurso, int idSemestre, int idPeriodo) {
+        String sql = "DELETE FROM Alocacao WHERE id_semestre = ? "
+                + "AND id_slot IN (SELECT id_slot FROM Slot WHERE id_periodo = ?) "
+                + "AND id_materia IN (SELECT id_materia FROM Materia WHERE id_curso = ?)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idSemestre);
+            stmt.setInt(2, idPeriodo);
+            stmt.setInt(3, idCurso);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

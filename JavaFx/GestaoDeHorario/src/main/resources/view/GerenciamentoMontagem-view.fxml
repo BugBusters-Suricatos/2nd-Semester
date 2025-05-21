@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.gestaodehorario.Controller.MontagemGradeController"
-            styleClass="root">
+            styleClass="montagem-root">
 
     <!-- TOPO: seleção de curso, período e semestre -->
     <top>
@@ -38,9 +38,12 @@
     <!-- RODAPÉ: botões Salvar e Voltar -->
     <bottom>
         <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
+            <Button text="Auto-Alocar" onAction="#autoAlocarMaterias" styleClass="btn-primary" />
+
             <Button text="Salvar Alocações" onAction="#salvarAlocacoes" styleClass="btn-primary" />
-            <Button text="Voltar" onAction="#btnVoltarClick" styleClass="btn-secondary" />
+           <Button text="Voltar" onAction="#btnVoltarClick" styleClass="btn-secondary" />
+
+
         </HBox>
     </bottom>
-
 </BorderPane>

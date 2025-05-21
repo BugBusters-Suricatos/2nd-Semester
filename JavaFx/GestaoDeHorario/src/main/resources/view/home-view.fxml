@@ -15,23 +15,18 @@
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.gestaodehorario.Controller.TelaHomeController"
-            styleClass="root">
+            styleClass="home-root">
 
     <!-- Menu Lateral -->
     <left>
         <VBox alignment="CENTER" spacing="20" styleClass="sidebar">
-<!--            <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">-->
-<!--                <Image url="@/images/logo.png" />-->
-<!--            </ImageView>-->
-
-            <!-- Botões do Menu -->
             <VBox spacing="15" alignment="CENTER">
                 <Button onAction="#btnCursosClick" text="Cursos" styleClass="menu-button" />
                 <Button onAction="#btnMateriaClick" text="Matérias" styleClass="menu-button" />
                 <Button onAction="#btnProfessoresClick" text="Professores" styleClass="menu-button" />
                 <Button onAction="#btnHorariosClick" text="Horários" styleClass="menu-button" />
                 <Button onAction="#btnMontagemClick" text="Montar Horário" styleClass="menu-button" />
-                <Button onAction="#btnRelatorioClick" text="Relatório de Horário" styleClass="menu-button" />
+                <Button onAction="#btnRelatorioClick" text="Relatorio de Horário" styleClass="menu-button" />
             </VBox>
         </VBox>
     </left>
@@ -73,5 +68,4 @@
             <Label text="Sistema de Gestão Acadêmica v2.3" styleClass="footer-text" />
         </VBox>
     </center>
-
 </BorderPane>

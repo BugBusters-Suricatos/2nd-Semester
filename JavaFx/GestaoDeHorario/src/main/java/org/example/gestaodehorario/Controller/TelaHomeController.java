@@ -97,8 +97,8 @@ public class TelaHomeController {
     }
 
     @FXML
-    private void btnMontagemClick(ActionEvent event) {
-        ScreenManager.changeScreen("/view/GerenciamentoMontagem-view.fxml", "/styles/customGerenciamentoIndisponibilidade.css");
+    private void btnMontagemClick() {
+        ScreenManager.changeScreen("/view/GerenciamentoMontagem-view.fxml", "/styles/customGerenciamentoMontagem.css");
     }
 
     @FXML

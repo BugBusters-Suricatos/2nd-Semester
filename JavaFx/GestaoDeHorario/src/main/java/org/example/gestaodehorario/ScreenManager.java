@@ -1,5 +1,6 @@
 package org.example.gestaodehorario;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,6 +26,8 @@ import java.net.URL;
 public class ScreenManager {
     private static Stage primaryStage;
 
+
+
     /**
      * Configura o palco principal da aplicação
      * @param stage Palco JavaFX a ser configurado
@@ -35,12 +38,7 @@ public class ScreenManager {
         primaryStage.setTitle("Sistema de Gestão");
     }
 
-    /**
-     * Carrega uma nova tela substituindo a cena atual
-     * @param fxmlPath Caminho relativo do arquivo FXML (a partir de resources/)
-     * @param cssPath Caminho opcional para arquivo CSS personalizado (a partir de resources/)
-     * @throws RuntimeException Se ocorrer erro no carregamento do FXML/CSS
-     */
+
     public static void changeScreen(String fxmlPath, String cssPath) {
         try {
             FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource(fxmlPath));
@@ -60,7 +58,29 @@ public class ScreenManager {
             scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
             primaryStage.setScene(scene);
-            primaryStage.setMaximized(true); // Mantém tela cheia
+
+            // Listener que MAXIMIZA logo que a janela for mostrada, só uma vez!
+            primaryStage.setOnShown(ev -> {
+                primaryStage.setMaximized(true);
+                // Remove o listener pra não repetir nas próximas trocas (opcional)
+                primaryStage.setOnShown(null);
+            });
+
+            // Se já está visível (troca de tela), força maximizar assim mesmo
+            if (primaryStage.isShowing()) {
+                primaryStage.setMaximized(true);
+            } else {
+                primaryStage.show();
+
+            }
+
+            new Thread(() -> {
+                try { Thread.sleep(250); } catch (Exception ignored) {}
+                Platform.runLater(() -> primaryStage.setMaximized(true));
+            }).start();
+
+
+
         } catch (IOException e) {
             AlertHelper.showError(
                     "Erro de Navegação",
@@ -69,5 +89,10 @@ public class ScreenManager {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 }
