@@ -25,6 +25,8 @@ public class Main extends Application {
 
     public void start(Stage primaryStage) {
         ScreenManager.setPrimaryStage(primaryStage);
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(600);
         ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
 
 
