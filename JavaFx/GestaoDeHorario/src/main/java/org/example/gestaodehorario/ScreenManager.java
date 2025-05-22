@@ -34,7 +34,7 @@ public class ScreenManager {
      */
     public static void setPrimaryStage(Stage stage) {
         primaryStage = stage;
-        stage.setMaximized(true); // Tela cheia
+       // stage.setMaximized(true); // Tela cheia
         primaryStage.setTitle("Sistema de Gestão");
     }
 
@@ -61,14 +61,14 @@ public class ScreenManager {
 
             // Listener que MAXIMIZA logo que a janela for mostrada, só uma vez!
             primaryStage.setOnShown(ev -> {
-                primaryStage.setMaximized(true);
+                //primaryStage.setMaximized(true);
                 // Remove o listener pra não repetir nas próximas trocas (opcional)
                 primaryStage.setOnShown(null);
             });
 
             // Se já está visível (troca de tela), força maximizar assim mesmo
             if (primaryStage.isShowing()) {
-                primaryStage.setMaximized(true);
+               // primaryStage.setMaximized(true);
             } else {
                 primaryStage.show();
 
@@ -76,7 +76,7 @@ public class ScreenManager {
 
             new Thread(() -> {
                 try { Thread.sleep(250); } catch (Exception ignored) {}
-                Platform.runLater(() -> primaryStage.setMaximized(true));
+                //Platform.runLater(() -> primaryStage.setMaximized(true));
             }).start();
 
 
