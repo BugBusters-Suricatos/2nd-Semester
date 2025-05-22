@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * <ul>
  *   <li>Inicializar o palco (stage) principal</li>
  *   <li>Configurar o tratamento de exceções não capturadas</li>
- *   <li>Gerenciar a navegação entre telas</li>
+ *   <li>Gerenciar a navegação entre telas </li>
  * </ul>
  * </p>
  */
