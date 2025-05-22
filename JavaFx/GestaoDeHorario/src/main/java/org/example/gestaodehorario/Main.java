@@ -29,8 +29,6 @@ public class Main extends Application {
         primaryStage.setHeight(600);
         ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
     }
-
-
     /**
      * Ponto de entrada padrão para aplicações JavaFX
      * @param args Argumentos de linha de comando
