@@ -141,4 +141,9 @@ public class IndisponibilidadeController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Indisponibilidades salvas com sucesso!");
         alert.showAndWait();
     }
+
+    @FXML
+    private void btnVoltarClick() {
+        ScreenManager.changeScreen("/view/home-view.fxml", "/styles/customHome.css");
+    }
 }
