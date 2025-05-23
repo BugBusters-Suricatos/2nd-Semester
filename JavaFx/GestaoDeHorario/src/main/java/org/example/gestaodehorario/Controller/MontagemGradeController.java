@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.beans.value.ChangeListener;
 
 public class MontagemGradeController implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(MontagemGradeController.class.getName());
@@ -53,7 +54,10 @@ public class MontagemGradeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ChangeListener<Object> reloadL = (obs, o, n) -> rebuildUI();
+        ChangeListener<Object> reloadL = (obs, o, n) -> {
+            rebuildUI();
+            verificarCompatibilidade();
+        };
         try {
             cbPeriodos.setConverter(new StringConverter<Periodo>() {
                 @Override public String toString(Periodo p) { return p != null ? p.getNome() : ""; }
@@ -92,6 +96,7 @@ public class MontagemGradeController implements Initializable {
                 }
                 evt.consume();
             });
+
 
             lvMaterias.setOnDragDropped(evt -> {
                 Dragboard db = evt.getDragboard();
@@ -132,6 +137,7 @@ public class MontagemGradeController implements Initializable {
             LOGGER.log(Level.SEVERE, "Erro init", e);
             showError("Erro init: " + e.getMessage());
         }
+
     }
 
     // Açúcar: carregar indisponibilidades de todos os professores do sistema
@@ -376,8 +382,68 @@ public class MontagemGradeController implements Initializable {
         return sp;
     }
 
+
+
+
+
+    private List<Node> filhosOriginais = new ArrayList<>();
+
+
+
+
+    private void verificarCompatibilidade() {
+        Curso c = cbCursos.getValue();
+        Periodo p = cbPeriodos.getValue();
+
+        if (c != null && p != null) {
+            if (p.getIdPeriodo() != c.getIdPeriodo()) {
+                mostrarErroNaGrade("O Período selecionado não é compatível com o período do curso");
+            } else {
+                limparErroNaGrade();
+            }
+        } else {
+            limparErroNaGrade();
+        }
+    }
+
+    private Label lblErroGrade = new Label();
+
+    private void mostrarErroNaGrade(String mensagem) {
+        lblErroGrade.setText(mensagem);
+        lblErroGrade.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+
+        if (filhosOriginais.isEmpty()) {
+            filhosOriginais.addAll(
+                    gradeAlocacao.getChildren().stream()
+                            .filter(n -> n != lblErroGrade)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        gradeAlocacao.getChildren().clear();
+        gradeAlocacao.add(lblErroGrade, 0, gradeAlocacao.getRowCount());
+    }
+
+    private void limparErroNaGrade() {
+        gradeAlocacao.getChildren().remove(lblErroGrade);
+
+        if (!filhosOriginais.isEmpty()) {
+            gradeAlocacao.getChildren().addAll(filhosOriginais);
+            filhosOriginais.clear();
+        }
+    }
+
+
+
+
+
+
+
+
+
     @FXML
     private void salvarAlocacoes() {
+
         try {
             Curso c = cbCursos.getValue();
             Semestre s = cbSemestres.getValue();
@@ -387,48 +453,48 @@ public class MontagemGradeController implements Initializable {
                 return;
             }
 
-            // Limpa todas as alocações antigas para esse curso, semestre, período
-            alocacaoDAO.excluirPorCursoSemestrePeriodo(
-                    c.getIdCurso(), s.getIdSemestre(), p.getIdPeriodo()
-            );
+                // Limpa todas as alocações antigas para esse curso, semestre, período
+                alocacaoDAO.excluirPorCursoSemestrePeriodo(
+                        c.getIdCurso(), s.getIdSemestre(), p.getIdPeriodo()
+                );
 
-            List<Alocacao> lista = new ArrayList<>();
-            Set<String> materiasSalvas = new HashSet<>();
+                List<Alocacao> lista = new ArrayList<>();
+                Set<String> materiasSalvas = new HashSet<>();
 
-            for (Node node : gradeAlocacao.getChildren()) {
-                if (node instanceof StackPane cell) {
-                    // Só salva se a célula tem um id_slot associado!
-                    if (!(cell.getUserData() instanceof Integer id_slot)) continue;
+                for (Node node : gradeAlocacao.getChildren()) {
+                    if (node instanceof StackPane cell) {
+                        // Só salva se a célula tem um id_slot associado!
+                        if (!(cell.getUserData() instanceof Integer id_slot)) continue;
 
-                    for (Node ch : cell.getChildren()) {
-                        if (ch instanceof StackPane sp) {
-                            @SuppressWarnings("unchecked")
-                            Map<String, Object> dt = (Map<String, Object>) sp.getUserData();
-                            if (dt == null) continue;
+                        for (Node ch : cell.getChildren()) {
+                            if (ch instanceof StackPane sp) {
+                                @SuppressWarnings("unchecked")
+                                Map<String, Object> dt = (Map<String, Object>) sp.getUserData();
+                                if (dt == null) continue;
 
-                            Materia m = (Materia) dt.get("materia");
-                            String chave = m.getIdMateria() + "-" + id_slot;
-                            if (materiasSalvas.contains(chave)) continue;
-                            materiasSalvas.add(chave);
+                                Materia m = (Materia) dt.get("materia");
+                                String chave = m.getIdMateria() + "-" + id_slot;
+                                if (materiasSalvas.contains(chave)) continue;
+                                materiasSalvas.add(chave);
 
-                            Professor pof = professorDAO.getByMateria(m.getIdMateria())
-                                    .stream().findFirst()
-                                    .orElseThrow(() -> new Exception("Professor não encontrado"));
+                                Professor pof = professorDAO.getByMateria(m.getIdMateria())
+                                        .stream().findFirst()
+                                        .orElseThrow(() -> new Exception("Professor não encontrado"));
 
-                            Slot sld = slotDAO.getById(id_slot)
-                                    .orElseThrow(() -> new Exception("Slot não encontrado para id_slot: " + id_slot));
-                            lista.add(new Alocacao(pof, m, sld, s));
+                                Slot sld = slotDAO.getById(id_slot)
+                                        .orElseThrow(() -> new Exception("Slot não encontrado para id_slot: " + id_slot));
+                                lista.add(new Alocacao(pof, m, sld, s));
+                            }
                         }
                     }
                 }
+                alocacaoDAO.salvar(lista);
+                showInfo(lista.size() + " alocações salvas com sucesso!");
+            } catch(Exception e){
+                LOGGER.log(Level.SEVERE, "Erro save", e);
+                showError("Erro save: " + e.getMessage());
             }
-            alocacaoDAO.salvar(lista);
-            showInfo(lista.size() + " alocações salvas com sucesso!");
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro save", e);
-            showError("Erro save: " + e.getMessage());
         }
-    }
 
     @FXML
     private void btnVoltarClick() {
