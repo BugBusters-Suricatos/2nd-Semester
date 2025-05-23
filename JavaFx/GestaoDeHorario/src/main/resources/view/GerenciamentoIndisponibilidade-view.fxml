@@ -8,7 +8,10 @@
             fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController">
 
     <children>
-        <Label layoutX="30" layoutY="20" text="Cadastro de Indisponibilidade" style="-fx-font-size: 18px;"/>
+        <HBox alignment="CENTER_LEFT" spacing="50" styleClass="header-box">
+            <Label layoutX="30" layoutY="20" text="Cadastro de Indisponibilidade" style="-fx-font-size: 18px;"/>
+            <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+        </HBox>
 
         <Label layoutX="30" layoutY="60" text="Curso:"/>
         <ComboBox fx:id="cbCursos" layoutX="100" layoutY="56" prefWidth="180"/>
