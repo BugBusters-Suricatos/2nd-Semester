@@ -1,0 +1,106 @@
+.montagem-root {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 20px;
+}
+
+.header-container {
+    -fx-padding: 0 0 20px 0;
+}
+
+.form-label {
+    -fx-text-fill: #3b3f45;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.combo-box {
+    -fx-pref-width: 150px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ced4da;
+    -fx-padding: 6px;
+}
+
+.palette-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 12px;
+}
+
+.header-cell {
+    -fx-alignment: CENTER;
+    -fx-padding: 8px;
+    -fx-background-color: #4a6572;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+}
+
+.matter-list .list-cell {
+    -fx-padding: 6px;
+}
+
+.grade-scroll {
+    -fx-background: transparent;
+}
+
+.grade-pane-alocacao {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 10px;
+}
+
+/* Cabeçalhos de dias */
+.grade-pane-alocacao Label {
+    -fx-background-color: #344955;
+    -fx-text-fill: white;
+    -fx-padding: 6px;
+    -fx-alignment: CENTER;
+    -fx-font-weight: bold;
+    -fx-border-color: #ecf0f1;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Células da grade vazias */
+.grade-pane-alocacao > *:nth-child(n + 1) {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-padding: 10px;
+}
+
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+.btn-secondary:hover {
+    -fx-background-color: #5a6268;
+}
+
+.button-container {
+    -fx-padding: 10px 0 0 0;
+}
+
+* {
+    -fx-font-family: 'Segoe UI';
+}

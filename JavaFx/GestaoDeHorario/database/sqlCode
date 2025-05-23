@@ -1,0 +1,284 @@
+-- Tabela de Coordenadores
+CREATE TABLE Coordenador (
+                             id_coordenador INTEGER PRIMARY KEY AUTOINCREMENT,
+                             nome TEXT NOT NULL,
+                             email TEXT UNIQUE NOT NULL,
+                             senha TEXT NOT NULL
+);
+
+-- Tabela de Períodos
+CREATE TABLE Periodo (
+                         id_periodo INTEGER PRIMARY KEY AUTOINCREMENT,
+                         nome TEXT NOT NULL UNIQUE CHECK(nome IN ('Matutino', 'Noturno'))
+);
+
+-- Tabela de Cursos
+CREATE TABLE Curso (
+                       id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
+                       nome TEXT NOT NULL,
+                       id_periodo INTEGER NOT NULL,
+                       id_coordenador INTEGER,
+                       FOREIGN KEY (id_periodo) REFERENCES Periodo(id_periodo),
+                       FOREIGN KEY (id_coordenador) REFERENCES Coordenador(id_coordenador) ON DELETE SET NULL
+);
+
+
+-- Tabela de Semestres
+CREATE TABLE Semestre (
+                          id_semestre INTEGER PRIMARY KEY AUTOINCREMENT,
+                          nome TEXT NOT NULL,
+                          ano INTEGER NOT NULL
+);
+
+-- Tabela de Matérias
+CREATE TABLE Materia (
+                         id_materia INTEGER PRIMARY KEY AUTOINCREMENT,
+                         nome TEXT NOT NULL,
+                         carga_horaria INTEGER NOT NULL,
+                         id_curso INTEGER,
+                         FOREIGN KEY (id_curso) REFERENCES Curso(id_curso) ON DELETE CASCADE
+);
+
+-- Tabela de Professores
+CREATE TABLE Professor (
+                           id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           nome TEXT NOT NULL,
+                           email TEXT NOT NULL UNIQUE,
+                           materia_id INTEGER,
+                           FOREIGN KEY (materia_id) REFERENCES Materia(id_materia)
+);
+
+-- Tabela de Indisponibilidade (Substituição do ENUM)
+CREATE TABLE Indisponibilidade (
+                                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                   id_professor INTEGER NOT NULL,
+                                   dia_semana TEXT CHECK(dia_semana IN ('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado')) NOT NULL,
+                                   hora_inicio TEXT NOT NULL,  -- SQLite não tem tipo TIME, usamos TEXT
+                                   hora_fim TEXT NOT NULL,
+                                   FOREIGN KEY (id_professor) REFERENCES Professor(id)
+);
+
+-- Tabela de Slots
+CREATE TABLE Slot (
+                      id_slot INTEGER PRIMARY KEY AUTOINCREMENT,
+                      dia_semana TEXT CHECK(dia_semana IN ('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado')) NOT NULL,
+                      hora_inicio TEXT NOT NULL,
+                      hora_fim TEXT NOT NULL,
+                      id_periodo INTEGER NOT NULL,
+                      status TEXT CHECK(status IN ('Disponível', 'Ocupado')) NOT NULL DEFAULT 'Disponível',
+                      FOREIGN KEY (id_periodo) REFERENCES Periodo(id_periodo)
+);
+
+-- Tabela de Alocação
+CREATE TABLE Alocacao (
+    id_alocacao INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_professor INTEGER NOT NULL,
+    id_materia INTEGER NOT NULL,
+    id_slot INTEGER NOT NULL,
+    id_semestre INTEGER NOT NULL,
+    FOREIGN KEY (id_professor) REFERENCES Professor(id),
+    FOREIGN KEY (id_materia) REFERENCES Materia(id_materia),
+    FOREIGN KEY (id_slot) REFERENCES Slot(id_slot),
+    FOREIGN KEY (id_semestre) REFERENCES Semestre(id_semestre)
+);
+
+-- Tabela Integração Curso e Slot
+CREATE TABLE Curso_Slot (
+                            id_curso INTEGER,
+                            id_slot INTEGER,
+                            PRIMARY KEY (id_curso, id_slot),
+                            FOREIGN KEY (id_curso) REFERENCES Curso(id_curso),
+                            FOREIGN KEY (id_slot) REFERENCES Slot(id_slot)
+);
+
+-- ========================================
+-- 2) Inserções básicas: períodos, semestres, coordenadores
+-- ========================================
+INSERT OR IGNORE INTO Periodo (nome) VALUES ('Matutino'),('Noturno');
+
+INSERT OR IGNORE INTO Semestre (nome, ano) VALUES
+                                               ('2025.1',2025),
+                                               ('2025.2',2025);
+
+INSERT OR IGNORE INTO Coordenador (nome,email,senha) VALUES
+                                                         ('Ana Silva','ana.silva@exemplo.com','senha1'),
+                                                         ('Carlos Oliveira','carlos.oliveira@exemplo.com','senha2');
+
+-- ========================================
+-- 3) Cursos do 1º semestre 2025 (MANTIDO)
+-- ========================================
+INSERT OR IGNORE INTO Curso (nome,id_periodo,id_coordenador) VALUES
+                                                                 ('Análise e Desenvolvimento de Sistemas (Manhã)',  (SELECT id_periodo FROM Periodo WHERE nome='Matutino'), 1),
+                                                                 ('Banco de Dados (Noite)',                            (SELECT id_periodo FROM Periodo WHERE nome='Noturno'), 2),
+                                                                 ('Desenvolvimento de Software Multiplataforma (Manhã)',(SELECT id_periodo FROM Periodo WHERE nome='Matutino'), 1),
+                                                                 ('Gestão da Produção Industrial (Noite)',              (SELECT id_periodo FROM Periodo WHERE nome='Noturno'), 2),
+                                                                 ('Logística (Manhã)',                                 (SELECT id_periodo FROM Periodo WHERE nome='Matutino'), 1),
+                                                                 ('Logística (Noite)',                                 (SELECT id_periodo FROM Periodo WHERE nome='Noturno'), 2),
+                                                                 ('Manufatura Avançada (Manhã)',                       (SELECT id_periodo FROM Periodo WHERE nome='Matutino'), 1),
+                                                                 ('Manutenção de Aeronaves (Noite)',                   (SELECT id_periodo FROM Periodo WHERE nome='Noturno'), 2),
+                                                                 ('Projetos de Estruturas Aeronáuticas (Noite)',       (SELECT id_periodo FROM Periodo WHERE nome='Noturno'), 2);
+
+-- ========================================
+-- 4) Geração de Slots - AJUSTADO PARA 23:05
+-- ========================================
+-- Período Matutino
+WITH times_manha(h1, h2) AS (
+    VALUES('07:30','08:20'),('08:30','09:20'),('09:30','10:20'),('10:30','11:20'),('11:30','12:20')
+)
+INSERT OR IGNORE INTO Slot (dia_semana, hora_inicio, hora_fim, id_periodo)
+SELECT d.dia, t.h1, t.h2, (SELECT id_periodo FROM Periodo WHERE nome = 'Matutino')
+FROM (
+         SELECT 'Segunda' AS dia UNION ALL
+         SELECT 'Terça'   UNION ALL
+         SELECT 'Quarta'  UNION ALL
+         SELECT 'Quinta'  UNION ALL
+         SELECT 'Sexta'   UNION ALL
+         SELECT 'Sábado'
+     ) AS d
+         CROSS JOIN times_manha t;
+
+-- Período Noturno
+WITH times_noite(h1, h2) AS (
+    VALUES('18:45','19:35'),('19:45','20:35'),('20:45','21:35'),('21:45','22:35'),('22:45','23:05')
+)
+INSERT OR IGNORE INTO Slot (dia_semana, hora_inicio, hora_fim, id_periodo)
+SELECT d.dia, t.h1, t.h2, (SELECT id_periodo FROM Periodo WHERE nome = 'Noturno')
+FROM (
+         SELECT 'Segunda' AS dia UNION ALL
+         SELECT 'Terça'   UNION ALL
+         SELECT 'Quarta'  UNION ALL
+         SELECT 'Quinta'  UNION ALL
+         SELECT 'Sexta'   UNION ALL
+         SELECT 'Sábado'
+     ) AS d
+         CROSS JOIN times_noite t;
+
+
+-- ========================================
+-- 5) Vinculação Curso ↔ Slot
+-- ========================================
+INSERT OR IGNORE INTO Curso_Slot (id_curso, id_slot)
+SELECT c.id_curso, s.id_slot
+  FROM Curso c
+  JOIN Slot s ON s.id_periodo = c.id_periodo;
+
+
+-- ========================================
+-- 6) Matérias, Professores e Vinculações
+-- ========================================
+
+-- Curso: Análise e Desenvolvimento de Sistemas (Manhã)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Matemática Discreta', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Análise e Desenvolvimento%')),
+                                                                  ('Arquitetura e Organização de Computadores', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Análise e Desenvolvimento%')),
+                                                                  ('Programação em Microinformática', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Análise e Desenvolvimento%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Reinaldo Gen Ichiro Arakaki','reinaldo.arakaki@fatec.edu.br',14),
+                                                  ('Antonio Egydio São Thiago Graça','antonio.graca@fatec.edu.br',8),
+                                                  ('Jean Carlos Lourenço Costa','jean.costa@fatec.edu.br',9);
+
+-- Curso: Banco de Dados (Noite)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Fundamentos de Administração Geral', 2, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Arquitetura e Organização de Computadores', 2, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Matemática Discreta', 2, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Algoritmos', 4, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Inglês I', 2, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Comunicação e Expressão', 2, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)')),
+                                                                  ('Laboratório de Desenvolvimento em BD I', 4, (SELECT id_curso FROM Curso WHERE nome='Banco de Dados (Noite)'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Geraldo Jose Lombardi de Souza','geraldo.lombardi@fatec.edu.br',14),
+                                                  ('Leonidas Lopes de Melo','leonidas.melo@fatec.edu.br',25),
+                                                  ('Marcos Allan Ferreira Gonçalves','marcos.goncalves@fatec.edu.br',10),
+                                                  ('Fabiano Sabha Walczak','fabiano.walczak@fatec.edu.br',22),
+                                                  ('Teresinha de Fátima Nogueira','teresinha.nogueira@fatec.edu.br',15),
+                                                  ('Maria Goreti Lopes Cepinho','goreti.cepinho@fatec.edu.br',8),
+
+-- Curso: Desenvolvimento de Software Multiplataforma (Manhã)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Design Digital', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Sistemas Operacionais e Redes de Computadores', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Modelagem de Banco de Dados', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Algoritmos e Lógica de Programação', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Desenvolvimento Web I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Engenharia de Software I', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%')),
+                                                                  ('Banco de Dados – Relacional', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Desenvolvimento de Software Multiplataforma%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Jean Carlos Lourenço Costa','jean.costa@fatec.edu.br',8),
+                                                  ('Dawilmar Guimarães de Araújo','dawilmar.araujo@fatec.edu.br',2),
+                                                  ('Juliana Forin Pasquini Martinez','juliana.martinez@fatec.edu.br',12),
+                                                  ('Fernando Masanori Ashikaga','fernando.ashikaga@fatec.edu.br',14),
+                                                  ('Claudio Etelvino de Lima','claudio.lima@fatec.edu.br',8);
+
+-- Curso: Gestão da Produção Industrial (Noite)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Informática', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%')),
+                                                                  ('Projetos Integrados em Gestão da Produção Industrial I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%')),
+                                                                  ('Tecnologia da Produção Industrial', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%')),
+                                                                  ('Cálculo', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%')),
+                                                                  ('Administração Geral', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%')),
+                                                                  ('Liderança e Empreendedorismo', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Gestão da Produção Industrial%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Adriana da Silva Jacinto','adriana.jacinto@fatec.edu.br',6),
+                                                  ('Carlos Eduardo Bastos','carlos.bastos@fatec.edu.br',2),
+                                                  ('Dercy Felix da Silva','dercy.silva@fatec.edu.br',5),
+                                                  ('Jose Jaetis Rosario','jose.rosario@fatec.edu.br',4),
+                                                  ('Rubens Barreto da Silva','rubens.bsilva@fatec.edu.br',3);
+
+-- Curso: Logística (Manhã)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Fundamentos de Administração', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Manhã)%')),
+                                                                  ('Matemática Aplicada', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Manhã)%')),
+                                                                  ('Fundamentos da Comunicação e Expressão', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Manhã)%')),
+                                                                  ('Logística Empresarial', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Manhã)%')),
+                                                                  ('Inglês para Logística I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Manhã)%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Geraldo Jose Lombardi de Souza','geraldo.lombardi@fatec.edu.br',25),
+                                                  ('Sanzara Nhiaaia Jardim Costa','sanzara.costa@fatec.edu.br',22),
+                                                  ('Hassmann Eliane Penha Mergulhão Dias','eliane.dias@fatec.edu.br',14);
+
+-- Curso: Logística (Noite)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Projeto Integrador em Logística I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Noite)%')),
+                                                                  ('Fundamentos da Comunicação e Expressão', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Noite)%')),
+                                                                  ('Matemática Aplicada', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Noite)%')),
+                                                                  ('Inglês para Logística I', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Logística (Noite)%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Jose Jaetis Rosario','jose.rosario@fatec.edu.br',8),
+                                                  ('Teresinha de Fátima Nogueira','teresinha.nogueira@fatec.edu.br',11);
+
+-- Curso: Manufatura Avançada (Manhã)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Empreendedorismo Tecnológico', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manufatura Avançada%')),
+                                                                  ('Processos de Fabricação I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manufatura Avançada%')),
+                                                                  ('Inglês I', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manufatura Avançada%')),
+                                                                  ('Algoritmos', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manufatura Avançada%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Rubens Barreto da Silva','rubens.bsilva@fatec.edu.br',9),
+                                                  ('Edmar de Queiroz Figueiredo','edmar.figueiredo@fatec.edu.br',7),
+                                                  ('Nilo Jeronimo Vieira','nilo.vieira@fatec.edu.br',6),
+                                                  ('Viviane Ribeiro de Siqueira','viviane.siqueira@fatec.edu.br',3);
+
+-- Curso: Manutenção de Aeronaves (Noite)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Desenho Técnico de Aeronaves', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manutenção de Aeronaves%')),
+                                                                  ('Física e Química Aplicada à Aeronáutica', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manutenção de Aeronaves%')),
+                                                                  ('Cálculo Aplicado à Aeronáutica', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manutenção de Aeronaves%')),
+                                                                  ('Informática Aplicada à Aeronáutica', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Manutenção de Aeronaves%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Fabiana Eloisa Passador','fabiana.passador@fatec.edu.br',1),
+                                                  ('Danielle Cristina de Morais Amorim','danielle.amorim@fatec.edu.br',15),
+                                                  ('Antonio Wellington Sales Rios','antonio.rios@fatec.edu.br',14);
+
+-- Curso: Projetos de Estruturas Aeronáuticas (Noite)
+INSERT OR IGNORE INTO Materia (nome, carga_horaria, id_curso) VALUES
+                                                                  ('Matemática Aplicada', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Projetos de Estruturas Aeronáuticas%')),
+                                                                  ('Comunicação e Redação Profissional', 4, (SELECT id_curso FROM Curso WHERE nome LIKE 'Projetos de Estruturas Aeronáuticas%')),
+                                                                  ('Desenho Técnico Aplicado a Projetos Aeronáuticos', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Projetos de Estruturas Aeronáuticas%')),
+                                                                  ('Familiarização Aeronáutica', 2, (SELECT id_curso FROM Curso WHERE nome LIKE 'Projetos de Estruturas Aeronáuticas%'));
+INSERT OR IGNORE INTO Professor (nome, email, materia_id) VALUES
+                                                  ('Dercy Felix da Silva','dercy.silva@fatec.edu.br',2),
+                                                  ('Ana Maria Pereira','ana.pereira@fatec.edu.br',22),
+                                                  ('Felix Arlindo Strottmann','felix.strottmann@fatec.edu.br',25);
+
+-- FIM DO SCRIPT COMPLETO

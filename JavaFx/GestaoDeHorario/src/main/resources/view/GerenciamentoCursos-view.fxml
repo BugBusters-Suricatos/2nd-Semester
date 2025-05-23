@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.gestaodehorario.Controller.CursosController"
+      spacing="20" styleClass="root"
+      alignment="TOP_CENTER">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <!-- Cabeçalho -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header-box">
+        <Label text="🎓 Gerenciamento de Cursos" styleClass="title-label"/>
+        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    </HBox>
+
+    <!-- Formulário em Container Flutuante -->
+    <VBox styleClass="form-container" spacing="15">
+        <GridPane vgap="15" hgap="20">
+            <Label text="Nome do Curso:" styleClass="input-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                <!--<ImageView fitWidth="20" fitHeight="20" styleClass="input-icon">
+                    <Image url="@/images/icon-course.png"/>
+                </ImageView>-->
+                <TextField fx:id="txtNomeCurso" promptText="Digite o nome do curso" styleClass="modern-input"/>
+            </HBox>
+
+            <Label text="Período:" styleClass="input-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="comboPeriodos" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Coordenador:" styleClass="input-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="comboCoordenadores" styleClass="modern-combo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Botões de Ação -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="➕ Adicionar" fx:id="btnAdicionar" onAction="#adicionarCurso" styleClass="gradient-button-primary"/>
+            <Button text="✏️ Editar" fx:id="btnEditar" onAction="#editarCurso" styleClass="gradient-button-secondary"/>
+            <Button text="🗑️ Remover" fx:id="btnRemover" onAction="#removerCurso" styleClass="gradient-button-danger"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tabela Estilizada -->
+    <TableView fx:id="cursosTable" styleClass="styled-table" prefHeight="350">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn" styleClass="table-column" prefWidth="70"/>
+            <TableColumn text="Nome" fx:id="nomeColumn" styleClass="table-column" prefWidth="250"/>
+            <TableColumn text="Período" fx:id="periodoColumn" styleClass="table-column" prefWidth="120"/>
+            <TableColumn text="Coordenador" fx:id="coordenadorColumn" styleClass="table-column" prefWidth="180"/>
+        </columns>
+        <placeholder>
+            <Label text="Nenhum curso cadastrado" styleClass="empty-table-label"/>
+        </placeholder>
+    </TableView>
+
+</VBox>

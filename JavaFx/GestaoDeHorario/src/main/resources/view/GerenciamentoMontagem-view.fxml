@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestaodehorario.Controller.MontagemGradeController"
+            styleClass="montagem-root">
+
+    <!-- TOPO: seleção de curso, período e semestre -->
+    <top>
+        <HBox spacing="15" alignment="CENTER" styleClass="header-container">
+            <Label text="Curso:" styleClass="form-label"/>
+            <ComboBox fx:id="cbCursos" styleClass="combo-box"/>
+            <Label text="Período:" styleClass="form-label"/>
+            <ComboBox fx:id="cbPeriodos" styleClass="combo-box"/>
+            <Label text="Semestre:" styleClass="form-label"/>
+            <ComboBox fx:id="cbSemestres" styleClass="combo-box"/>
+        </HBox>
+    </top>
+
+    <!-- PAINEL LATERAL: Paleta de matérias -->
+    <left>
+        <VBox spacing="10" alignment="TOP_CENTER" prefWidth="220" styleClass="palette-box">
+            <Label text="Matérias disponíveis" styleClass="header-cell"/>
+            <ListView fx:id="lvMaterias" styleClass="matter-list" />
+        </VBox>
+    </left>
+
+    <!-- GRADE PRINCIPAL: Dias × Horários -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="grade-scroll">
+            <GridPane fx:id="gradeAlocacao"
+                      gridLinesVisible="true"
+                      hgap="4" vgap="4"
+                      styleClass="grade-pane-alocacao" />
+        </ScrollPane>
+    </center>
+
+    <!-- RODAPÉ: botões Salvar e Voltar -->
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
+            <Button text="Auto-Alocar" onAction="#autoAlocarMaterias" styleClass="btn-primary" />
+
+            <Button text="Salvar Alocações" onAction="#salvarAlocacoes" styleClass="btn-primary" />
+           <Button text="Voltar" onAction="#btnVoltarClick" styleClass="btn-secondary" />
+
+
+        </HBox>
+    </bottom>
+</BorderPane>

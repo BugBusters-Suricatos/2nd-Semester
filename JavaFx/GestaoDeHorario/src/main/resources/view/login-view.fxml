@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestaodehorario.Controller.TelaLoginController"
+            styleClass="root">
+
+    <!-- Left Decorative Panel -->
+    <left>
+        <StackPane prefWidth="400">
+<!--            <ImageView fitWidth="400" fitHeight="600" preserveRatio="false">-->
+<!--                <Image url="@/images/login-bg.jpg" />-->
+<!--                <effect>-->
+<!--                    <DropShadow color="#2A2D4377" radius="20" spread="0.1"/>-->
+<!--                </effect>-->
+<!--            </ImageView>-->
+            <Rectangle width="400" height="600" fill="#2A2D43CC"/>
+            <VBox alignment="CENTER" spacing="20">
+<!--                <ImageView fitWidth="120" fitHeight="120">-->
+<!--                    <Image url="@/images/logo-white.png" />-->
+<!--                </ImageView>-->
+                <Label text="Sistema de Gestão Acadêmica" styleClass="brand-text"/>
+            </VBox>
+        </StackPane>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <StackPane>
+            <VBox alignment="CENTER" spacing="40" styleClass="login-container">
+                <!-- Header -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Bem-vindo de volta!" styleClass="title"/>
+                    <Label text="Faça login para continuar" styleClass="subtitle"/>
+                </VBox>
+
+                <!-- Form -->
+                <VBox alignment="CENTER" spacing="25" styleClass="form-container">
+                    <!-- Email Field -->
+                    <VBox styleClass="input-group">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <ImageView fitWidth="20" fitHeight="20" styleClass="input-icon">
+                                <Image url="@../images/icon-user.png" />
+                            </ImageView>
+                            <TextField fx:id="txtUsuario" promptText="Email" styleClass="modern-input"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Password Field -->
+                    <VBox styleClass="input-group">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <ImageView fitWidth="20" fitHeight="20" styleClass="input-icon">
+                                <Image url="@../images/icon-lock.png" />
+                            </ImageView>
+                            <PasswordField fx:id="txtSenha" promptText="Senha" styleClass="modern-input"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Login Button -->
+                    <Button text="Acessar Sistema" onAction="#LoginClick" styleClass="gradient-button"/>
+
+                    <!-- Links -->
+                    <Hyperlink text="Esqueceu a senha?" styleClass="link"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

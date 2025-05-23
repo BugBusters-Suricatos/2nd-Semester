@@ -1,0 +1,57 @@
+.home-root {
+    -fx-background-color: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+}
+
+/* Estilização do menu lateral */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #2A2D43, #1A1C2B);
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+}
+
+.menu-button {
+    -fx-background-color: linear-gradient(to right, #3A3F5D, #2A2D43);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 12px 25px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-transition: all 0.3s ease;
+}
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to right, #d85a5a, #bc3b3b);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(136, 15, 15, 0.3), 10, 0, 0, 4);
+}
+
+.main-container {
+    -fx-padding: 40px;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: linear-gradient(to right, #2A2D43, #4A4F6D);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.stats-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-padding: 25px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    -fx-transition: all 0.3s ease;
+}
+.stats-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+    -fx-translate-y: -5px;
+}
+.stats-number {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2A2D

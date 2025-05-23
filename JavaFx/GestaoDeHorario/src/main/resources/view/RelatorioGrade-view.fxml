@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestaodehorario.Controller.RelatorioGradeController">
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+        <!-- Cabeçalho -->
+        <HBox alignment="CENTER" spacing="20" styleClass="header-container">
+            <Label text="Relatorio dos Horarios Montados" styleClass="title-label"/>
+            <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+        </HBox>
+        <TableView fx:id="tableRelatorio">
+            <columns>
+                <TableColumn text="Curso" fx:id="colCurso" prefWidth="120" />
+                <TableColumn text="Semestre" fx:id="colSemestre" prefWidth="100" />
+                <TableColumn text="Período" fx:id="colPeriodo" prefWidth="100" />
+                <TableColumn text="Dia" fx:id="colDia" prefWidth="80" />
+                <TableColumn text="Horário" fx:id="colHorario" prefWidth="120" />
+                <TableColumn text="Matéria" fx:id="colMateria" prefWidth="200" />
+                <TableColumn text="Professor" fx:id="colProfessor" prefWidth="200" />
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="btnExportPdf"
+                    text="Exportar PDF"
+                    onAction="#exportToPdf"
+                    styleClass="btn-primary"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.gestaodehorario.Controller.MateriaController"
+      spacing="25" styleClass="root"
+      alignment="TOP_CENTER">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <!-- Cabeçalho -->
+    <HBox alignment="CENTER" spacing="20" styleClass="header-container">
+        <Label text="📚 Gerenciamento de Matérias" styleClass="title-label"/>
+        <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
+    </HBox>
+
+    <!-- Formulário Flutuante -->
+    <VBox styleClass="form-container" spacing="20">
+        <GridPane hgap="15" vgap="15">
+            <Label text="Nome da Matéria:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNomeMateria" promptText="Ex: Programação" styleClass="modern-input" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Curso Associado:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCurso" promptText="Selecione um Curso" styleClass="modern-combo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Aulas Semanais:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCargaHoraria" promptText="Ex: 2 ou 4 Aulas Semanais" styleClass="modern-input" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- Botões de Ação -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="➕ Adicionar" fx:id="btnAdicionar" onAction="#btnAdicionarClick" styleClass="gradient-button-primary"/>
+            <Button text="✏️ Editar" fx:id="btnEditar" onAction="#btnEditarClick" styleClass="gradient-button-secondary"/>
+            <Button text="🗑️ Remover" fx:id="btnRemover" onAction="#btnRemoverClick" styleClass="gradient-button-danger"/>
+            <Button text="🧹 Limpar" onAction="#limparCampos" styleClass="gradient-button-neutral"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tabela Estilizada -->
+    <TableView fx:id="tableMateria" styleClass="styled-table" prefHeight="350">
+        <columns>
+            <TableColumn fx:id="colNome" text="Nome" styleClass="table-column" prefWidth="250"/>
+            <TableColumn fx:id="colCurso" text="Curso" styleClass="table-column" prefWidth="200"/>
+            <TableColumn fx:id="colCargaHoraria" text="Carga Horária" styleClass="table-column" prefWidth="120"/>
+        </columns>
+        <placeholder>
+            <Label text="Nenhuma matéria cadastrada" styleClass="empty-table-label"/>
+        </placeholder>
+    </TableView>
+
+</VBox>
