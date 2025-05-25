@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestaodehorario.Controller.IndisponibilidadeController">
 
     <children>
-        <HBox alignment="CENTER_LEFT" spacing="50" styleClass="header-box">
-            <Label layoutX="30" layoutY="20" text="Cadastro de Indisponibilidade" style="-fx-font-size: 18px;"/>
-            <Button text="← Voltar" onAction="#btnVoltarClick" styleClass="back-button"/>
-        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="50" styleClass="header-box" />
 
-        <Label layoutX="30" layoutY="60" text="Curso:"/>
-        <ComboBox fx:id="cbCursos" layoutX="100" layoutY="56" prefWidth="180"/>
+        <Label layoutX="30" layoutY="60" text="Curso:" />
+        <ComboBox fx:id="cbCursos" layoutX="100" layoutY="56" prefWidth="180" />
 
-        <Label layoutX="320" layoutY="60" text="Semestre:"/>
-        <ComboBox fx:id="cbSemestres" layoutX="400" layoutY="56" prefWidth="100"/>
+        <Label layoutX="320" layoutY="60" text="Semestre:" />
+        <ComboBox fx:id="cbSemestres" layoutX="400" layoutY="56" prefWidth="100" />
 
-        <Label layoutX="520" layoutY="60" text="Professor:"/>
-        <ComboBox fx:id="cbProfessores" layoutX="600" layoutY="56" prefWidth="220"/>
+        <Label layoutX="520" layoutY="60" text="Professor:" />
+        <ComboBox fx:id="cbProfessores" layoutX="600" layoutY="56" prefWidth="220" />
 
-        <Button text="Salvar Todas" fx:id="btnSalvarTodas" layoutX="830" layoutY="56" prefWidth="120"/>
+        <Button fx:id="btnSalvarTodas" layoutX="830" layoutY="56" prefWidth="120" text="Salvar Todas" />
 
-        <ScrollPane fx:id="scrollPane" layoutX="30" layoutY="100" prefWidth="920" prefHeight="450">
+        <ScrollPane fx:id="scrollPane" layoutX="30" layoutY="100" prefHeight="450" prefWidth="920">
             <content>
                 <GridPane fx:id="gridSlots" hgap="5" vgap="5" />
             </content>
         </ScrollPane>
+         <Label layoutX="30.0" layoutY="12.0" style="-fx-font-size: 18px;" text="Cadastro de Indisponibilidade" />
+         <Button layoutX="297.0" layoutY="13.0" onAction="#btnVoltarClick" styleClass="back-button" text="← Voltar" />
     </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package org.example.gestaodehorario.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import org.example.gestaodehorario.ScreenManager;
 import org.example.gestaodehorario.dao.IndisponibilidadeDAO;
 import org.example.gestaodehorario.dao.ProfessorDAO;
 import org.example.gestaodehorario.dao.SlotDAO;
