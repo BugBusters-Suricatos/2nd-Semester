@@ -127,7 +127,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 ## 📋 Sprint Backlog
 
 ### 🏃‍♂️ Sprint 1 (Finalizada)
-**Período:** 30/03/2025 – 06/04/2025
+**Período:** 10/03/2025 – 30/03/2025
 
 - [x] **User Story 4** – Gerenciar as disciplinas de cada semestre para organizar o cronograma do curso.
 - [x] **User Story 5** – Cadastrar e gerenciar cursos e disciplinas para manter o sistema atualizado.
@@ -136,7 +136,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 ---
 
 ### 🏃‍♂️ Sprint 2 (Finalizada)
-**Período:** 07/04/2025 – 14/04/2025
+**Período:** 07/04/2025 – 27/04/2025
 
 - [x] **User Story 1** – Definir os horários de aula para um semestre para organizar o calendário de aulas.
 - [x] **User Story 7** – Gerenciar os horários de aula considerando a padronização de 50 minutos e variações de intervalos para adequar o calendário ao curso.
@@ -144,7 +144,7 @@ A organização de horários de aula é frequentemente complexa, especialmente a
 ---
 
 ### 🏃‍♂️ Sprint 3 (Em andamento)
-**Período:** 21/04/2025 – 28/04/2025
+**Período:** 05/05/2025 – 25/05/2025
 
 - [ ] **User Story 2** – Evitar sobreposição de horários para garantir que os professores não tenham conflitos de horários.
 - [ ] **User Story 3** – Receber sugestões de alocação de horários para otimizar a definição do calendário de aulas.
