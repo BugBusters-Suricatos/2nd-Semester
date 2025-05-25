@@ -30,7 +30,7 @@ public class Main extends Application {
         ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
     }
     /**
-     * Ponto de entrada padrão para aplicações JavaFX
+     * Ponto de entrada padrão para aplicações JavaFX k
      * @param args Argumentos de linha de comando
      */
     public static void main(String[] args) {
