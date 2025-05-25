@@ -4,6 +4,52 @@ Todas as mudanças importantes deste projeto serão documentadas aqui.
 
 O formato segue as diretrizes de [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v2.3.1] - 2025-05-25
+
+### ✨ Adicionado
+- Persistência das **alocações** e **indisponibilidades** diretamente no banco de dados.
+- Tela de **cadastro de indisponibilidade** de professores integrada ao banco.
+- Funcionalidade de **autoalocação** de disciplinas considerando restrições e indisponibilidades dos professores.
+- Suporte ao **drag-and-drop** de disciplinas entre lista e grade de horários.
+- Botão "Salvar Todas" para registrar alterações em lote.
+- Tela para **gerenciamento de professores**, incluindo cadastro, edição, remoção e exibição de disciplinas associadas.
+- Suporte ao cadastro de **múltiplas disciplinas** para um mesmo professor.
+- Mensagens de **confirmação** e **avisos de erro** nas operações críticas.
+- Criação do **DAO de Indisponibilidade** e melhorias nos DAOs de Materia, Professor e Slot.
+- Tela para **cadastro e exibição de cursos**, sem filtro obrigatório por semestre.
+
+### 🛠️ Alterado
+- Refatoração dos **Controllers** para padronizar chamadas DAO e separar lógica de UI e acesso a dados.
+- Melhoria na **atualização dinâmica** de combos e listas (ex: ao selecionar curso/semestre).
+- Ajuste no comportamento do **drag-and-drop** para manter a consistência entre listas e slots.
+- **Layout das telas** ajustado para melhor alinhamento visual dos botões e controles.
+- Otimização das consultas para evitar recarregamentos desnecessários na grade.
+
+### 🐞 Corrigido
+- Correção de bug que apagava **cursos** ou **matérias** ao editar dados em sequência.
+- Correção no carregamento dos combos de cursos e semestres, que permaneciam **vazios** ou **duplicavam itens**.
+- Corrigido problema onde **slots indisponíveis** não eram exibidos corretamente na grade.
+- Ajuste no **salvamento da grade** para não sobrescrever alocações previamente existentes.
+- Correção no botão **editar/excluir** em Professores, que não atualizava as disciplinas corretamente.
+- Correção do **arrasto manual** de disciplinas para garantir que o item volte à lista quando removido do grid.
+- Corrigido erro ao tentar alocar disciplina para slot já **ocupado** por outro professor.
+
+## 📅 Histórico de Reuniões
+
+## 🔹 Reuniões Internas da Equipe (Segundas-feiras)
+- **05/05/2025**: Planejamento do módulo de indisponibilidade e revisão da estrutura dos DAOs.
+- **12/05/2025**: Implementação e testes das telas de cadastro de professores e indisponibilidade.
+- **19/05/2025**: Testes do autoalocador e correção de bugs críticos para a entrega.
+- **26/05/2025**: Revisão geral, padronização de layouts e testes finais para entrega ao cliente.
+
+## 🔹 Reuniões com o Cliente (Quartas-feiras)
+- **07/05/2025**: Demonstração das telas de professores e indisponibilidade.
+- **14/05/2025**: Feedback do autoalocador e integração da validação de conflitos.
+- **21/05/2025**: Ajustes finais na experiência do usuário e bugs reportados.
+- **28/05/2025**: Apresentação da versão estável para homologação final.
+
+
+
 ## [v1.4.0] - 2025-04-27
 
 ### ✨ Adicionado
