@@ -116,7 +116,3 @@ O formato segue as diretrizes de [Keep a Changelog](https://keepachangelog.com/e
   - Definição do escopo inicial do projeto.
   - Distribuição de tarefas entre os membros da equipe.
   - Estabelecimento de um cronograma para as próximas semanas.
-
----
-
-*Nota:* Este changelog contém informações fictícias criadas para ilustrar como documentar o progresso de um projeto, incluindo reuniões semanais e detalhes sobre implementações específicas. Para um registro preciso, é recomendável que a equipe do projeto mantenha descrições detalhadas das alterações realizadas e das reuniões ocorridas.
