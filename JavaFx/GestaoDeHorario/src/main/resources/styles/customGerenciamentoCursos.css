@@ -164,3 +164,26 @@
 .form-container {
     -fx-animation: fade-in 0.6s ease-out;
 }
+
+/* Título mais destacado */
+.title-label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #2A2D43, #4A4F6D);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1);
+}
+
+/* Uniformização de largura */
+.modern-input,
+.modern-combo {
+    -fx-pref-width: 320px;
+    -fx-pref-height: 40px;
+}
+
+/* Melhor espaçamento geral */
+.form-container {
+    -fx-padding: 30px 40px;
+}
+
+
+/* Removido HBox para o campo de nome (estava desnecessário e quebrando alinhamento) */

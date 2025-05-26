@@ -1,38 +1,50 @@
 package org.example.gestaodehorario;
 
 import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-/**
- * Classe principal que inicia a aplicação JavaFX e configura o ambiente inicial.
- * <p>
- * Responsável por:
- * <ul>
- *   <li>Inicializar o palco (stage) principal</li>
- *   <li>Configurar o tratamento de exceções não capturadas</li>
- *   <li>Gerenciar a navegação entre telas </li>
- * </ul>
- * </p>
- */
 public class Main extends Application {
 
-
     @Override
-
     public void start(Stage primaryStage) {
-        ScreenManager.setPrimaryStage(primaryStage);
-        primaryStage.setWidth(800);
-        primaryStage.setHeight(600);
-        ScreenManager.changeScreen("/view/login-view.fxml", "/styles/customlogin.css");
+        try {
+            // Carrega a tela inicial (login)
+            Parent root = FXMLLoader.load(getClass().getResource("/view/login-view.fxml"));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/styles/customlogin.css").toExternalForm());
+
+            // Define título e estilo da janela
+            primaryStage.setTitle("Sistema de Gestão Acadêmica");
+            primaryStage.initStyle(StageStyle.UNDECORATED); // Sem barra
+
+            // Pega o tamanho da tela atual
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+            // Seta o tamanho da janela para ocupar toda a tela
+            primaryStage.setX(screenBounds.getMinX());
+            primaryStage.setY(screenBounds.getMinY());
+            primaryStage.setWidth(screenBounds.getWidth());
+            primaryStage.setHeight(screenBounds.getHeight());
+
+            // Impede redimensionamento e mostra a janela
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+            // Registra o stage no ScreenManager
+            ScreenManager.setPrimaryStage(primaryStage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    /**
-     * Ponto de entrada padrão para aplicações JavaFX
-     * @param args Argumentos de linha de comando
-     */
+
     public static void main(String[] args) {
         launch(args);
     }

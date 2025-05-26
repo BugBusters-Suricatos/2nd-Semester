@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      alignment="TOP_CENTER" spacing="30" styleClass="main-container">
+
+    <Label text="Dashboard Acadêmico" styleClass="title" />
+
+    <HBox alignment="CENTER" spacing="30">
+        <VBox styleClass="stats-card" alignment="CENTER">
+            <Label text="📚" styleClass="emoji-icon" />
+            <Label fx:id="lblTotalCursos" styleClass="stats-number" />
+            <Label text="Cursos Ativos" styleClass="stats-label" />
+        </VBox>
+
+        <VBox styleClass="stats-card" alignment="CENTER">
+            <Label text="📖" styleClass="emoji-icon" />
+            <Label fx:id="lblTotalMateria" styleClass="stats-number" />
+            <Label text="Matérias Cadastradas" styleClass="stats-label" />
+        </VBox>
+
+        <VBox styleClass="stats-card" alignment="CENTER">
+            <Label text="👨🏫" styleClass="emoji-icon" />
+            <Label fx:id="lblTotalProfessores" styleClass="stats-number" />
+            <Label text="Professores" styleClass="stats-label" />
+        </VBox>
+
+        <VBox styleClass="stats-card" alignment="CENTER">
+            <Label text="🔗" styleClass="emoji-icon" />
+            <Label fx:id="lblTotalAssociacoes" styleClass="stats-number" />
+            <Label text="Associações" styleClass="stats-label" />
+        </VBox>
+    </HBox>
+
+    <Label text="Sistema de Gestão Acadêmica v2.3" styleClass="footer-text" />
+</VBox>

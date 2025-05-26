@@ -35,14 +35,12 @@
         </ScrollPane>
     </center>
 
-    <!-- RODAPÉ: botões Salvar e Voltar -->
+    <!-- RODAPÉ: botão salvar -->
     <bottom>
         <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
             <Button text="Auto-Alocar" onAction="#autoAlocarMaterias" styleClass="btn-primary" />
 
             <Button text="Salvar Alocações" onAction="#salvarAlocacoes" styleClass="btn-primary" />
-           <Button text="Voltar" onAction="#btnVoltarClick" styleClass="btn-secondary" />
-
 
         </HBox>
     </bottom>

@@ -29,7 +29,11 @@
                 <GridPane fx:id="gridSlots" hgap="5" vgap="5" />
             </content>
         </ScrollPane>
-         <Label layoutX="30.0" layoutY="12.0" style="-fx-font-size: 18px;" text="Cadastro de Indisponibilidade" />
-         <Button layoutX="297.0" layoutY="13.0" onAction="#btnVoltarClick" styleClass="back-button" text="← Voltar" />
+
+        <HBox alignment="CENTER" spacing="10" styleClass="header-box">
+            <Label text="🎓 Cadastro de Indisponibilidade 🎓" styleClass="title-label-large"/>
+        </HBox>
+
     </children>
+
 </AnchorPane>

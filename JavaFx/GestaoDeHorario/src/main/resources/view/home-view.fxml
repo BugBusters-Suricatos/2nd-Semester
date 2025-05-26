@@ -1,71 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600" prefWidth="1000"
-            xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.gestaodehorario.Controller.TelaHomeController"
-            styleClass="home-root">
+            styleClass="home-root"
+            prefHeight="600" prefWidth="1000">
 
-    <!-- Menu Lateral -->
+    <!-- Menu lateral fixo -->
     <left>
-        <VBox alignment="CENTER" spacing="20" styleClass="sidebar">
+        <VBox alignment="CENTER" spacing="20" styleClass="sidebar" prefWidth="220">
             <VBox spacing="15" alignment="CENTER">
-                <Button onAction="#btnCursosClick" text="Cursos" styleClass="menu-button" />
-                <Button onAction="#btnMateriaClick" text="Matérias" styleClass="menu-button" />
-                <Button onAction="#btnProfessoresClick" text="Professores" styleClass="menu-button" />
-                <Button onAction="#btnHorariosClick" text="Horários" styleClass="menu-button" />
-                <Button onAction="#btnMontagemClick" text="Montar Horário" styleClass="menu-button" />
-                <Button onAction="#btnRelatorioClick" text="Relatorio de Horário" styleClass="menu-button" />
+                <Button text="Dashboard" styleClass="menu-button" onAction="#btnDashboardClick"/>
+                <Button text="Cursos" styleClass="menu-button" onAction="#btnCursosClick"/>
+                <Button text="Matérias" styleClass="menu-button" onAction="#btnMateriaClick"/>
+                <Button text="Professores" styleClass="menu-button" onAction="#btnProfessoresClick"/>
+                <Button text="Indisponibilidade" styleClass="menu-button" onAction="#btnHorariosClick"/>
+                <Button text="Montar Horário" styleClass="menu-button" onAction="#btnMontagemClick"/>
+                <Button text="Relatório de Horário" styleClass="menu-button" onAction="#btnRelatorioClick"/>
             </VBox>
         </VBox>
     </left>
 
-    <!-- Área Principal -->
+    <!-- Área central com conteúdo dinâmico -->
     <center>
-        <VBox alignment="TOP_CENTER" spacing="30" styleClass="main-container">
-            <!-- Cabeçalho -->
-            <Label text="Dashboard Acadêmico" styleClass="title" />
-
-            <!-- Cards de Estatísticas -->
-            <HBox alignment="CENTER" spacing="30">
-                <VBox styleClass="stats-card" alignment="CENTER">
-                    <Label text="📚" styleClass="emoji-icon" />
-                    <Label fx:id="lblTotalCursos" styleClass="stats-number" />
-                    <Label text="Cursos Ativos" styleClass="stats-label" />
-                </VBox>
-
-                <VBox styleClass="stats-card" alignment="CENTER">
-                    <Label text="📖" styleClass="emoji-icon" />
-                    <Label fx:id="lblTotalMateria" styleClass="stats-number" />
-                    <Label text="Matérias Cadastradas" styleClass="stats-label" />
-                </VBox>
-
-                <VBox styleClass="stats-card" alignment="CENTER">
-                    <Label text="👨🏫" styleClass="emoji-icon" />
-                    <Label fx:id="lblTotalProfessores" styleClass="stats-number" />
-                    <Label text="Professores" styleClass="stats-label" />
-                </VBox>
-
-                <VBox styleClass="stats-card" alignment="CENTER">
-                    <Label text="🔗" styleClass="emoji-icon" />
-                    <Label fx:id="lblTotalAssociacoes" styleClass="stats-number" />
-                    <Label text="Associações" styleClass="stats-label" />
-                </VBox>
-            </HBox>
-
-            <!-- Rodapé -->
-            <Label text="Sistema de Gestão Acadêmica v2.3" styleClass="footer-text" />
-        </VBox>
+        <StackPane fx:id="contentArea" styleClass="main-container"/>
     </center>
+
 </BorderPane>
