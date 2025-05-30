@@ -37,5 +37,5 @@
         </VBox>
     </HBox>
 
-    <Label text="Sistema de Gestão Acadêmica v2.3" styleClass="footer-text" />
+    <Label text="Sistema de Gestão Acadêmica v3.0" styleClass="footer-text" />
 </VBox>

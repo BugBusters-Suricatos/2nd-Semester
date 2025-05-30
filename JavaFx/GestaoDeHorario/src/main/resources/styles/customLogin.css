@@ -1,119 +1,96 @@
-/* Estilos modernos com gradientes e animações */
+/* ============================
+   Estilos Gerais
+   ============================ */
+
 .root {
-    -fx-background-color: linear-gradient(to bottom right, #2A2D43, #4A4F6D);
+    -fx-background-color: #ECEFF1;
+    -fx-font-family: "Roboto", sans-serif;
+}
+
+/* ============================
+   Painel Lateral Esquerdo
+   ============================ */
+
+.side-panel {
+    -fx-background-color: linear-gradient(to bottom, #1565C0, #1E88E5);
 }
 
 .brand-text {
     -fx-text-fill: white;
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-font-size: 32px;      /* Aumentado */
+    -fx-font-weight: bold;
 }
 
-.login-container {
-    -fx-padding: 40px;
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-background-radius: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 25, 0, 0, 5);
-    -fx-border-color: rgba(255, 255, 255, 0.3);
-    -fx-border-width: 2px;
-    -fx-border-radius: 20px;
+.brand-subtext {
+    -fx-text-fill: #BBDEFB;
+    -fx-font-size: 14px;
 }
 
+/* ============================
+   Painel de Login
+   ============================ */
+
+.login-panel {
+    -fx-background-color: white;
+    -fx-padding: 60 80;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 12, 0, 0, 6);
+}
+
+/* Títulos dentro do painel */
 .title {
-    -fx-text-fill: #2A2D43;
-    -fx-font-size: 32px;
-    -fx-font-weight: 800;
-    -fx-font-family: 'Segoe UI Semibold';
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
 }
 
 .subtitle {
-    -fx-text-fill: #6c757d;
-    -fx-font-size: 16px;
-}
-
-.modern-input {
-    -fx-pref-width: 350px;
-    -fx-pref-height: 50px;
-    -fx-background-color: transparent;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 0 0 2px 0;
-    -fx-padding: 0 0 0 40px;
     -fx-font-size: 14px;
-    -fx-text-fill: #2A2D43;
-    -fx-background-radius: 0;
-    -fx-effect: dropshadow(gaussian, rgba(42,45,67,0.1), 0, 0, 0, 1);
+    -fx-text-fill: #757575;
 }
 
-.modern-input:focused {
-    -fx-border-color: #FF6B6B;
-    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.2), 0, 0, 0, 2);
-}
-
+/* Campos de entrada */
 .input-icon {
     -fx-opacity: 0.6;
 }
 
-.gradient-button {
-    -fx-background-color: linear-gradient(to right, #FF6B6B, #FF5252);
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-pref-width: 350px;
-    -fx-pref-height: 50px;
-    -fx-background-radius: 10px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 10, 0, 0, 3);
-    -fx-transition: all 0.3s ease;
-}
-
-.gradient-button:hover {
-    -fx-background-color: linear-gradient(to right, #FF5252, #FF3D3D);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.5), 15, 0, 0, 5);
-}
-
-.link {
-    -fx-text-fill: #6c757d;
+.input-field {
+    -fx-background-color: #F5F5F5;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12;
     -fx-border-color: transparent;
-    -fx-underline: false;
-    -fx-cursor: hand;
-    -fx-transition: all 0.2s ease;
-}
-
-.link:hover {
-    -fx-text-fill: #FF6B6B;
-    -fx-underline: true;
-}
-
-.input-group {
-    -fx-padding: 10px;
-    -fx-background-color: transparent;
-}
-
-.modern-input {
-    -fx-pref-width: 300px;
-    -fx-pref-height: 50px;
-    -fx-background-color: transparent;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 0 0 2px 0;
+    -fx-prompt-text-fill: #9E9E9E;
     -fx-font-size: 14px;
-    -fx-text-fill: #2A2D43;
+    -fx-text-fill: #212121;
 }
 
-/* Animação de entrada */
-@keyframes slide-in {
-    from {
-        -fx-translate-x: 50px;
-        -fx-opacity: 0;
-    }
-    to {
-        -fx-translate-x: 0;
-        -fx-opacity: 1;
-    }
+.input-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: #2196F3;  /* Azul de foco */
+    -fx-border-width: 2;
 }
 
-.login-container {
-    -fx-animation: slide-in 0.8s ease-out;
+/* Botão principal */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #1E88E5, #42A5F5);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #42A5F5, #90CAF9);
+}
+
+/* Link de esquecimento */
+.link-text {
+    -fx-text-fill: #1E88E5;
+    -fx-font-size: 12px;
+}
+
+.link-text:hover {
+    -fx-underline: true;
 }
