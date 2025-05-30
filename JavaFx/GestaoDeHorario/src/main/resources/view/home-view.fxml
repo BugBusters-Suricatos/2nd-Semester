@@ -11,7 +11,7 @@
             styleClass="home-root"
             prefHeight="600" prefWidth="1000">
 
-    <!-- Menu lateral fixo -->
+    <!-- Menu lateral fixo 2-->
     <left>
         <VBox alignment="CENTER" spacing="20" styleClass="sidebar" prefWidth="220">
             <VBox spacing="15" alignment="CENTER">
